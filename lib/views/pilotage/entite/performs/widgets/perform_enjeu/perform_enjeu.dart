@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+class PerformanceEnjeux extends StatefulWidget {
+  const PerformanceEnjeux({Key? key}) : super(key: key);
+
+  @override
+  State<PerformanceEnjeux> createState() => _PerformanceEnjeuxState();
+}
+
+class _PerformanceEnjeuxState extends State<PerformanceEnjeux> {
+
+  late double _columnWidth;
+  late double _columnSpacing;
+  List<ChartSampleData>? chartData;
+  TooltipBehavior? _tooltipBehavior;
+  bool _isLoaded = false ;
+  bool isCardView = true ;
+
+
+  void initialisation() async {
+    _columnWidth = 0.8;
+    _columnSpacing = 0.2;
+    _tooltipBehavior = TooltipBehavior(enable: true);
+    chartData = <ChartSampleData>[
+      ChartSampleData(
+          x: '1.a Gouvernance DD et stratégie', y: 16, secondSeriesYValue: 8, thirdSeriesYValue: 13),
+      ChartSampleData(
+          x: '1.b Pilotage DD', y: 12, secondSeriesYValue: 10, thirdSeriesYValue: 5),
+      ChartSampleData(
+          x: '2. Éthique des affaires et achats responsables', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14),
+      ChartSampleData(
+          x: '3. Intégration des attentes DD des clients et consommateurs', y: 16, secondSeriesYValue: 8, thirdSeriesYValue: 13),
+      ChartSampleData(
+          x: '4. Égalité de traitement', y: 8, secondSeriesYValue: 10, thirdSeriesYValue: 7),
+      ChartSampleData(
+          x: '5. Conditions de travail', y: 12, secondSeriesYValue: 10, thirdSeriesYValue: 5),
+      ChartSampleData(
+          x: '6. Amélioration du cadre de vie', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14),
+      ChartSampleData(
+          x: '7. Inclusion sociale et développement des communautés', y: 16, secondSeriesYValue: 8, thirdSeriesYValue: 13),
+      ChartSampleData(
+          x: '8. Changement climatique et déforestation', y: 8, secondSeriesYValue: 10, thirdSeriesYValue: 7),
+      ChartSampleData(
+          x: '9. Gestion et traitement de l’eau', y: 12, secondSeriesYValue: 10, thirdSeriesYValue: 5),
+      ChartSampleData(
+          x: '10. Gestion des ressources et déchets', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14)
+    ];
+    await Future.delayed(const Duration(milliseconds: 2000));
+    setState(() {
+      _isLoaded = true;
+    });
+  }
+
+  @override
+  void initState() {
+    initialisation();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoaded ? _buildSpacingColumnChart() : const Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        SizedBox(
+            height: 50,
+            width: 50,
+            child: CircularProgressIndicator(
+              color: Colors.grey,
+              strokeWidth: 4,
+            )),
+        SizedBox(
+            height: 30,
+            width: 30,
+            child:
+            CircularProgressIndicator(color: Colors.amber, strokeWidth: 4)),
+      ],
+    );
+  }
+
+  SfCartesianChart _buildSpacingColumnChart() {
+    return SfCartesianChart(
+      plotAreaBorderWidth: 0,
+      title: ChartTitle(
+          text: 'PERFORMANCE PAR ENJEU PRIORITAIRE',
+        textStyle: const TextStyle(fontWeight: FontWeight.bold,fontSize: 14,decoration: TextDecoration.underline)
+      ),
+      primaryXAxis: CategoryAxis(
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold,fontSize: 14),
+        title: AxisTitle(text: "Les enjeux prioritaires",textStyle: const TextStyle(fontSize: 18)),
+        majorGridLines: const MajorGridLines(width: 0),
+      ),
+      primaryYAxis: NumericAxis(
+          labelAlignment: LabelAlignment.center,
+          title: AxisTitle(text: "Performance en %",textStyle: const TextStyle(fontSize: 18)),
+          maximum: 20,
+           minimum: 0,
+          interval: 5,
+          axisLine: const AxisLine(width: 0),
+          majorTickLines: const MajorTickLines(size: 0)),
+      series: _getDefaultColumn(),
+      legend: Legend(isVisible: true),
+      tooltipBehavior: _tooltipBehavior,
+    );
+  }
+
+  ///Get the column series
+  List<BarSeries<ChartSampleData, String>> _getDefaultColumn() {
+    return <BarSeries<ChartSampleData, String>>[
+      BarSeries<ChartSampleData, String>(
+
+        /// To apply the column width here.
+          width: isCardView ? 0.8 : _columnWidth,
+
+          /// To apply the spacing betweeen to two columns here.
+          spacing: isCardView ? 0.2 : _columnSpacing,
+          dataSource: chartData!,
+          color: const Color.fromRGBO(177, 183, 188, 1) ,
+          xValueMapper: (ChartSampleData sales, _) => sales.x as String,
+          yValueMapper: (ChartSampleData sales, _) => sales.y,
+          name: '2022'),
+      BarSeries<ChartSampleData, String>(
+          dataSource: chartData!,
+          width: isCardView ? 0.8 : _columnWidth,
+          spacing: isCardView ? 0.2 : _columnSpacing,
+          color: Colors.blue,
+          xValueMapper: (ChartSampleData sales, _) => sales.x as String,
+          yValueMapper: (ChartSampleData sales, _) => sales.secondSeriesYValue,
+          name: '2023'),
+    ];
+  }
+
+  @override
+  void dispose() {
+    chartData!.clear();
+    super.dispose();
+  }
+}
+
+class ChartSampleData {
+  final String x;
+  final double y;
+  final double secondSeriesYValue;
+  final double thirdSeriesYValue;
+  ChartSampleData({
+    required double this.thirdSeriesYValue,
+    required String this.x,
+    required double this.y,
+    required double this.secondSeriesYValue,
+  });
+}
