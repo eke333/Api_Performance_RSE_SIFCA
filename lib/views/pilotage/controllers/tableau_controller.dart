@@ -147,7 +147,7 @@ class TableauBordController extends GetxController {
         "formule":formule,
       };
 
-      const String apiUrl = "http://127.0.0.1:5000/data-entite-indicateur/update-data";
+      const String apiUrl = "${DataBaseController.baseUrl}/data-entite-indicateur/update-data";
 
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -201,7 +201,7 @@ class TableauBordController extends GetxController {
         "colonne":colonne
       };
 
-      const String apiUrl = "http://127.0.0.1:5000/data-entite-indicateur/update-validation";
+      const String apiUrl = "${DataBaseController.baseUrl}/data-entite-indicateur/update-validation";
 
       final response = await http.post(
         Uri.parse(apiUrl),

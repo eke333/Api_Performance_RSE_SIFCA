@@ -138,7 +138,7 @@ class _ContentEditionState extends State<ContentEdition> {
 
                     if (result==true){
                         tableauBordController.updateDataIndicateur();
-                        await Future.delayed(const Duration(milliseconds: 500));
+                        await Future.delayed(const Duration(seconds: 2));
                         var message = "La donnée a été modifiée avec succès.";
                         ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Succès",message,Colors.green));
                     }else{

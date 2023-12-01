@@ -8,7 +8,6 @@ import 'controller/time_system_controller.dart';
 import 'routes/routes.dart';
 
 void main() async{
-
   setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   await TimeSystemController.initDateTime();

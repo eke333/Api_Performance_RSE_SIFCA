@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Themes {
   static final ligthTheme = ThemeData(
+      useMaterial3: false,
       primaryColor: const Color(0xFFFFC61A),
       scaffoldBackgroundColor: const Color(0xFFF6F7FB),
       appBarTheme: const AppBarTheme(

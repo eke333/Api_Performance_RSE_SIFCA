@@ -209,7 +209,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
               ],
             ),
           ),
-          Checkbox(
+          isValidatingRealise ? loadingValidation() : Checkbox(
               value: valide ?? false,
               splashRadius: 15,
               checkColor: valide == true ? Colors.white : Colors.transparent,
@@ -221,10 +221,17 @@ class _RowIndicateurState extends State<RowIndicateur> {
               ),
               fillColor: MaterialStateProperty.resolveWith((states) => valide == true ? Colors.green : Colors.transparent),
               onChanged: (valeur == null || valide == true) ? null:(value) async {
+                setState(() {
+                  isValidatingRealise = true;
+                });
                 final validation = value;
                 if (validation != null ) {
-                  await validerIndicateur(validation,valeur,widget.indicateur.numero,0,widget.indicateur.reference);
+                  await validerIndicateur(validation,valeur,widget.indicateur.numero-1,0,widget.indicateur.reference);
                 }
+                await Future.delayed(Duration(seconds: 1));
+                setState(() {
+                  isValidatingRealise = false;
+                });
               }
           ),
           const SizedBox(width: 3,),
@@ -375,7 +382,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
           ),
           Container(width: 32,height: 40,alignment: Alignment.centerLeft,
               child: Padding(padding: const EdgeInsets.only(right: 2.0, left: 2.0),
-                child: Checkbox(
+                child: isValidatingMonth ? loadingValidation()  : Checkbox(
                     value: valide??false,
                     splashRadius: 15,
                     checkColor: valide == true ? Colors.white : Colors.transparent,
@@ -399,6 +406,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
                       }else {
                         _showMyDialog("Vous n'avez pas l'accès à validateur.");
                       }
+                      await Future.delayed(Duration(seconds: 1));
                       setState(() {
                         isValidatingMonth = false;
                       });
@@ -426,7 +434,6 @@ class _RowIndicateurState extends State<RowIndicateur> {
       );
       if (result==true){
         tableauBordController.updateDataIndicateur();
-        await Future.delayed(const Duration(milliseconds: 500));
         var message = "La donnée a été validée avec succès.";
         ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Succès",message,Colors.green));
       }else{
@@ -438,6 +445,17 @@ class _RowIndicateurState extends State<RowIndicateur> {
 
   String getIdDoc(String idIndicateur) {
     return idIndicateur;
+  }
+
+  Widget loadingValidation() {
+    return const Center(
+      child: SizedBox(
+          width: 25,height: 25,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: Colors.blue,
+          )),
+    );
   }
 
   Future validateDataIndicator(bool? value, int numeroIndicateur) async {}

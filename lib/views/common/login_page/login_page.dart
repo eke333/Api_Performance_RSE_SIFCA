@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:get/get.dart';
+import 'package:styled_widget/styled_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../constants/constant_colors.dart';
 import '../../../helper/helper_methods.dart';
@@ -104,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(body: Column(
       children: [
         Expanded(
@@ -130,21 +132,21 @@ class _LoginPageState extends State<LoginPage> {
                             height: 150,
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
+                         SizedBox(
+                          height: height < 750 ? 10: 20,
                         ),
                         Image.asset(
                           "assets/images/cover_image_perf_rse.png",
-                          height: 350,
+                          height: height < 750 ? 250 : 350,
                         ),
-                        const SizedBox(
-                          height: 20,
+                        SizedBox(
+                          height: height < 750 ? 10: 20,
                         ),
                         RichText(
-                          text: const TextSpan(
+                          text:  TextSpan(
                               text: "",
                               style: TextStyle(
-                                  fontSize: 30,
+                                  fontSize: height < 750 ? 25 : 30,
                                   fontStyle: FontStyle.italic,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF6E4906)),
@@ -174,12 +176,12 @@ class _LoginPageState extends State<LoginPage> {
                             height: 150,
                           ),
                         ),
-                        const SizedBox(
-                          height: 30,
+                        SizedBox(
+                          height: height < 750 ? 10: 20,
                         ),
                         SizedBox(
                           width: 400,
-                          height: 450,
+                          height: height < 750 ? 350: 450,
                           child: Card(
                             elevation: 10,
                             shape: RoundedRectangleBorder(

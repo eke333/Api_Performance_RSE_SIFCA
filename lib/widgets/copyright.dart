@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../api/supabse_db.dart';
 import 'custom_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -16,12 +19,19 @@ class _CopyRightState extends State<CopyRight> {
   bool isConnected = true ;
   final supabase = Supabase.instance.client;
 
-  String version = "";
+  String version = "1";
 
   Future getVersionApp() async {
-    final reponse = await supabase.from("System").select().eq("id", 0);
+    //final reponse = await supabase.from("System").select().eq("id", 0);
+    final response = await http.get(Uri.parse('${DataBaseController.baseUrl}'));
+    if (response.statusCode == 200) {
+      final kVersion = jsonDecode(response.body) as Map<String, dynamic>;
+      version = kVersion["version"];
+    } else {
+      version = "Error version";
+    }
     setState(() {
-      version = reponse[0]["app_version"];
+
     });
   }
 
@@ -29,7 +39,6 @@ class _CopyRightState extends State<CopyRight> {
   void initState() {
     getVersionApp();
     super.initState();
-    //getInternetStatus();
   }
 
   @override
