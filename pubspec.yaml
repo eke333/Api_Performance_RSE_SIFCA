@@ -70,7 +70,6 @@ dependencies:
   vs_scrollbar: ^1.0.0
   d_chart: ^2.6.2
   dio: ^5.3.3
-  url_strategy: ^0.2.0
   popover: ^0.2.8+2
   pdf: ^3.10.6
 

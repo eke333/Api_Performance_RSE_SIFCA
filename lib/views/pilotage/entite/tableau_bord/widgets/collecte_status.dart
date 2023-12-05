@@ -43,7 +43,7 @@ class _CollecteStatusState extends State<CollecteStatus> {
       final ratio = json["taux"];
       return  Row(
         children: [
-          Text("${tableauBordController.dataIndicateur.value.valeurs.length}"),
+          Text("${tableauBordController.currentMonth.value}"),
           Row(
             children: [
               const CustomText(

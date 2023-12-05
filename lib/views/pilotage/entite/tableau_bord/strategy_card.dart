@@ -11,6 +11,7 @@ class StrategieContainer extends StatefulWidget {
   @override
   State<StrategieContainer> createState() => _StrategieContainerState();
 }
+
 class _StrategieContainerState extends State<StrategieContainer> {
   @override
   Widget build(BuildContext context) {
@@ -109,6 +110,7 @@ class StrategyButton extends StatefulWidget {
   @override
   State<StrategyButton> createState() => _StrategyButtonState();
 }
+
 class _StrategyButtonState extends State<StrategyButton> {
   final EntitePilotageController entitePilotageController = Get.find();
   double elevation = 5;
@@ -185,13 +187,13 @@ class _StrategyButtonState extends State<StrategyButton> {
   }
 }
 
-
 class GeneralButton extends StatefulWidget {
   const GeneralButton({super.key});
 
   @override
   State<GeneralButton> createState() => _GeneralButtonState();
 }
+
 class _GeneralButtonState extends State<GeneralButton> {
   final EntitePilotageController entitePilotageController = Get.find();
   double elevation = 5;

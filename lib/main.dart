@@ -1,4 +1,3 @@
-import 'package:url_strategy/url_strategy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,7 +7,6 @@ import 'controller/time_system_controller.dart';
 import 'routes/routes.dart';
 
 void main() async{
-  setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   await TimeSystemController.initDateTime();
   await Supabase.initialize(

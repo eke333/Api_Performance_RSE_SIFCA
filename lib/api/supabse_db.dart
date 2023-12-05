@@ -9,7 +9,7 @@ import '../models/pilotage/acces_pilotage_model.dart';
 class DataBaseController {
   final supabase = Supabase.instance.client;
 
-  static const baseUrl = "http://172.232.173.59:4535";
+  static const baseUrl = "http://127.0.0.1:4535";
 
   Future<bool> calculEntitePriamire(String entite,int annee) async {
     try {
@@ -55,27 +55,6 @@ class DataBaseController {
      return DataIndicateurRowModel.init();
     }
 
-  }
-
-  Future<bool> updateDataIndicateur({required String id,required String field,required Map<String,dynamic> data}) async {
-    try {
-      await Supabase.instance.client.from('DataIndicateur')
-          .update({'${field}': data}).eq('_id', id);
-      return true;
-
-    }catch(e) {
-      return false;
-    }
-  }
-
-  Future<bool> validerDataIndicateur({required String id,required String field,required Map<String,dynamic> data}) async {
-    try {
-      await Supabase.instance.client.from('DataIndicateur').update({'${field}': data}).eq('_id', id);
-      return true;
-
-    }catch(e) {
-      return false;
-    }
   }
 
    Future<List<UserModel>> getAllUser() async{
