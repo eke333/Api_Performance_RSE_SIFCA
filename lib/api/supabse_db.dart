@@ -9,20 +9,7 @@ import '../models/pilotage/acces_pilotage_model.dart';
 class DataBaseController {
   final supabase = Supabase.instance.client;
 
-  static const baseUrl = "http://127.0.0.1:4535";
-
-  Future<bool> calculEntitePriamire(String entite,int annee) async {
-    try {
-      final response = await http.get(Uri.parse('https://api-schedule-perfrse.onrender.com/schedule/calcul-entite-priamire/${entite}/${annee}'));
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    }catch (e) {
-      return false;
-    }
-  }
+  static const baseUrl = "http://172.232.173.59:4535";
 
   Future<List<IndicateurModel>> getAllIndicateur() async{
     final List<Map<String,dynamic>> docs = await supabase.from('Indicateurs').select();

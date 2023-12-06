@@ -3,7 +3,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../../api/supabse_db.dart';
 import '../../../../helper/helper_methods.dart';
 import '/widgets/custom_text.dart';
 
