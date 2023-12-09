@@ -51,6 +51,8 @@ class _LoginPageState extends State<LoginPage> {
       final acces_token = result.session?.accessToken;
 
       if (email != null && acces_token != null) {
+        final date = DateTime.now();
+        await storage.write(key: 'expiration', value: "${date.toString()}");
         await storage.write(key: 'logged', value: "true");
         await storage.write(key: 'email', value: email);
         await Future.delayed(const Duration(milliseconds: 15));
@@ -105,7 +107,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height.roundToDouble();
+    double width = MediaQuery.of(context).size.width.roundToDouble();
     return Scaffold(body: Column(
       children: [
         Expanded(
@@ -124,29 +127,30 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text("${width} x ${height}"),
                         SizedBox(
                           height: 150,
                           width: 300,
-                          child: Image.asset(
-                            "assets/logos/perf_rse.png",
+                          child: Image.network(
+                            "https://djlcnowdwysqbrggekme.supabase.co/storage/v1/object/public/Images/image_accueil.png",
                             height: 150,
                           ),
                         ),
-                         SizedBox(
-                          height: height < 750 ? 10: 20,
+                         const SizedBox(
+                          height: 20,
                         ),
                         Image.asset(
                           "assets/images/cover_image_perf_rse.png",
-                          height: height < 750 ? 250 : 350,
+                          height: 350,
                         ),
-                        SizedBox(
-                          height: height < 750 ? 10: 20,
+                        const SizedBox(
+                          height:  20,
                         ),
                         RichText(
-                          text:  TextSpan(
+                          text:  const TextSpan(
                               text: "",
                               style: TextStyle(
-                                  fontSize: height < 750 ? 25 : 30,
+                                  fontSize:  30,
                                   fontStyle: FontStyle.italic,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFF6E4906)),
@@ -177,11 +181,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         SizedBox(
-                          height: height < 750 ? 10: 20,
+                          height:  20,
                         ),
                         SizedBox(
                           width: 400,
-                          height: height < 750 ? 350: 450,
+                          height:  450,
                           child: Card(
                             elevation: 10,
                             shape: RoundedRectangleBorder(

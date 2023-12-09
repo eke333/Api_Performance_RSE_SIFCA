@@ -19,20 +19,18 @@ class _CopyRightState extends State<CopyRight> {
   bool isConnected = true ;
   final supabase = Supabase.instance.client;
 
-  String version = "1";
+  String? version = null;
 
   Future getVersionApp() async {
-    //final reponse = await supabase.from("System").select().eq("id", 0);
     final response = await http.get(Uri.parse('${DataBaseController.baseUrl}'));
     if (response.statusCode == 200) {
       final kVersion = jsonDecode(response.body) as Map<String, dynamic>;
-      version = kVersion["version"];
-    } else {
-      version = "Error version";
-    }
-    setState(() {
+      setState(() {
+        version = kVersion["version"];
+      });
 
-    });
+    }
+
   }
 
   @override
@@ -74,7 +72,7 @@ class _CopyRightState extends State<CopyRight> {
                 }
               },
               child: CustomText(
-                  text: "Copyright @ Vision & Strategie Groupe ${version}",
+                  text: "Copyright @ Vision & Strategie Groupe ${version??""}",
                  size: 15,
                 weight: FontWeight.bold,
                 color: Colors.white,
@@ -98,25 +96,5 @@ class _CopyRightState extends State<CopyRight> {
         ],
       ),
     );
-  }
-
-  void  getInternetStatus() async {
-    while (true) {
-      try {
-        var response = await http.get(Uri.parse('http://127.0.0.1:5000/'),headers: {
-          "Access-Control-Allow-Origin":"*"
-        });
-        if (response.statusCode == 200) {
-          setState(() {
-            isConnected = true;
-          });
-        }
-      } catch (e){
-        setState(() {
-          isConnected = false;
-        });
-      }
-      await Future.delayed(const Duration(seconds: 10));
-    }
   }
 }

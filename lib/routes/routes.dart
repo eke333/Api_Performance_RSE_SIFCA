@@ -6,8 +6,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../views/common/forgot_password/change_password.dart';
 import '../views/common/reload_page/reload_screen.dart';
 import '../views/common/update_page/update_page.dart';
-import '../views/evaluation/evaluation_screen.dart';
-import '../views/evaluation/home/evaluation_home.dart';
 import '../views/export_page.dart';
 import '../views/pilotage/entite/admin/screen_admin_pilotage.dart';
 import '../views/pilotage/entite/entity_piloatage_main.dart';
@@ -43,27 +41,6 @@ class RouteClass {
             child: const MainPage(),
           ),
       ),
-
-      // Evaluation
-
-      GoRoute(
-        path: '/evaluation',
-        pageBuilder: (context, state) => NoTransitionPage<void>(
-          key: state.pageKey,
-          restorationId: state.pageKey.value,
-          child: const EvaluationScreen(child: EvaluationHome(),),
-        ),
-      ),
-
-      GoRoute(
-        path: '/evaluation/liste-des-evaluations',
-        pageBuilder: (context, state) => NoTransitionPage<void>(
-          key: state.pageKey,
-          restorationId: state.pageKey.value,
-          child: const EvaluationScreen(child: EvaluationHome(),),
-        ),
-      ),
-
       //
       GoRoute(
         path: '/reload-page',

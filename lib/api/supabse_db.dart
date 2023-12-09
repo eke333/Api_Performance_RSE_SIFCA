@@ -9,7 +9,7 @@ import '../models/pilotage/acces_pilotage_model.dart';
 class DataBaseController {
   final supabase = Supabase.instance.client;
 
-  static const baseUrl = "http://172.232.173.59:4535";
+  static const baseUrl = "http://127.0.0.1:4444";
 
   Future<List<IndicateurModel>> getAllIndicateur() async{
     final List<Map<String,dynamic>> docs = await supabase.from('Indicateurs').select();
