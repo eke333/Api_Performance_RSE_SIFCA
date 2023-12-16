@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -61,6 +62,7 @@ class _MainPageState extends State<MainPage> {
 
 
   Future<bool> checkAccesPilotage(String email) async {
+
     final result = await supabase.from("AccesPilotage").select().eq("email", email);
     final acces = result[0];
     if (acces["est_bloque"]) {
@@ -80,7 +82,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<bool> checkAccesEvaluation(String email) async {
-    context.go("/evaluation");
     return true;
   }
 
@@ -154,7 +155,9 @@ class _MainPageState extends State<MainPage> {
                                   ),
                                   CustomCadre(
                                     onTap: (){
+                                      EasyLoading.show(status: 'Chargement...');
                                       checkAccesPilotage("${data["user"]["email"]}");
+                                      EasyLoading.dismiss();
                                     },
                                     imagePath: "assets/images/pilotage_rse.jpg",
                                     titreCadre: "Pilotage",

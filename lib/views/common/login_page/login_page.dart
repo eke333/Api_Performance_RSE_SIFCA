@@ -127,20 +127,19 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("${width} x ${height}"),
                         SizedBox(
                           height: 150,
                           width: 300,
-                          child: Image.network(
-                            "https://djlcnowdwysqbrggekme.supabase.co/storage/v1/object/public/Images/image_accueil.png",
+                          child: Image.asset(
+                            "assets/logos/perf_rse.png",
                             height: 150,
                           ),
                         ),
                          const SizedBox(
                           height: 20,
                         ),
-                        Image.asset(
-                          "assets/images/cover_image_perf_rse.png",
+                        Image.network(
+                          "https://djlcnowdwysqbrggekme.supabase.co/storage/v1/object/public/Images/image_accueil.png",
                           height: 350,
                         ),
                         const SizedBox(
