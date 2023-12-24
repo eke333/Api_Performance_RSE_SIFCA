@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../helper/helper_methods.dart';
 import '../../../../utils/pilotage_utils.dart';
 import '../../../../widgets/privacy_widget.dart';
+import '../../controllers/drop_down_controller.dart';
 import 'strategy_card.dart';
 
 class ScreenTableauBordPilotage extends StatefulWidget {
@@ -16,6 +18,8 @@ class ScreenTableauBordPilotage extends StatefulWidget {
 }
 
 class _ScreenTableauBordPilotageState extends State<ScreenTableauBordPilotage> {
+
+  final dropDownController = Get.put(DropDownController());
 
   final storage = const FlutterSecureStorage();
   final supabase = Supabase.instance.client;

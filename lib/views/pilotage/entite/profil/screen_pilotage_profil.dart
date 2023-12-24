@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../../helper/helper_methods.dart';
-import '../../../../models/common/user_model.dart';
-import '../../../../models/pilotage/acces_pilotage_model.dart';
-import '../../../../utils/pilotage_utils.dart';
 import '../../controllers/profil_pilotage_controller.dart';
 import 'profil_pilotage.dart';
 

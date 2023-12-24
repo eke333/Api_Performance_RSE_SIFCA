@@ -1,12 +1,13 @@
+import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:get/get.dart';
-import 'package:styled_widget/styled_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../constants/constant_colors.dart';
 import '../../../helper/helper_methods.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/export_widget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -37,6 +38,22 @@ class _LoginPageState extends State<LoginPage> {
   bool onLogging = false;
   bool isLogging = false;
 
+  Future trackUserLogin(String email) async {
+    try {
+      final ipAddress = await Ipify.ipv4();
+      final localisation = await getCountryCityFromIP(ipAddress);
+
+      await supabase.from('Historiques').insert(
+          {
+            'action': 'Connexion', 'user': email,
+            "ip":ipAddress,"localisation":localisation
+          }
+      );
+    } catch (e) {
+      return ;
+    }
+  }
+
   void login(BuildContext context) async {
     setState(() {
       isLoadedPage = true;
@@ -55,7 +72,9 @@ class _LoginPageState extends State<LoginPage> {
         await storage.write(key: 'expiration', value: "${date.toString()}");
         await storage.write(key: 'logged', value: "true");
         await storage.write(key: 'email', value: email);
-        await Future.delayed(const Duration(milliseconds: 15));
+        await Future.delayed(const Duration(milliseconds: 100));
+        await trackUserLogin(email);
+        await Future.delayed(const Duration(milliseconds: 100));
         context.go("/");
         setState(() {
           isLoadedPage = false;
@@ -66,18 +85,16 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           isLoadedPage = false;
         });
-        ScaffoldMessenger.of(context)
-            .showSnackBar(showSnackBar("Echec", message, Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Echec", message, Colors.red));
       }
     } on Exception catch (e) {
       print(e.toString());
-      const message = "Vos identifiants sont incorrectes";
+      const message = "Vos identifiants sont incorrects";
       await Future.delayed(const Duration(milliseconds: 15));
       setState(() {
         isLoadedPage = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(showSnackBar("Echec", message, Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Echec", message, Colors.red));
     }
   }
 
@@ -179,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 150,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height:  20,
                         ),
                         SizedBox(

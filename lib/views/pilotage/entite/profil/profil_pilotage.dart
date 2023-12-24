@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 import '../../../../constants/constant_double.dart';
-import '../../../../models/common/user_model.dart';
-import '../../../../models/pilotage/acces_pilotage_model.dart';
 import '../../../../widgets/custom_text.dart';
 import 'widgets/export_widget_profile.dart';
 

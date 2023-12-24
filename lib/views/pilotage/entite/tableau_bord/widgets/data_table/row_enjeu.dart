@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../../models/pilotage/data_indicateur_row_model.dart';
 import '../../../../../../models/pilotage/indicateur_model.dart';
+import '../../../../controllers/drop_down_controller.dart';
 import '../../../../controllers/tableau_controller.dart';
 import 'row_indicateur.dart';
 
@@ -30,65 +30,72 @@ class _RowEnjeuState extends State<RowEnjeu> {
 
   bool estVisibleIndicateur = false;
   final TableauBordController tableauBordController  = Get.find();
+  final DropDownController dropDownController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     final indicateurs = widget.indicateurs.where((indicateur) => indicateur.enjeu == "${widget.idEnjeu}");
-    return Column(
-      children: [
-        Visibility(
-          visible: true,
-          child: Container(
-            height: 30,
-            padding: const EdgeInsets.only(left: 100),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-                color: widget.color.withOpacity(0.7),
-                border: Border.all(color: Colors.white),
-                borderRadius: BorderRadius.circular(4.0)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "${widget.numero}. ${widget.enjeuTitle}",
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                Expanded(child: Container()),
-                RotatedBox(
-                  quarterTurns: estVisibleIndicateur ? 1 : 3,
-                  child: IconButton(
-                    splashRadius: 10,
-                    icon: const Icon(
-                      Icons.arrow_back_ios_sharp,
-                      size: 15,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        estVisibleIndicateur = !estVisibleIndicateur;
-                      });
-                    },
+    return Obx(() {
+      bool isFiltreEnjeu = dropDownController.filtreViewAxe["enjeu"]??false;
+      bool debloqueFunEnjeu = isFiltreEnjeu ? dropDownController.filtreViewAxe[widget.idEnjeu]?? false : true;
+      return Column(
+        children: [
+          Visibility(
+            visible: true,
+            child: Container(
+              height: 30,
+              padding: const EdgeInsets.only(left: 100),
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                  color: widget.color.withOpacity(0.7),
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(4.0)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "${widget.numero}. ${widget.enjeuTitle}",
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
-                ),
-                const SizedBox(
-                  width: 15,
-                )
-              ],
+                  Expanded(child: Container()),
+                  RotatedBox(
+                    quarterTurns: estVisibleIndicateur ? 1 : 3,
+                    child: IconButton(
+                      splashRadius: 10,
+                      icon: const Icon(
+                        Icons.arrow_back_ios_sharp,
+                        size: 15,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        if (debloqueFunEnjeu) {
+                          setState(() {
+                            estVisibleIndicateur = !estVisibleIndicateur;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        Visibility(
-          visible: estVisibleIndicateur,
-          child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: indicateurs.map((indicateur){
-                  return RowIndicateur(indicateur: indicateur);
-                }).toList()
-            )
+          Visibility(
+              visible: estVisibleIndicateur,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: indicateurs.map((indicateur){
+                    return RowIndicateur(indicateur: indicateur);
+                  }).toList()
+              )
           ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   List<dynamic> getValeurs(int numeroLigne) {

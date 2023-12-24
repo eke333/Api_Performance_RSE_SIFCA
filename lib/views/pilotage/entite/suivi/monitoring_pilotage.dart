@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../constants/constant_double.dart';
 import '../../../../helper/responsive.dart';
 import '../overview/widgets/suivi_details/section_suivi.dart';
 import '../overview/widgets/suivi_details/suivi_details.dart';

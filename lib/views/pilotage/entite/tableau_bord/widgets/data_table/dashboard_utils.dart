@@ -78,7 +78,7 @@ class _ContentEditionState extends State<ContentEdition> {
           return  Container();
         default :
           return Container();
-      };
+      }
     }
   }
 

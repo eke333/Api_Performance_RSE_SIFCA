@@ -228,7 +228,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
                 if (validation != null ) {
                   await validerIndicateur(validation,valeur,widget.indicateur.numero-1,0,widget.indicateur.reference);
                 }
-                await Future.delayed(Duration(seconds: 1));
+                await Future.delayed(const Duration(seconds: 1));
                 setState(() {
                   isValidatingRealise = false;
                 });
@@ -406,7 +406,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
                       }else {
                         _showMyDialog("Vous n'avez pas l'accès à validateur.");
                       }
-                      await Future.delayed(Duration(seconds: 1));
+                      await Future.delayed(const Duration(seconds: 1));
                       setState(() {
                         isValidatingMonth = false;
                       });

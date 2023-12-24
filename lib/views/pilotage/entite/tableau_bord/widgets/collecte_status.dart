@@ -43,7 +43,7 @@ class _CollecteStatusState extends State<CollecteStatus> {
       final ratio = json["taux"];
       return  Row(
         children: [
-          Text("${tableauBordController.currentMonth.value}"),
+          //Text("${tableauBordController.currentMonth.value}"),
           Row(
             children: [
               const CustomText(
@@ -53,7 +53,7 @@ class _CollecteStatusState extends State<CollecteStatus> {
               CustomText(
                 text: ratio !=null? "${ratio.toStringAsFixed(2)} %" :"--- %",
                 size: 15,
-                color: Colors.amber,
+                color: ratio < 25 ? Colors.red : ratio < 50 ? Colors.amber : ratio < 75 ? Colors.green : Colors.blue,
                 weight: FontWeight.bold,
               ),
               CustomText(

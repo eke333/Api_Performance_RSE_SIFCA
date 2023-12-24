@@ -8,13 +8,18 @@ import '../../../api/supabse_db.dart';
 import '../../../controller/time_system_controller.dart';
 import '../../../models/pilotage/data_indicateur_row_model.dart';
 import '../../../models/pilotage/indicateur_model.dart';
+import 'drop_down_controller.dart';
 import 'entite_pilotage_controler.dart';
 import 'profil_pilotage_controller.dart';
 import 'package:http/http.dart' as http;
 
 class TableauBordController extends GetxController {
 
+  final DropDownController dropDownController = Get.find();
+
   final indicateursList = <IndicateurModel>[].obs;
+
+  Map<String,dynamic>? dataMapExport  = null;
   final indicateursListApparente = <IndicateurModel>[].obs;
 
   final dataIndicateur = DataIndicateurRowModel.init().obs;
@@ -72,11 +77,28 @@ class TableauBordController extends GetxController {
     return indicateursList.length;
   }
 
+
+  void filtreListApparente() {
+    if ( dropDownController.filtreProcessus.isEmpty ) {
+      indicateursListApparente.value = indicateursList;
+    } else {
+      final List<IndicateurModel> _Klist = [];
+      for (var indicateur in indicateursList ) {
+        if (dropDownController.filtreProcessus.contains(indicateur.processus)) {
+          _Klist.add(indicateur);
+        }
+      }
+      indicateursListApparente.value = _Klist;
+    }
+  }
+
   void initDateTime() {
     var dateTime = TimeSystemController.date;
     currentYear.value = dateTime.year;
     currentMonth.value = dateTime.month;
   }
+
+
 
   void changeMonth(int month) {
     currentMonth.value = month;
@@ -98,11 +120,18 @@ class TableauBordController extends GetxController {
     }
   }
 
+  Future<Map<String, dynamic>?> loadDataExport(String entite,int annee) async {
+    final result = await dataBaseController.getExportEntite(entite, annee);
+    return result;
+  }
+
   void initialisation(BuildContext context) async {
     allYearsList.value = TimeSystemController.years;
     final currentEntite = entitePilotageController.currentEntite.value;
+
     isLoading.value = true;
     indicateursList.value = await dataBaseController.getAllIndicateur();
+    indicateursListApparente.value = indicateursList;
     dataIndicateur.value = await dataBaseController.getAllDataRowIndicateur("${currentEntite}", currentYear.value);
     if (dataIndicateur.value.entite != "" && dataIndicateur.value.annee !=0) {
       statusIntialisation.value = true;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:perf_rse/constants/constant_colors.dart';
 import '../../../../widgets/custom_text.dart';
+import '../../controllers/drop_down_controller.dart';
 import '../../controllers/entite_pilotage_controler.dart';
 
 
@@ -13,6 +15,7 @@ class StrategieContainer extends StatefulWidget {
 }
 
 class _StrategieContainerState extends State<StrategieContainer> {
+
   @override
   Widget build(BuildContext context) {
     return const SizedBox(
@@ -27,6 +30,7 @@ class _StrategieContainerState extends State<StrategieContainer> {
               child: SizedBox(
                 width: 400,height: 200,
                 child: Padding(padding: EdgeInsets.all(8.0), child: StrategyButton(
+                  axeId: "axe_3",
                   color: Color(0xFFFAAF7B),
                   imagePilier: "assets/icons/social.png",
                   titlePilier: "Communauté et innovation sociétale",
@@ -43,6 +47,7 @@ class _StrategieContainerState extends State<StrategieContainer> {
               child: SizedBox(
                 width: 400,height: 200,
                 child: Padding(padding: EdgeInsets.all(8.0), child: StrategyButton(
+                  axeId: "axe_1",
                   color: Color(0xFF3F93D0),
                   imagePilier: "assets/icons/gouvernance.png",
                   titlePilier: "Gouvernance éthique",
@@ -61,6 +66,7 @@ class _StrategieContainerState extends State<StrategieContainer> {
               child: SizedBox(
                 width: 400,height: 200,
                 child: Padding(padding: EdgeInsets.all(8.0), child: StrategyButton(
+                  axeId: "axe_2",
                   color: Color(0xFFEABF64),
                   imagePilier: "assets/icons/economie.png",
                   titlePilier: "Emploi et conditions de travail",
@@ -78,6 +84,7 @@ class _StrategieContainerState extends State<StrategieContainer> {
               child: SizedBox(
                 width: 400,height: 200,
                 child: Padding(padding: EdgeInsets.all(8.0), child: StrategyButton(
+                  axeId: "axe_4",
                   color: Color(0xFF97C3A8),
                   imagePilier: "assets/icons/environnement.png",
                   titlePilier: "Environnement",
@@ -101,11 +108,12 @@ class _StrategieContainerState extends State<StrategieContainer> {
 }
 
 class StrategyButton extends StatefulWidget {
+  final String axeId;
   final String titlePilier;
   final String imagePilier;
   final List<Map> enjeux;
   final Color color;
-  const StrategyButton({super.key, required this.titlePilier, required this.imagePilier, required this.enjeux, required this.color});
+  const StrategyButton({super.key, required this.titlePilier, required this.imagePilier, required this.enjeux, required this.color, required this.axeId});
 
   @override
   State<StrategyButton> createState() => _StrategyButtonState();
@@ -113,11 +121,15 @@ class StrategyButton extends StatefulWidget {
 
 class _StrategyButtonState extends State<StrategyButton> {
   final EntitePilotageController entitePilotageController = Get.find();
+  final DropDownController dropDownController = Get.find();
   double elevation = 5;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: (){
+          dropDownController.filtreViewAxe.value = {
+            "${widget.axeId}":true,
+          };
           context.go("/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
         },
         onHover: (value){
@@ -152,32 +164,44 @@ class _StrategyButtonState extends State<StrategyButton> {
                   ],
                 ),
                 const SizedBox(height: 5,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 50),
-                  child: Column(
-                    children: widget.enjeux.map((enjeu){
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                height: 25,
-                                width: 25,
-                                decoration: const BoxDecoration(
-                                    color: Colors.black,
-                                    shape: BoxShape.circle
+                Column(
+                  children: widget.enjeux.map((enjeu){
+                    return InkWell(
+                      radius: 10,
+                      hoverColor: primaryColor.withOpacity(0.5),
+                      onTap: (){
+                        dropDownController.filtreViewAxe.value = {
+                          "enjeu":true,
+                          "${widget.axeId}":true,
+                          "enjeu_${enjeu["key"]}":true,
+                        };
+                        context.go("/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  height: 25,
+                                  width: 25,
+                                  decoration: const BoxDecoration(
+                                      color: Colors.black,
+                                      shape: BoxShape.circle
+                                  ),
+                                  child: Center(child: Text("${enjeu["key"]}")),
                                 ),
-                                child: Center(child: Text("${enjeu["key"]}")),
-                              ),
-                              const SizedBox(width: 5,),
-                              Flexible(child: CustomText(text: "${enjeu["enjeu"]}",size: 13,fontStyle: FontStyle.italic,))
-                            ],
-                          ),
-                          const SizedBox(height: 5,),
-                        ],
-                      );
-                    }).toList()
-                  ),
+                                const SizedBox(width: 5,),
+                                Flexible(child: CustomText(text: "${enjeu["enjeu"]}",size: 13,fontStyle: FontStyle.italic,))
+                              ],
+                            ),
+                            const SizedBox(height: 5,),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList()
                 )
               ],
             ),
@@ -196,11 +220,19 @@ class GeneralButton extends StatefulWidget {
 
 class _GeneralButtonState extends State<GeneralButton> {
   final EntitePilotageController entitePilotageController = Get.find();
+  final DropDownController dropDownController = Get.find();
   double elevation = 5;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: (){
+        dropDownController.filtreViewAxe.value = {
+          "axe_0":true,
+          "axe_1":true,
+          "axe_2":true,
+          "axe_3":true,
+          "axe_4":true
+        };
         context.go("/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
       },
       onHover: (value){

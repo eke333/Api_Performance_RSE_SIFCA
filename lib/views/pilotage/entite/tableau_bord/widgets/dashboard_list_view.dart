@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../models/pilotage/data_indicateur_model.dart';
-import '../../../../../models/pilotage/data_indicateur_row_model.dart';
 import '../../../../../models/pilotage/indicateur_model.dart';
 import '/views/pilotage/controllers/tableau_controller.dart';
 import 'data_table/row_indicateur.dart';
@@ -70,7 +69,7 @@ class _DashBoardListViewState extends State<DashBoardListView> {
           idAxe: "axe_1",
           imagePath: "assets/icons/gouvernance.png",
           indicateurs: listIndicateurs,),
-        RowAxe(title: "Emploi et conditions de travai",
+        RowAxe(title: "Emploi et conditions de travail",
           color: const Color(0xFFEABF64),
           idAxe: "axe_2",
           imagePath: "assets/icons/economie.png",

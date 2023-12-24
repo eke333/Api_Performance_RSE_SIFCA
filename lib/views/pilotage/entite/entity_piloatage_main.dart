@@ -16,7 +16,6 @@ import '../../../utils/utils.dart';
 import '../controllers/side_menu_controller.dart';
 import 'widgets/drawer_menu_pilotage.dart';
 import 'widgets/menu_nav_pilotage.dart';
-import 'package:http/http.dart' as http;
 
 
 class EntityPilotageMain extends StatefulWidget {

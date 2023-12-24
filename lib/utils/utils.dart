@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
-import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'dart:math' as math;
+import 'package:http/http.dart' as http;
 
 const storage = FlutterSecureStorage();
 
@@ -39,6 +39,29 @@ String valueToDisplayValue(double value){
   }
   double result = math.pow(1000, magnitude) as double;
   return '${result.toStringAsFixed(2)}${['', 'K', 'M', 'B', 'T'][magnitude]}';
+}
+
+Future<String> getCountryCityFromIP(String ipAddress) async {
+  try {
+    final response = await http.get(Uri.parse('http://ip-api.com/json/$ipAddress'));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+
+      if (responseData['status'] == 'success') {
+        String country = responseData['country'] ?? '';
+        String city = responseData['city'] ?? '';
+
+        if (country.isNotEmpty && city.isNotEmpty) {
+          return '$country, $city';
+        }
+      }
+    }
+  } catch (e) {
+    return '---';
+  }
+
+  return '---';
 }
 
 void showDebugMessage(BuildContext context,String message){

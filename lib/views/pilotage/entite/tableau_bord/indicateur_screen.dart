@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../models/pilotage/indicateur_model.dart';
 import '../../../../widgets/privacy_widget.dart';
 import '../../controllers/drop_down_controller.dart';
 import '../../controllers/side_menu_controller.dart';
@@ -21,7 +22,7 @@ class IndicateurScreen extends StatefulWidget {
 class _IndicateurScreenState extends State<IndicateurScreen> {
 
   final tableauBordController = Get.put(TableauBordController());
-  final dropDownController = Get.put(DropDownController());
+  final DropDownController dropDownController = Get.find();
 
   final SideMenuController sideMenuController = Get.find();
 
@@ -84,8 +85,9 @@ class _IndicateurScreenState extends State<IndicateurScreen> {
                         Obx((){
                           final isLoading = tableauBordController.isLoading.value;
                           final status = tableauBordController.statusIntialisation.value;
+                          tableauBordController.filtreListApparente();
                           return Expanded(
-                              child: Container(child: isLoading ? loadingWidget() : status ? DashBoardListView(indicateurs: tableauBordController.indicateursList)
+                              child: Container(child: isLoading ? loadingWidget() : status ? DashBoardListView(indicateurs: tableauBordController.indicateursListApparente)
                                 : const Center(child: Text("Acunnes données")),));
                         }),
                         const SizedBox(height: 10),

@@ -5,7 +5,6 @@ import '../../../../../api/supabse_db.dart';
 import '../../../../../helper/helper_methods.dart';
 import '../../../../../widgets/custom_text.dart';
 import '../../../../../widgets/custom_text_form_field.dart';
-import '../../../../../widgets/menu_deroulant.dart';
 import '../../../controllers/profil_pilotage_controller.dart';
 
 class InfosPilote extends StatefulWidget {

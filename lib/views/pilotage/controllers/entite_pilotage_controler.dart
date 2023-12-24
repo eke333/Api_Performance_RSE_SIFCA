@@ -1,13 +1,32 @@
+import 'dart:typed_data';
+
 import 'package:get/get.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EntitePilotageController extends GetxController{
 
+  Uint8List? bytesLogo = null;
   final currentEntite = "".obs;
   final supabase = Supabase.instance.client;
   final entites = [].obs;
+
+  Future<Uint8List?> downloadImageAsUint8List(String imageUrl) async {
+    try {
+      final response = await http.get(Uri.parse(imageUrl));
+      if (response.statusCode == 200) {
+        Uint8List? bytes = response.bodyBytes;
+        bytesLogo = bytes;
+        return bytes;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
 
   Future<bool> initialisation() async {
     try {
@@ -21,6 +40,8 @@ class EntitePilotageController extends GetxController{
       return false;
     }
   }
+
+
 
   Map getCurrentEntiteRes() {
     for (var entite in entites) {

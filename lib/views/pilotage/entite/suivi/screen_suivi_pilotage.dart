@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../helper/helper_methods.dart';
 import '../../../../widgets/privacy_widget.dart';
-import '../../../../helper/helper_methods.dart';
 import 'monitoring_pilotage.dart';
 import 'widgets/entete_suivi/entete_suivi.dart';
 

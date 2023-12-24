@@ -22,6 +22,11 @@ class _AppBarPilotageState extends State<AppBarPilotage> {
   static const logoSifca = "https://djlcnowdwysqbrggekme.supabase.co/storage/v1/object/public/LogoEntites/logo_sifca_bon.png";
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     int width = MediaQuery.of(context).size.width.round();
     String responsive = responsiveRule(width);
@@ -40,6 +45,7 @@ class _AppBarPilotageState extends State<AppBarPilotage> {
               ))),
       child: Obx((){
         var entiteRes = entitePilotageController.getCurrentEntiteRes();
+        entitePilotageController.downloadImageAsUint8List(entiteRes["logo"]);
         var mapColor = getEntiteColor(entiteRes["couleur"]);
         return Row(
           children: [

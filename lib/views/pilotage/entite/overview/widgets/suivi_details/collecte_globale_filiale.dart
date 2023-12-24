@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../../../../../../constants/constant_colors.dart';
 import '../../../../../../constants/constant_double.dart';
 
 class CollecteGlobale extends StatefulWidget {

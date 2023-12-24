@@ -12,7 +12,7 @@ class DataBaseController {
   static const baseUrl = "https://test-api-rse.onrender.com";
 
   Future<List<IndicateurModel>> getAllIndicateur() async{
-    final List<Map<String,dynamic>> docs = await supabase.from('Indicateurs').select();
+    final List<dynamic> docs = await supabase.from('Indicateurs').select().order('numero', ascending: true);
     final indicateurs = docs.map((json) => IndicateurModel.fromJson(json)).toList();
     return indicateurs;
   }
@@ -40,6 +40,33 @@ class DataBaseController {
       return dataModel;
     } else {
      return DataIndicateurRowModel.init();
+    }
+
+  }
+
+  Future<Map<String,dynamic>?> getExportEntite(String entite,int annee) async{
+
+    final Map<String, dynamic> data = {
+      "annee": annee,
+      "entiteId": entite,
+      "enjeux":["all"]
+    };
+
+    const String apiUrl = "${baseUrl}/data-entite-indicateur/export-all-data";
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:  jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      return jsonData;
+    } else {
+      return null;
     }
 
   }

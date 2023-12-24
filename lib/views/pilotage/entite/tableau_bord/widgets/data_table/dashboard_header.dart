@@ -79,7 +79,7 @@ class _MonthHeaderState extends State<MonthHeader> {
           ],
         ),
       ),
-    );;
+    );
   }
 }
 

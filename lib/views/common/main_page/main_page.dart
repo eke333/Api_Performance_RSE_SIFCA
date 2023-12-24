@@ -1,8 +1,10 @@
+import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../utils/utils.dart';
 import '../../../widgets/export_widget.dart';
 import '../../../widgets/loading_widget.dart';
 import 'widget/banniere.dart';
@@ -24,6 +26,8 @@ class _MainPageState extends State<MainPage> {
   final storage = const FlutterSecureStorage();
   final supabase = Supabase.instance.client;
   late Future<Map> mainData;
+
+  bool isDisconnecting = false;
 
   @override
   void initState() {
@@ -83,6 +87,19 @@ class _MainPageState extends State<MainPage> {
 
   Future<bool> checkAccesEvaluation(String email) async {
     return true;
+  }
+
+  Future trackUserLogin(String email) async {
+
+    final ipAddress = await Ipify.ipv4();
+    final localisation = await getCountryCityFromIP(ipAddress);
+
+    await supabase.from('Historiques').insert(
+        {
+          'action': 'Déconnexion', 'user': email,
+          "ip":ipAddress,"localisation":localisation
+        }
+    );
   }
 
   @override
@@ -206,12 +223,22 @@ class _MainPageState extends State<MainPage> {
                                             child: const Text('Non'),
                                           ),
                                           OutlinedButton(
-                                            onPressed: () async {
+                                            onPressed: isDisconnecting ? null : () async {
+                                              setState(() {
+                                                isDisconnecting = true;
+                                              });
+                                              String? emailCurrent = supabase.auth.currentUser!.email;
                                               await storage.write(key: 'logged', value: "");
                                               await storage.write(key: 'email', value: "");
                                               await storage.deleteAll();
                                               await supabase.auth.signOut();
                                               context.go('/account/login');
+                                              if (emailCurrent != null ) {
+                                                trackUserLogin(emailCurrent);
+                                              }
+                                              setState(() {
+                                                isDisconnecting =false ;
+                                              });
                                             },
                                             child: const Text('Oui'),
                                           ),

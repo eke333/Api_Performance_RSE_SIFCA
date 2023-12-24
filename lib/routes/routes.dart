@@ -8,8 +8,8 @@ import '../views/common/reload_page/reload_screen.dart';
 import '../views/common/update_page/update_page.dart';
 import '../views/export_page.dart';
 import '../views/pilotage/entite/admin/screen_admin_pilotage.dart';
+import '../views/pilotage/entite/connexion_historique/screen_connexion_historique.dart';
 import '../views/pilotage/entite/entity_piloatage_main.dart';
-import '../views/pilotage/entite/modification_history/screen_modification_history.dart';
 import '../views/pilotage/entite/overview/screen_overview_pilotage.dart';
 import '../views/pilotage/entite/performs/screen_pilotage_perform.dart';
 import '../views/pilotage/entite/profil/screen_pilotage_profil.dart';
@@ -141,7 +141,7 @@ class RouteClass {
                         path: 'historique-des-modifications',
                         pageBuilder: (context, state) => NoTransitionPage<void>(
                             key: state.pageKey,
-                            child: const ScreenModificationHistory()
+                            child: const ScreenConnexionHistorique()
                         ),
                       ),
                     ],
