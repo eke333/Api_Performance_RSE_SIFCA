@@ -232,6 +232,7 @@ class _YearFiltreWidgetState extends State<YearFiltreWidget> {
                       _btn3SelectedYear = newValue;
                       tableauBordController.changeYear(int.parse(_btn3SelectedYear));
                     });
+                    tableauBordController.initialisation(context);
                   },
                   itemBuilder: (BuildContext context) => _popUpMenuYearItems(),
                 )

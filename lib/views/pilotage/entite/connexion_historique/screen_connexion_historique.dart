@@ -20,8 +20,7 @@ class _ScreenConnexionHistoriqueState extends State<ScreenConnexionHistorique> {
     });
     String? emailCurrent = supabase.auth.currentUser!.email;
     if (emailCurrent != null ) {
-      final List<dynamic> KDataHistorique = await supabase.from('Historiques').select().eq("user",emailCurrent);
-      print(KDataHistorique);
+      final List<dynamic> KDataHistorique = await supabase.from('Historiques').select().eq("user",emailCurrent).order("date",ascending: false);
       setState(() {
         dataHistory = KDataHistorique;
       });
@@ -45,7 +44,7 @@ class _ScreenConnexionHistoriqueState extends State<ScreenConnexionHistorique> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SelectionArea(child: Scaffold(
       body: Padding(
         padding: EdgeInsets.only(top: 16,left: 10),
         child: Column(
@@ -60,11 +59,12 @@ class _ScreenConnexionHistoriqueState extends State<ScreenConnexionHistorique> {
               ],
             ),
             const SizedBox(height: 5,),
-            Expanded(child: isLoading ? loadingWidget () : dataHistory.isEmpty ? initWidget()  : dataTable () )
+            Expanded(child: isLoading ? loadingWidget () : dataHistory.isEmpty ? initWidget()  : dataTable () ),
+            const SizedBox(height: 10,),
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget loadingWidget () {
@@ -127,7 +127,6 @@ class _ScreenConnexionHistoriqueState extends State<ScreenConnexionHistorique> {
   }
 
   String formatDate(String dateString) {
-    print(dateString);
     final date = DateTime.parse(dateString);
     return "${date.day}/${date.month}/${date.year} - ${date.hour}:${date.month}:${date.second}";
   }

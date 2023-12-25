@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'admin_controller.dart';
 import 'widgets/contributeurs_screen.dart';
+import 'widgets/indicateurs_screen.dart';
 
 class AdministrationPilotage extends StatefulWidget {
   const AdministrationPilotage({super.key});
@@ -15,7 +16,7 @@ class _AdministrationPilotageState extends State<AdministrationPilotage> {
   Widget build(BuildContext context) {
     return Obx(() {
       final adminCard = adminPilotageController.titleCard.value;
-      return const Column(
+      return  Column(
         children: [
           Row(
             children: [
@@ -23,15 +24,10 @@ class _AdministrationPilotageState extends State<AdministrationPilotage> {
               SizedBox(width: 10,),
               ButtonCard(title: "Indicateurs",),
               SizedBox(width: 10,),
-              ButtonCard(title: "Filiales/Entités",),
-              SizedBox(width: 10,),
-              ButtonCard(title: "Tickets",),
-              SizedBox(width: 10,),
             ],
           ),
           SizedBox(height: 10,),
-          Expanded(child: ContributeurScreen(),
-          )
+          Expanded(child: adminCard == "Contributeurs" ?  ContributeurScreen() : IndicateursScreen() )
         ],
       );
     });
@@ -46,6 +42,7 @@ class ButtonCard extends StatefulWidget {
   @override
   State<ButtonCard> createState() => _ButtonCardState();
 }
+
 class _ButtonCardState extends State<ButtonCard> {
   final AdminPilotageController adminPilotageController = Get.find();
   bool isHovering = false;

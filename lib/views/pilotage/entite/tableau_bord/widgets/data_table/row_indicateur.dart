@@ -161,7 +161,6 @@ class _RowIndicateurState extends State<RowIndicateur> {
     return  Obx((){
 
       int numeroLigne = widget.indicateur.numero-1;
-      int currentMonth = tableauBordController.currentMonth.value;
 
       var valeur = getValeur(numeroLigne,0);
       var valide = getValidation(numeroLigne,0);
@@ -271,9 +270,6 @@ class _RowIndicateurState extends State<RowIndicateur> {
 
   Future<bool> checkAccesValidation() async {
     final access = profilPilotageController.accesPilotageModel.value;
-    // if (access.estBloque == false ) {
-    //   return false;
-    // }
     if (access.estAdmin == true ) {
       return true;
     }

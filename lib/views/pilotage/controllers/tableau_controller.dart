@@ -77,7 +77,6 @@ class TableauBordController extends GetxController {
     return indicateursList.length;
   }
 
-
   void filtreListApparente() {
     if ( dropDownController.filtreProcessus.isEmpty ) {
       indicateursListApparente.value = indicateursList;
@@ -120,20 +119,16 @@ class TableauBordController extends GetxController {
     }
   }
 
-  Future<Map<String, dynamic>?> loadDataExport(String entite,int annee) async {
-    final result = await dataBaseController.getExportEntite(entite, annee);
-    return result;
-  }
-
   void initialisation(BuildContext context) async {
     allYearsList.value = TimeSystemController.years;
-    final currentEntite = entitePilotageController.currentEntite.value;
-
     isLoading.value = true;
     indicateursList.value = await dataBaseController.getAllIndicateur();
+    await initialisationDataIndicateur();
     indicateursListApparente.value = indicateursList;
-    dataIndicateur.value = await dataBaseController.getAllDataRowIndicateur("${currentEntite}", currentYear.value);
+    final idDataIndicateur = '${entitePilotageController.currentEntite.value}_${currentYear.value}';
+    dataIndicateur.value = await dataBaseController.getAllDataRowIndicateur(idDataIndicateur);
     if (dataIndicateur.value.entite != "" && dataIndicateur.value.annee !=0) {
+      dataBaseController.updateAPIDatabase(idDataIndicateur);
       statusIntialisation.value = true;
       isLoading.value = false;
     } else {
@@ -142,13 +137,61 @@ class TableauBordController extends GetxController {
     }
   }
 
+
+  Future resetTotal() async {
+    List listEntites = [
+      "comex","groupe-sifca","caoutchouc-naturel","sifca-holding","oleagineux","sucre",//6
+      "sucrivoire","sucrivoire-siege","sucrivoire-borotou-koro","sucrivoire-zuenoula",//4
+      "palmci","palmci-siege","palmci-blidouba","palmci-boubo","palmci-ehania","palmci-gbapet","palmci-iboke","palmci-irobo","palmci-neka","palmci-toumanguie",//9
+      "sania","mopp",//3
+      "saph","saph-siege","saph-bettie","saph-bongo","saph-loeth","saph-ph-cc","saph-rapides-grah","saph-toupah","saph-yacoli",//9
+      "grel","grel-tsibu","grel-apimenim",//3,
+      "siph","crc","renl" // 3
+    ];
+    var annnes = [2021,2022,2023,2024,2025,2026];
+
+    for (var entite in listEntites) {
+      for (var an in annnes ) {
+        final idDataIndicateur = '${entite}_${an}';
+        final List datasEntite = await supabase.from('DataIndicateur').select().eq('id',idDataIndicateur);
+        if ( datasEntite.isEmpty ) {
+          final List<List<num?>> initData = List.generate(280, (index) => [null,null,null,null,null,null,null,null,null,null,null,null,null]).toList();
+          await supabase.from('DataIndicateur').insert(
+            {'id': idDataIndicateur,
+              'annee': currentYear.value,
+              'entite':entitePilotageController.currentEntite.value,
+              "valeurs":initData,
+              "validations":initData
+            },
+          );
+          await dataBaseController.updateAPIDatabase(idDataIndicateur);
+        }
+      }
+    }
+  }
+
+  Future initialisationDataIndicateur() async {
+    final idDataIndicateur = '${entitePilotageController.currentEntite.value}_${currentYear.value}';
+    final List datasEntite = await supabase.from('DataIndicateur').select().eq('id',idDataIndicateur);
+    if ( datasEntite.isEmpty ) {
+      final List<List<num?>> initData = List.generate(280, (index) => [null,null,null,null,null,null,null,null,null,null,null,null,null]).toList();
+      await supabase.from('DataIndicateur').insert(
+        {'id': idDataIndicateur,
+          'annee': currentYear.value,
+          'entite':entitePilotageController.currentEntite.value,
+          "valeurs":initData,
+          "validations":initData
+        },
+      );
+    }
+  }
 
   void refreshData() async {
     allYearsList.value = TimeSystemController.years;
-    final currentEntite = entitePilotageController.currentEntite.value;
     isLoading.value = false;
-    indicateursList.value = await dataBaseController.getAllIndicateur();
-    dataIndicateur.value = await dataBaseController.getAllDataRowIndicateur("${currentEntite}", currentYear.value);
+    //indicateursList.value = await dataBaseController.getAllIndicateur();
+    final idDataIndicateur = '${entitePilotageController.currentEntite.value}_${currentYear.value}';
+    dataIndicateur.value = await dataBaseController.getAllDataRowIndicateur(idDataIndicateur);
     if (dataIndicateur.value.entite != "" && dataIndicateur.value.annee !=0) {
       statusIntialisation.value = true;
       isLoading.value = false;
@@ -158,9 +201,9 @@ class TableauBordController extends GetxController {
     }
   }
 
-  void updateDataIndicateur() async {
-    final currentEntite = entitePilotageController.currentEntite.value;
-    dataIndicateur.value = await dataBaseController.getAllDataRowIndicateur("${currentEntite}", currentYear.value);
+  Future updateDataIndicateur() async {
+    final idDataIndicateur = '${entitePilotageController.currentEntite.value}_${currentYear.value}';
+    dataIndicateur.value = await dataBaseController.getAllDataRowIndicateur(idDataIndicateur);
   }
 
   Future<bool> renseignerIndicateurMois({required num valeur,required int numeroLigne,required int colonne,required String type,required String formule}) async {
@@ -195,30 +238,6 @@ class TableauBordController extends GetxController {
     }
   }
 
-  Future<bool> createDataIndicateur(String idEntite, List<IndicateurModel> listIndicateurModel, BuildContext context) async {
-    final annees = [2023];
-    for (int an in annees) {
-      var dataList = [];
-      for (IndicateurModel indic in listIndicateurModel) {
-        var row = {
-          "_id": "${idEntite}_${an}_${indic.reference}",
-          "entite": "${idEntite}",
-          "annee": an,
-          "numero_indicateur": indic.numero,
-          "reference_indicateur": "${indic.reference}"
-        };
-        dataList.add(row);
-        break;
-      }
-      await supabase.from('DataIndicateur').insert(dataList);
-    }
-    ;
-
-    final location = GoRouter.of(context).location;
-    context.go("/reload-page", extra: "${location}");
-    return true;
-  }
-
   Future<bool> validerIndicateurMois({required bool valide,required int numeroLigne,required int colonne}) async {
     try {
       final currentEntite = entitePilotageController.currentEntite.value;
@@ -247,6 +266,11 @@ class TableauBordController extends GetxController {
     } catch (e) {
       return false;
     }
+  }
+
+  Future<bool> consolidation(int annee) async {
+    final result = await dataBaseController.consolidation(annee);
+    return result;
   }
 
   void triggerUpdateDataRow() async {

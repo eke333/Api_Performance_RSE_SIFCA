@@ -88,7 +88,6 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Echec", message, Colors.red));
       }
     } on Exception catch (e) {
-      print(e.toString());
       const message = "Vos identifiants sont incorrects";
       await Future.delayed(const Duration(milliseconds: 15));
       setState(() {
@@ -103,11 +102,13 @@ class _LoginPageState extends State<LoginPage> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
 
+
     supabase.auth.onAuthStateChange.listen((data) {
       final AuthChangeEvent event = data.event;
       setState(() {
         session = event.name;
       });
+      print(event.name);
       if (session == "passwordRecovery") {
         context.go("/account/change-password",extra:"passowrdRecovery");
       }
@@ -255,8 +256,7 @@ class _LoginPageState extends State<LoginPage> {
                                           controller: _passwordController,
                                           validator: (value) {
                                             if (value == null ||
-                                                value.isEmpty ||
-                                                !regex.hasMatch(value)) {
+                                                value.isEmpty || value.length < 8) {
                                               return 'Le mot de passe doit avoir au moins de 8 caractères.';
                                             }
                                             return null;

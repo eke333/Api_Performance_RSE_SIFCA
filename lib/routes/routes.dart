@@ -187,6 +187,14 @@ class RouteClass {
       if (state.fullPath!=null && state.fullPath =="/account/forgot-password"){
         return null;
       }
+      supabase.auth.onAuthStateChange.listen((data) {
+        final AuthChangeEvent event = data.event;
+        var session = event.name;
+        print(event.name);
+        if (session == "passwordRecovery") {
+          context.go("/account/change-password",extra:"passowrdRecovery");
+        }
+      });
 
       const storage = FlutterSecureStorage();
       String? loggedPref = await storage.read(key: 'logged');
@@ -208,6 +216,7 @@ class RouteClass {
       if (loggedPref == "true" && email!=null && isInitTime == "true" && GetUtils.isEmail(email) && sessionVerification ==true) {
         return null;
       }
+      await supabase.auth.signOut();
       return "/account/login";
     },
   );

@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:perf_rse/helper/helper_methods.dart';
 import 'package:perf_rse/models/pilotage/acces_pilotage_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,6 +23,18 @@ class _ContributeurScreenState extends State<ContributeurScreen> {
   final supabase = Supabase.instance.client;
   bool isLoading = false;
 
+  List<String> entitesName = [];
+  List<String> entitesId = [];
+  List<String> filiales = [];
+
+  void loadEntite () async {
+    final List response  = await supabase.from("Entites").select();
+    for (var data in response ) {
+      entitesName.add(data["nom_entite"]);
+      entitesId.add(data["id_entite"]);
+      filiales.add(data["filiale"]);
+    }
+  }
 
   Future<List<ContributeurModel>> getListContributeurs() async{
     setState(() {
@@ -61,8 +75,10 @@ class _ContributeurScreenState extends State<ContributeurScreen> {
 
   @override
   void initState() {
-    super.initState();
     refreshData();
+    loadEntite ();
+    super.initState();
+
   }
 
   SfDataGridTheme  _buildDataGridForWeb() {
@@ -212,46 +228,25 @@ class _ContributeurScreenState extends State<ContributeurScreen> {
             ),
           ),
         ),
-        const SizedBox(width: 10,),
-        InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onHover: (value){},
-          onTap: (){},
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10)
-            ),
-            padding: const EdgeInsets.all(8),
-            child: const Row(
-              children: [
-                Icon(Icons.filter_alt_rounded,size: 25,color: Colors.green,),
-                SizedBox(width: 5,),
-                Text("Filtrer")
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 10,),
-        InkWell(
-          borderRadius: BorderRadius.circular(10),
-          onHover: (value){},
-          onTap: (){},
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10)
-            ),
-            padding: const EdgeInsets.all(8),
-            child: const Row(
-              children: [
-                Icon(Icons.sort,size: 25,color: Colors.green,),
-                SizedBox(width: 5,),
-                Text("Trier")
-              ],
-            ),
-          ),
-        ),
         Expanded(child: Container()),
-        ElevatedButton(onPressed: (){},
+        ElevatedButton(onPressed: (){
+          if (entitesName.isNotEmpty) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Ajouter un contributeur",style: TextStyle(color:Colors.blue),),
+                  contentPadding: const EdgeInsets.all(30),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  titlePadding: const EdgeInsets.only(top: 20,right: 20,left: 20),
+                  titleTextStyle: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),
+                  content: AjoutContributeur(entitesName: entitesName, entitesId: entitesId, filiales: filiales,),
+                );
+              },
+            );
+          }
+
+        },
         child : const Row(
           children: [
             Icon(Icons.add),
@@ -351,9 +346,7 @@ class ContributeurDataGridSource extends DataGridSource {
     return Container();
   }
 
-
 }
-
 
 class ContributeurModel {
 
@@ -392,3 +385,289 @@ class ContributeurModel {
   };
 
 }
+
+class AjoutContributeur extends StatefulWidget {
+  final List<String> entitesName;
+  final List<String> entitesId;
+  final List<String> filiales;
+  const AjoutContributeur({super.key, required this.entitesName, required this.entitesId, required this.filiales});
+
+  @override
+  State<AjoutContributeur> createState() => _AjoutContributeurState();
+}
+
+class _AjoutContributeurState extends State<AjoutContributeur> {
+
+  final supabase = Supabase.instance.client;
+
+  bool isSubmetted = false;
+
+
+  List<DropdownMenuItem<String>> _dropDownMenuItems = [];
+
+  static const listTitres = ["M.","Mme","Mlle"];
+  static const listAcces = ["Spectateur","Editeur","Validateur","Admin"];
+
+  Map accesToDoc = {
+    "Spectateur": "est_spectateur",
+    "Editeur": "est_editeur",
+    "Validateur":"est_validateur",
+    "Admin":"est_admin"
+  };
+
+  String? entiteName;
+  String? titre;
+  String? acces;
+
+  void initialisation () {
+    final dropDown = widget.entitesName.map((String value) => DropdownMenuItem<String>(
+      value: value,
+      child: Text(value),),
+    ).toList();
+    setState(() {
+      _dropDownMenuItems = dropDown;
+    });
+  }
+
+  final _formKey = GlobalKey<FormState>();
+
+
+  final List<DropdownMenuItem<String>> _dropDownMenuAcces = listAcces.map((String value) => DropdownMenuItem<String>(
+    value: value,
+    child: Text(value),
+  ),
+  ).toList();
+
+  final List<DropdownMenuItem<String>> _dropDownMenuTitre = listTitres.map((String value) => DropdownMenuItem<String>(
+    value: value,
+    child: Text(value),
+  ),
+  ).toList();
+
+  final TextEditingController emailEditingController = TextEditingController();
+  final TextEditingController nomEditingController = TextEditingController();
+  final TextEditingController prenomEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    initialisation();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 500,
+      height: 500,
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 70,
+                child: TextFormField(
+                  controller: emailEditingController,
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty || !GetUtils.isEmail(value)) {
+                      return '...';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: "Email",
+                    labelText: "Email",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10,),
+              Container(
+                height: 70,
+                child: TextFormField(
+                  controller: nomEditingController,
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty || value.length < 3) {
+                      return '...';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: "Nom",
+                    labelText: "Nom",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10,),
+              Container(
+                height: 70,
+                child: TextFormField(
+                  controller: prenomEditingController,
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value == null || value.isEmpty || value.length < 3) {
+                      return '...';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: "Prénom(s)",
+                    labelText: "Prénom(s)",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10,),
+              ListTile(
+                title: const Text("M./Mme/Mlle"),
+                trailing: DropdownButton(
+                  menuMaxHeight: 400,
+                  value: titre,
+                  hint: const Text('Titre'),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() => titre = newValue);
+                    }
+                  },
+                  items: _dropDownMenuTitre,
+                ),
+              ),
+              ListTile(
+                title: const Text("Espace pilotage"),
+                trailing: DropdownButton(
+                  menuMaxHeight: 400,
+                  value: entiteName,
+                  hint: const Text('Espace'),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() => entiteName = newValue);
+                    }
+                  },
+                  items: _dropDownMenuItems,
+                ),
+              ),
+              ListTile(
+                title: const Text("Le type d'accès"),
+                trailing: DropdownButton(
+                  menuMaxHeight: 400,
+                  value: acces,
+                  hint: const Text('Choose'),
+                  onChanged: (String? newValue) {
+                    if (newValue != null) {
+                      setState(() => acces = newValue);
+                    }
+                  },
+                  items: _dropDownMenuAcces,
+                ),
+              ),
+              SizedBox(height: 10,),
+              Text("Renseigner bien tous les champs avant de soumettre ",style: TextStyle(fontStyle: FontStyle.italic),),
+              SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    child: const Text('Annuler'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  Container(
+                    child: isSubmetted ?  CircularProgressIndicator() : null ,
+                  ),
+                  ElevatedButton(
+                      onPressed: isSubmetted ? null : () async {
+                        if (_formKey.currentState!.validate() && titre!= null  && entiteName != null && acces != null  ) {
+                          setState(() {
+                            isSubmetted = true ;
+                          });
+
+                          final index = widget.entitesName.indexOf(entiteName!);
+                          final filiale = widget.filiales[index];
+                          final idEntite = widget.entitesId[index];
+
+                          final userMap = {
+                            "email":emailEditingController.text,
+                            "nom":nomEditingController.text,
+                            "prenom":prenomEditingController.text,
+                            "acces_pilotage":emailEditingController.text,
+                            "entreprise":filiale,
+                            "est_bloque":false,
+                            "titre":titre,
+                          };
+
+                          final userAcces = {
+                            "email":emailEditingController.text,
+                            "entite": idEntite,
+                            "nom_entite": entiteName,
+                            "est_bloque":false,
+                            "est_spectateur":false,
+                            "est_editeur":false,
+                            "est_validateur":false,
+                            "restrictions":[],
+                            "est_admin":false,
+                          };
+
+                          userAcces[accesToDoc[acces]] = true;
+
+                          try {
+                            final res1  = await supabase.from('Users').insert(userMap);
+
+                            final res2 = await supabase.from('AccesPilotage').insert(userAcces);
+
+                            String pwd = generatePassword();
+                            final AuthResponse res3 = await supabase.auth.signUp(
+                                email: emailEditingController.text,
+                                password: pwd,
+                                data: {"password":pwd}
+                            );
+
+                          } catch (e) {
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(duration: Duration(seconds: 10),backgroundColor: Colors.red,content: Text(e.toString(),style: TextStyle(fontSize: 16),),),
+                            );
+                          }
+
+                          setState(() {
+                            isSubmetted = false ;
+                          });
+
+
+                          Navigator.of(context).pop();
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                             SnackBar(backgroundColor: Colors.green,content: Text('Le compte ${emailEditingController.text} a été crée .',style: TextStyle(fontSize: 16),),),
+                          );
+                        }
+                      },
+                      child: const Text('Soumettre')
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String generatePassword() {
+    const String validChars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#';
+
+    Random random = Random();
+    String password = '';
+
+    for (int i = 0; i < 10; i++) {
+      int randomIndex = random.nextInt(validChars.length);
+      password += validChars[randomIndex];
+    }
+
+    return password;
+  }
+}
+

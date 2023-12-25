@@ -45,9 +45,9 @@ class ExportDataController  {
   }
 
 
-  List<List<String>> getRows(List<dynamic> datas) {
+  List<List<String>> getRows(List<dynamic> datas,dynamic annee) {
 
-    List<String> initialRow = ['#',"Référence",'Indicateurs', 'Unité', 'Réalisé 2023'];
+    List<String> initialRow = ['#',"Référence",'Indicateurs', 'Unité', 'Réalisé ${annee}'];
     final List<List<String>> result = [initialRow];
 
 
@@ -151,21 +151,21 @@ class ExportDataController  {
             pw.SizedBox(height: 10),
             pw.TableHelper.fromTextArray(
               columnWidths: {
-                0: pw.FixedColumnWidth(40),
+                0: pw.FixedColumnWidth(50),
                 1: pw.FixedColumnWidth(100),
-                3: pw.FixedColumnWidth(100),
+                3: pw.FixedColumnWidth(85),
                 4: pw.FixedColumnWidth(140),
               },
               context: context,
               border: pw.TableBorder.all(),
               headerStyle: pw.TextStyle(fontSize: 10,fontWeight: pw.FontWeight.bold, color: PdfColors.white,),
               cellStyle: pw.TextStyle(fontSize: 10),
-              oddRowDecoration: pw.BoxDecoration(color: PdfColor.fromInt(0xFFE5E5E5).),
+              oddRowDecoration: pw.BoxDecoration(color: PdfColor.fromInt(0xFFE5E5E5)),
               headerDecoration: pw.BoxDecoration(color: getColor(mapData["color"])),
               rowDecoration: const pw.BoxDecoration(
                 border: pw.Border(bottom: pw.BorderSide(color: PdfColors.grey, width: .5)),
               ),
-              data: getRows(allData),
+              data: getRows(allData,mapData["annee"]),
             ),
 
           ];

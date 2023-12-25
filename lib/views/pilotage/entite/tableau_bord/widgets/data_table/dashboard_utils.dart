@@ -137,10 +137,11 @@ class _ContentEditionState extends State<ContentEdition> {
                     );
 
                     if (result==true){
-                        tableauBordController.updateDataIndicateur();
-                        await Future.delayed(const Duration(seconds: 2));
+                        await tableauBordController.updateDataIndicateur();
+                        await Future.delayed(const Duration(seconds: 1));
                         var message = "La donnée a été modifiée avec succès.";
                         ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Succès",message,Colors.green));
+                        tableauBordController.consolidation(tableauBordController.currentYear.value);
                     }else{
                         var message = "La donnée n'a pas été mise à jour.";
                         ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Echec",message,Colors.red));

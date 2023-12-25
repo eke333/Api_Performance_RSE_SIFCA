@@ -17,14 +17,32 @@ class DataBaseController {
     return indicateurs;
   }
 
-  Future<DataIndicateurRowModel> getAllDataRowIndicateur(String entite,int annee) async{
+  Future<DataIndicateurRowModel> getAllDataRowIndicateur(String idDataIndicateur) async{
+
+    try {
+      final List<dynamic> datas = await supabase.from('DataIndicateur').select().eq('id',idDataIndicateur);
+
+      if (datas.isEmpty) {
+        return DataIndicateurRowModel.init();
+      }
+
+      final data = datas[0];
+      final result = DataIndicateurRowModel(entite: data["entite"], annee: data["annee"], valeurs: data["valeurs"], validations: data["validations"]);
+      return result;
+
+    } catch (e) {
+      return DataIndicateurRowModel.init();
+    }
+
+  }
+
+  Future<bool> updateAPIDatabase(String id) async{
 
     final Map<String, dynamic> data = {
-      "annee": annee,
-      "entite": entite
+      "id": id
     };
 
-    const String apiUrl = "${DataBaseController.baseUrl}/data-entite-indicateur/get";
+    const String apiUrl = "${baseUrl}/data-entite-indicateur/update-data-from-supabase";
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -35,11 +53,34 @@ class DataBaseController {
     );
 
     if (response.statusCode == 200) {
-      final jsonData = jsonDecode(response.body);
-      final dataModel = DataIndicateurRowModel.fromJson(jsonData);
-      return dataModel;
+      return true;
     } else {
-     return DataIndicateurRowModel.init();
+      return false;
+    }
+
+  }
+
+
+  Future<bool> consolidation(int annee) async{
+
+    final Map<String, dynamic> data = {
+      "annee": annee
+    };
+
+    const String apiUrl = "${baseUrl}/data-entite-indicateur/consolidation";
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:  jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
 
   }
@@ -49,7 +90,6 @@ class DataBaseController {
     final Map<String, dynamic> data = {
       "annee": annee,
       "entiteId": entite,
-      "enjeux":["all"]
     };
 
     const String apiUrl = "${baseUrl}/data-entite-indicateur/export-all-data";
