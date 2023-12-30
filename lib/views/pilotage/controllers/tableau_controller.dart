@@ -273,6 +273,14 @@ class TableauBordController extends GetxController {
     return result;
   }
 
+
+  Future<bool> updateSuiviDate(int annee) async {
+    final currentEntite = entitePilotageController.currentEntite.value;
+    await dataBaseController.updateSuiviDataEntite(currentEntite,annee);
+    return true;
+  }
+
+
   void triggerUpdateDataRow() async {
     while (true) {
       await Future.delayed(const Duration(seconds: 120));

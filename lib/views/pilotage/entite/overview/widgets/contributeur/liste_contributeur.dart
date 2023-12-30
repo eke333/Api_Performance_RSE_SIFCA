@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../../constants/constant_double.dart';
 import '../../../../../../helper/responsive.dart';
+import '../../../../../../models/pilotage/contributeur_model.dart';
 import '../../../../../../widgets/custom_text.dart';
-import 'contributeur_model.dart';
+import '../../../../controllers/overview_pilotage_controller.dart';
 
 class ListeContributeur extends StatefulWidget {
   const ListeContributeur({
@@ -16,25 +18,16 @@ class ListeContributeur extends StatefulWidget {
 
 class _ListeContributeurState extends State<ListeContributeur> {
 
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Accès refusé'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                const Text("Vous n'avez pas accès à cet espace."),
-                const SizedBox(height: 20,),
-                Image.asset("assets/images/forbidden.png",width: 50,height: 50,)
-              ],
-            ),
-          ),
-        );
-      },
-    );
+  final OverviewPilotageController overviewPilotageController = Get.find();
+
+  void loading() async {
+    await overviewPilotageController.getAllUserEntite();
+  }
+
+  @override
+  void initState() {
+    loading();
+    super.initState();
   }
 
   @override
@@ -44,89 +37,115 @@ class _ListeContributeurState extends State<ListeContributeur> {
       shape : RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      child: Container(
-        padding: const EdgeInsets.all(defaultPadding),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const CustomText(
-                  text: "Liste des contributeurs",
-                  weight: FontWeight.bold,
-                ),
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                      vertical:
-                      defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                    ),
+      child: Obx(() {
+        final List<ContributeurModel> contributeurs = overviewPilotageController.contributeurs;
+        return Container(
+          padding: const EdgeInsets.all(defaultPadding),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
+                    text: "Liste des contributeurs",
+                    weight: FontWeight.bold,
                   ),
-                  onPressed: () {
-                    context.go("/pilotage/espace/sucrivoire-siege/admin",extra: "Contributeurs");
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text("Ajouter"),
-                )
-              ],
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: DataTable(
-                  columnSpacing: 12,
-                  horizontalMargin: 12,
-                  columns: const [
-                    DataColumn(
-                      label: Text("Nom"),
+                  ElevatedButton.icon(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: defaultPadding * 1.5,
+                        vertical:
+                        defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
+                      ),
                     ),
-                    DataColumn(
-                      label: Text("Filiale"),
-                    ),
-                    DataColumn(
-                      label: Text("Entité"),
-                    ),
-                    DataColumn(
-                      label: Text("Accès"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    demoContributeurs.length, (index) => contributeursDataRow(demoContributeurs[index]),
+                    onPressed: () {
+                      context.go("/pilotage/espace/sucrivoire-siege/admin",extra: "Contributeurs");
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text("Ajouter"),
                   )
+                ],
               ),
-            )
-          ],
-        ),
-      ),
+              contributeurs.isEmpty ? Container(
+                width: double.infinity,
+                height: 270,
+                child: Center(child: Container(width: 50,height: 50,
+                child: CircularProgressIndicator(),)),
+              ) :
+              SizedBox(
+                width: double.infinity,
+                height : 400,
+                child:  DataTable(
+                    columnSpacing: 12,
+                    horizontalMargin: 12,
+                    columns: const [
+                      DataColumn(
+                        label: Text("Nom"),
+                      ),
+                      DataColumn(
+                        label: Text("Filiale"),
+                      ),
+                      DataColumn(
+                        label: Text("Entité"),
+                      ),
+                      DataColumn(
+                        label: Text("Accès"),
+                      ),
+                    ],
+                    rows: List.generate(
+                      contributeurs.length, (index) => contributeursDataRow(contributeurs[index],colors[index%8]),
+                    )
+                ),
+              )
+            ],
+          ),
+        );
+      }),
     );
   }
 
-  DataRow contributeursDataRow(ContributeurModel fileInfo) {
+  List<Color> colors = [
+    Colors.blue,
+    Colors.green,
+    Colors.red,
+    Colors.yellow,
+    Colors.orange,
+    Colors.amber,
+    Colors.brown,
+    Colors.deepPurple
+  ];
+
+  DataRow contributeursDataRow(ContributeurModel fileInfo,Color color) {
     return DataRow(
       cells: [
         DataCell(
           Row(
             children: [
-              Image.asset(
-                fileInfo.photo_url!,
+              Container(
                 height: 30,
                 width: 30,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color,
+                ),
+                child: Center(child: Text("${fileInfo.prenom[0].toUpperCase()}${fileInfo.nom[0].toUpperCase()}",
+                style: const TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: Text(fileInfo.name!),
+                child: Text("${fileInfo.prenom} ${fileInfo.nom}") ,
               ),
             ],
           ),
         ),
-        DataCell(Text(fileInfo.entite!)),
-        DataCell(Text(fileInfo.entite!)),
-        DataCell(Text(fileInfo.access!)),
+        DataCell(Text(fileInfo.filiale)),
+        DataCell(Text(fileInfo.entite)),
+        DataCell(Text(fileInfo.access)),
       ],
     );
   }

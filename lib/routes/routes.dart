@@ -190,7 +190,6 @@ class RouteClass {
       supabase.auth.onAuthStateChange.listen((data) {
         final AuthChangeEvent event = data.event;
         var session = event.name;
-        print(event.name);
         if (session == "passwordRecovery") {
           context.go("/account/change-password",extra:"passowrdRecovery");
         }

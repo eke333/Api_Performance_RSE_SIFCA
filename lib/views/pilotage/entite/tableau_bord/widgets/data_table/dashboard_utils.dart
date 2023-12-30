@@ -142,6 +142,7 @@ class _ContentEditionState extends State<ContentEdition> {
                         var message = "La donnée a été modifiée avec succès.";
                         ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Succès",message,Colors.green));
                         tableauBordController.consolidation(tableauBordController.currentYear.value);
+                        tableauBordController.updateSuiviDate(tableauBordController.currentYear.value);
                     }else{
                         var message = "La donnée n'a pas été mise à jour.";
                         ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Echec",message,Colors.red));

@@ -9,7 +9,7 @@ import '../models/pilotage/acces_pilotage_model.dart';
 class DataBaseController {
   final supabase = Supabase.instance.client;
 
-  static const baseUrl = "https://test-api-rse.onrender.com";
+  static const baseUrl = "http://127.0.0.1:4444";//"https://test-api-rse.onrender.com" ;
 
   Future<List<IndicateurModel>> getAllIndicateur() async{
     final List<dynamic> docs = await supabase.from('Indicateurs').select().order('numero', ascending: true);
@@ -60,6 +60,31 @@ class DataBaseController {
 
   }
 
+
+  Future<bool> updateSuiviDataEntite(String entite,int annee) async{
+
+    final Map<String, dynamic> data = {
+      "entite": entite,
+      "annee": annee,
+    };
+
+    const String apiUrl = "${baseUrl}/data-entite-suivi";
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:  jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
 
   Future<bool> consolidation(int annee) async{
 

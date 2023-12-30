@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'dart:math' as math;
 import 'package:http/http.dart' as http;
 
+import '../models/pilotage/acces_pilotage_model.dart';
+
 const storage = FlutterSecureStorage();
 
 bool verifyEmail(String email){
@@ -14,6 +16,23 @@ bool verifyEmail(String email){
     return true;
   }
   return false;
+}
+
+
+String getAccesTypeUtils(AccesPilotageModel accesPilotageModel) {
+  if (accesPilotageModel.estAdmin ?? false) {
+    return "Admin";
+  }
+  if (accesPilotageModel.estValidateur ?? false) {
+    return "Validateur";
+  }
+  if (accesPilotageModel.estEditeur ?? false) {
+    return "Editeur";
+  }
+  if (accesPilotageModel.estSpectateur ?? false) {
+    return "Spectateur";
+  }
+  return "";
 }
 
 String responsiveRule(int width){

@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import '../../../../../../constants/constant_double.dart';
 import '../../../../../../helper/responsive.dart';
 import '../../../../../../widgets/custom_text.dart';
-import '../strategy_info/pilier_model.dart';
-import '../strategy_info/pilier_info_card.dart';
+import '../../../../controllers/suivi_data_controller.dart';
+import '../../../overview/widgets/strategy_info/pilier_info_card.dart';
+import '../../../overview/widgets/strategy_info/pilier_model.dart';
 
-class SectionSuivi extends StatelessWidget {
-  const SectionSuivi({
+class SuiviAxe extends StatefulWidget {
+  const SuiviAxe({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<SuiviAxe> createState() => _SuiviAxeState();
+}
+
+class _SuiviAxeState extends State<SuiviAxe> {
+
+  final SuiviDataController suiviDataController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
     return Column(
       children: [
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CustomText(
-              text: "Les Axes Stratégiques",
+            Obx(() => CustomText(
+              text: "Les Axes Stratégiques , Année ${suiviDataController.annee.value}",
               weight: FontWeight.bold,
-            ),
+            ))
           ],
         ),
         const SizedBox(height: defaultPadding),
@@ -40,7 +51,7 @@ class SectionSuivi extends StatelessWidget {
   }
 }
 
-class PilierInfoCardGridView extends StatelessWidget {
+class PilierInfoCardGridView extends StatefulWidget {
   const PilierInfoCardGridView({
     Key? key,
     this.crossAxisCount = 4,
@@ -51,18 +62,26 @@ class PilierInfoCardGridView extends StatelessWidget {
   final double childAspectRatio;
 
   @override
+  State<PilierInfoCardGridView> createState() => _PilierInfoCardGridViewState();
+}
+
+class _PilierInfoCardGridViewState extends State<PilierInfoCardGridView> {
+
+  final SuiviDataController suiviDataController = Get.find();
+
+  @override
   Widget build(BuildContext context) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: demoPiliers.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
+        crossAxisCount: widget.crossAxisCount,
         crossAxisSpacing: defaultPadding,
         mainAxisSpacing: defaultPadding,
-        childAspectRatio: childAspectRatio,
+        childAspectRatio: widget.childAspectRatio,
       ),
-      itemBuilder: (context, index) => PilierInfoCard(info: demoPiliers[index], annee: DateTime.now().year,),
+      itemBuilder: (context, index) => Obx(() => PilierInfoCard(info: demoPiliers[index], annee: suiviDataController.annee.value,)),
     );
   }
 }

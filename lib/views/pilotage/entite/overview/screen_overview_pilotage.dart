@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../api/supabse_db.dart';
 import '../../../../helper/helper_methods.dart';
 import '../../../../widgets/privacy_widget.dart';
+import '../../controllers/entite_pilotage_controler.dart';
+import '../../controllers/overview_pilotage_controller.dart';
 import 'overview_pilotage.dart';
 
 class ScreenOverviewPilotage extends StatefulWidget {
@@ -12,11 +16,19 @@ class ScreenOverviewPilotage extends StatefulWidget {
 }
 
 class _ScreenOverviewPilotageState extends State<ScreenOverviewPilotage> {
+
   bool _isLoaded = false;
   late ScrollController _scrollController;
+  final DataBaseController apiClient =  DataBaseController();
+  final EntitePilotageController entitePilotageController = Get.find();
+
+  final overviewPilotageController = Get.put(OverviewPilotageController());
+
 
   void loadScreen() async {
-    await Future.delayed(const Duration(seconds: 2));
+    final annee = DateTime.now().year;
+    final entite = entitePilotageController.currentEntite.value;
+    apiClient.updateSuiviDataEntite(entite,annee);
     setState(() {
       _isLoaded = true;
     });
@@ -58,11 +70,16 @@ class _ScreenOverviewPilotageState extends State<ScreenOverviewPilotage> {
                   child: const Padding(
                     padding: EdgeInsets.only(right: 15),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         OverviewPilotage(),
-                        SizedBox(height: 20,),
-                        PrivacyWidget(),
-                        SizedBox(height: 20,),
+                        Column(
+                          children: [
+                            SizedBox(height: 20,),
+                            PrivacyWidget(),
+                            SizedBox(height: 20,),
+                          ],
+                        )
                       ],
                     ),
                   ),

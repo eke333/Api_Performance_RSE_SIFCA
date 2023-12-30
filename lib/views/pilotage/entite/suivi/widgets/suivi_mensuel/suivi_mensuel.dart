@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+
+import '../../../../controllers/entite_pilotage_controler.dart';
+import '../../../../controllers/suivi_data_controller.dart';
 
 class SuiviMensuel extends StatefulWidget {
   const SuiviMensuel({super.key});
@@ -58,37 +63,55 @@ class _SuiviMensuelChartState extends State<SuiviMensuelChart> {
   TooltipBehavior? _tooltipBehavior;
   bool _isLoaded = false ;
   bool isCardView = true ;
+  int numberTotal = 0;
+  String eniteName = "";
 
+  final supabase = Supabase.instance.client;
+  final EntitePilotageController entitePilotageController = Get.find();
+  final SuiviDataController suiviDataController = Get.find();
 
   void initialisation() async {
+
+    final entiteID = entitePilotageController.currentEntite.value;
+    final idSuivi = "${entiteID}_${suiviDataController.annee.value}";
+    final List suiviDocList = await supabase.from('SuiviData').select().eq("id_suivi",idSuivi);
+
+    final String _entite = suiviDocList.first["nom_entite"];
+    final int _number = suiviDocList.first["indicateur_total"];
+
+    setState(() {
+      eniteName = _entite;
+      numberTotal = _number;
+    });
+    final suiviDoc = suiviDocList.first["suivi_mensuel"];
     _columnWidth = 0.8;
     _columnSpacing = 0.2;
     _tooltipBehavior = TooltipBehavior(enable: true);
     chartData = <ChartSampleData>[
       ChartSampleData(
-          x: 'Jan.', y: 16, secondSeriesYValue: 8, thirdSeriesYValue: 13),
+          x: 'Jan.', y: _number.toDouble() - suiviDoc["1"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["1"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["1"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Fév.', y: 8, secondSeriesYValue: 10, thirdSeriesYValue: 7),
+          x: 'Fév.', y: _number.toDouble() - suiviDoc["2"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["2"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["2"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Mars', y: 12, secondSeriesYValue: 10, thirdSeriesYValue: 5),
+          x: 'Mars', y: _number.toDouble() - suiviDoc["3"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["3"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["3"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Avril', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14),
+          x: 'Avril', y: _number.toDouble() - suiviDoc["4"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["4"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["4"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Mai', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14),
+          x: 'Mai', y: _number.toDouble() - suiviDoc["5"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["5"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["5"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Juin', y: 16, secondSeriesYValue: 8, thirdSeriesYValue: 13),
+          x: 'Juin', y: _number.toDouble() - suiviDoc["6"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["6"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["6"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Jui.', y: 8, secondSeriesYValue: 10, thirdSeriesYValue: 7),
+          x: 'Jui.', y: _number.toDouble() - suiviDoc["7"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["7"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["7"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Août', y: 12, secondSeriesYValue: 10, thirdSeriesYValue: 5),
+          x: 'Août', y: _number.toDouble() - suiviDoc["8"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["8"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["8"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Sept.', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14),
+          x: 'Sept.', y: _number.toDouble() - suiviDoc["9"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["9"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["9"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Oct.', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14),
+          x: 'Oct.', y: _number.toDouble() - suiviDoc["10"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["10"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["10"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Nov.', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14),
+          x: 'Nov.', y: _number.toDouble() - suiviDoc["11"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["11"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["11"]["indicateur_valides"]),
       ChartSampleData(
-          x: 'Déc.', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14)
+          x: 'Déc.', y: _number.toDouble() - suiviDoc["12"]["indicateur_collectes"], secondSeriesYValue: suiviDoc["12"]["indicateur_collectes"], thirdSeriesYValue: suiviDoc["12"]["indicateur_valides"])
     ];
     await Future.delayed(const Duration(milliseconds: 2000));
     setState(() {
@@ -136,7 +159,7 @@ class _SuiviMensuelChartState extends State<SuiviMensuelChart> {
     return SfCartesianChart(
       plotAreaBorderWidth: 0,
       title: ChartTitle(
-          text: 'Suivi des données mensuelles 2023 : Sucrivoire Siège',
+          text: 'Suivi des données mensuelles ${suiviDataController.annee.value} : ${eniteName}',
           textStyle: const TextStyle(fontSize: 16,decoration: TextDecoration.underline)
       ),
       primaryXAxis: CategoryAxis(
@@ -145,9 +168,9 @@ class _SuiviMensuelChartState extends State<SuiviMensuelChart> {
       ),
       primaryYAxis: NumericAxis(
           title: AxisTitle(text: "Nombre d'occurrence"),
-          maximum: 20,
+          maximum: numberTotal.toDouble(),
           minimum: 0,
-          interval: 5,
+          interval: 40,
           axisLine: const AxisLine(width: 0),
           majorTickLines: const MajorTickLines(size: 0)),
       series: _getDefaultColumn(),

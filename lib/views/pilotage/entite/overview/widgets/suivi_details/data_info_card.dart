@@ -4,17 +4,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../../constants/constant_colors.dart';
 import '../../../../../../constants/constant_double.dart';
 
-class DataInfoCard extends StatelessWidget {
-  const DataInfoCard({
+class DataSuiviCard extends StatelessWidget {
+  const DataSuiviCard({
     Key? key,
     required this.title,
     required this.svgSrc,
-    required this.amountOfFiles,
-    required this.numOfFiles, required this.color,
+    required this.nombre,
+    required this.total, required this.color,
   }) : super(key: key);
 
-  final String title, svgSrc, amountOfFiles;
-  final int numOfFiles;
+  final String title, svgSrc, nombre;
+  final int total;
   final Color color;
 
   @override
@@ -48,7 +48,7 @@ class DataInfoCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 12),
                   ),
                   Text(
-                    "$numOfFiles indicateurs",
+                    "$total indicateurs",
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!
@@ -58,7 +58,7 @@ class DataInfoCard extends StatelessWidget {
               ),
             ),
           ),
-          Text(amountOfFiles)
+          Text(nombre)
         ],
       ),
     );

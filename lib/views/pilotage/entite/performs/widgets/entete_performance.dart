@@ -22,17 +22,6 @@ class _EntityWidgetWidgetState extends State<EntetePerformance> {
         const CustomText(text: "Filtre",size: 20,),
         const SizedBox(width: 5,),
         Container(height: 40,width: 1,color: Colors.grey,),
-        const SizedBox(width: 5,),
-        const CustomText(text: "Espace",size: 20,),
-        const SizedBox(width: 5,),
-        MenuDeroulant(
-          indication: "",
-          items: const ["Sucrivoire Siège","Sucrivoire Zuénoula","Sucrivoire Borotou-Koro"],
-          width: 200,
-          initValue: "Sucrivoire Siège",
-          onChanged: (value){
-          },
-        ),
         const SizedBox(width: 20,),
         const CustomText(text: "Année",size: 20,),
         const SizedBox(width: 5,),

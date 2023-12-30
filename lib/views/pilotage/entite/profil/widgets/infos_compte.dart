@@ -169,7 +169,7 @@ class _InfosCompteState extends State<InfosCompte> {
       return "Validateur";
     }
     if (accesPilotageModel.estEditeur ?? false) {
-      return "Collecteur";
+      return "Editeur";
     }
     if (accesPilotageModel.estSpectateur ?? false) {
       return "Spectateur";

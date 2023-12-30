@@ -8,6 +8,7 @@ import 'widgets/contributeur/liste_contributeur.dart';
 class OverviewPilotage extends StatelessWidget {
   const OverviewPilotage({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return const Row(
@@ -26,7 +27,7 @@ class OverviewPilotage extends StatelessWidget {
           children: [
             CustomText(text: "Progrès de collecte",weight: FontWeight.bold,),
             SizedBox(height: defaultPadding),
-            CollecteGlobale()
+            CollecteGlobaleEntites()
           ],
         ),),
         SizedBox(width: defaultPadding),

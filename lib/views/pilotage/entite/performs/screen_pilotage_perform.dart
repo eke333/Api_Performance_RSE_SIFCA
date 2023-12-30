@@ -43,13 +43,14 @@ class _ScreenPilotagePerformState extends State<ScreenPilotagePerform> {
             const SizedBox(height: 5,),
             const EntetePerformance(),
             const SizedBox(height: 5,),
-            _isLoaded ? const Expanded(
+            _isLoaded ? Expanded(
               child: Column(
                 children: [
-                  Expanded(child: PerformPilotage()),
-                  SizedBox(height: 10,),
-                  PrivacyWidget(),
-                  SizedBox(height: 20,),
+                  //Expanded(child: PerformPilotage()),
+                  Expanded(child: Container()),
+                  const SizedBox(height: 10,),
+                  const PrivacyWidget(),
+                  const SizedBox(height: 20,),
                 ],
               ),
             ) : Expanded(

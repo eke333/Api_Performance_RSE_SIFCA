@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../helper/responsive.dart';
-import '../overview/widgets/suivi_details/section_suivi.dart';
 import '../overview/widgets/suivi_details/suivi_details.dart';
+import 'widgets/axe_suivi/suivi_axe.dart';
 import 'widgets/suivi_mensuel/suivi_mensuel.dart';
 
 class MonitoringPilotage extends StatefulWidget {
@@ -41,7 +41,7 @@ class _MonitoringPilotageState extends State<MonitoringPilotage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SectionSuivi(),
+                      const SuiviAxe(),
                       const SizedBox(
                         height: 10,
                       ),

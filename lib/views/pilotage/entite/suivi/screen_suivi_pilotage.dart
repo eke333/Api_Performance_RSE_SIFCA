@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../api/supabse_db.dart';
 import '../../../../helper/helper_methods.dart';
 import '../../../../widgets/privacy_widget.dart';
+import '../../controllers/entite_pilotage_controler.dart';
+import '../../controllers/suivi_data_controller.dart';
 import 'monitoring_pilotage.dart';
 import 'widgets/entete_suivi/entete_suivi.dart';
 
@@ -13,14 +17,13 @@ class ScreenPilotageSuivi extends StatefulWidget {
 }
 
 class _ScreenPilotageSuiviState extends State<ScreenPilotageSuivi> {
-  bool _isLoaded = false;
 
+  final SuiviDataController suiviDataController = Get.put(SuiviDataController());
 
   void loadScreen() async {
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      _isLoaded = true;
-    });
+    suiviDataController.isLoading.value = true;
+    await Future.delayed(const Duration(seconds: 1));
+    suiviDataController.isLoading.value = false;
   }
 
   @override
@@ -32,46 +35,48 @@ class _ScreenPilotageSuiviState extends State<ScreenPilotageSuivi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 16, left: 10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text(
-            "Suivi des données",
-            style: TextStyle(
-                fontSize: 24,
-                color: Color(0xFF3C3D3F),
-                fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          const EnteteSuivi(),
-          _isLoaded ? Expanded(child: Column(
-            children: [
-              Expanded(
-                child: Theme(
-                  data: Theme.of(context).copyWith(scrollbarTheme: ScrollbarThemeData(
-                  trackColor:  MaterialStateProperty.all(Colors.black12),
-                  trackBorderColor: MaterialStateProperty.all(Colors.black38),
-                  thumbColor: MaterialStateProperty.all(const Color(0xFF80868B)),
-                  interactive: true,
-                  )),
-                  child: const MonitoringPilotage(),
-                ),
+      body: Obx((){
+        bool isLoading = suiviDataController.isLoading.value;
+        return Padding(
+          padding: const EdgeInsets.only(top: 16, left: 10),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text(
+              "Suivi des données",
+              style: TextStyle(
+                  fontSize: 24,
+                  color: Color(0xFF3C3D3F),
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            const EnteteSuivi(),
+            isLoading ? Expanded(
+              child: Column(
+                children: [
+                  Expanded(child: Center(child: loadingPageWidget(),)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const PrivacyWidget(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              const PrivacyWidget(),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
-          ))  :
-          Expanded(
-            child: Column(
+            ) : Expanded(child: Column(
               children: [
-                Expanded(child: Center(child: loadingPageWidget(),)),
+                Expanded(
+                  child: Theme(
+                    data: Theme.of(context).copyWith(scrollbarTheme: ScrollbarThemeData(
+                      trackColor:  MaterialStateProperty.all(Colors.black12),
+                      trackBorderColor: MaterialStateProperty.all(Colors.black38),
+                      thumbColor: MaterialStateProperty.all(const Color(0xFF80868B)),
+                      interactive: true,
+                    )),
+                    child: const MonitoringPilotage(),
+                  ),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -80,10 +85,10 @@ class _ScreenPilotageSuiviState extends State<ScreenPilotageSuivi> {
                   height: 20,
                 ),
               ],
-            ),
-          ),
-        ]),
-      ),
+            )) ,
+          ]),
+        );
+      }),
     );
   }
 }

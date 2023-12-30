@@ -39,7 +39,7 @@ class StrategyInfoCard extends StatelessWidget {
   }
 }
 
-class PilierInfoCardGridView extends StatelessWidget {
+class PilierInfoCardGridView extends StatefulWidget {
   const PilierInfoCardGridView({
     Key? key,
     this.crossAxisCount = 4,
@@ -50,18 +50,23 @@ class PilierInfoCardGridView extends StatelessWidget {
   final double childAspectRatio;
 
   @override
+  State<PilierInfoCardGridView> createState() => _PilierInfoCardGridViewState();
+}
+
+class _PilierInfoCardGridViewState extends State<PilierInfoCardGridView> {
+  @override
   Widget build(BuildContext context) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: demoPiliers.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
+        crossAxisCount: widget.crossAxisCount,
         crossAxisSpacing: defaultPadding,
         mainAxisSpacing: defaultPadding,
-        childAspectRatio: childAspectRatio,
+        childAspectRatio: widget.childAspectRatio,
       ),
-      itemBuilder: (context, index) => PilierInfoCard(info: demoPiliers[index]),
+      itemBuilder: (context, index) => PilierInfoCard(info: demoPiliers[index],annee: DateTime.now().year,),
     );
   }
 }

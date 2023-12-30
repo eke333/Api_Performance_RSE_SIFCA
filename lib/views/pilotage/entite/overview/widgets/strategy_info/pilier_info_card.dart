@@ -1,18 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../../constants/constant_colors.dart';
 import '../../../../../../constants/constant_double.dart';
+import '../../../../controllers/entite_pilotage_controler.dart';
 import 'pilier_model.dart';
 
 class PilierInfoCard extends StatefulWidget {
   final PilierInfoModel info;
-  const PilierInfoCard({super.key, required this.info});
+  final int annee;
+  const PilierInfoCard({super.key, required this.info, required this.annee});
 
   @override
   State<PilierInfoCard> createState() => _PilierInfoCardState();
 }
 
 class _PilierInfoCardState extends State<PilierInfoCard> {
+
+  bool isLoading = false;
   double isHovering = 3;
+  Map<String, dynamic> entiteSuivi = {};
+  num percentage = 0;
+
+  int status = 0;
+
+  final supabase = Supabase.instance.client;
+  final EntitePilotageController entitePilotageController = Get.find();
+
+  void loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final entiteID = entitePilotageController.currentEntite.value;
+      final idSuivi = "${entiteID}_${widget.annee}";
+      final List suiviDocList = await supabase.from('SuiviData').select().eq("id_suivi",idSuivi);
+      final axeId = widget.info.axeId;
+      final kEntiteSuivi = suiviDocList.first["suivi_axe"][axeId];
+      setState(() {
+        entiteSuivi = kEntiteSuivi;
+        num kPercentage = entiteSuivi["indicateur_collectes"] / entiteSuivi["indicateur_total"] ;
+        percentage = num.parse(kPercentage.toStringAsFixed(2));
+      });
+    } catch (e) {
+      setState(() {
+        status = -1;
+      });
+    }
+    setState(() {
+      isLoading = false;
+    });
+
+  }
+
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -40,7 +87,15 @@ class _PilierInfoCardState extends State<PilierInfoCard> {
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(15)),
           ),
-          child: Column(
+          child: isLoading ? Center(
+            child: Container(
+              width: 50,height: 50, child: CircularProgressIndicator(),
+            ),
+          ) : (status == -1 ) ? Center(
+            child: Container(
+              width: 50,height: 50, child: Text("Aucune Donnée"),
+            ),
+          ) : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -59,9 +114,9 @@ class _PilierInfoCardState extends State<PilierInfoCard> {
                       widget.info.svgSrc!,
                     ),
                   ),
-                  Text("${widget.info.percentage} %",style: TextStyle(
-                      color: widget.info.percentage! < 30 ?  Colors.red :
-                      widget.info.percentage! < 60 ? Colors.yellow : widget.info.percentage! < 75 ?
+                  Text("${percentage} %",style: TextStyle(
+                      color: 24 < 30 ?  Colors.red :
+                      20 < 60 ? Colors.yellow : percentage < 75 ?
                       Colors.green : Colors.blue,fontWeight: FontWeight.bold
                   ),)
                 ],
@@ -73,20 +128,20 @@ class _PilierInfoCardState extends State<PilierInfoCard> {
               ),
               ProgressLine(
                 color: widget.info.color,
-                percentage: widget.info.percentage,
+                percentage: percentage.toInt(),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "${widget.info.numOfFiles} indicateurs sur",
+                    "${entiteSuivi["indicateur_collectes"]} indicateur${ entiteSuivi["indicateur_collectes"] > 1 ? "s" : "" } sur",
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!
                         .copyWith(color: Colors.black87),
                   ),
                   Text(
-                    widget.info.totalStorage!,
+                    "${entiteSuivi["indicateur_total"]}",
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!

@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import '../../../../../../constants/constant_double.dart';
 
 class ChartOverview extends StatefulWidget {
+  final int nombreTotal;
+  final int numberVide;
+  final int numberCollecte;
   const ChartOverview({
-    Key? key,
+    Key? key, required this.nombreTotal, required this.numberVide, required this.numberCollecte,
   }) : super(key: key);
 
   @override
@@ -47,7 +50,7 @@ class _ChartOverviewState extends State<ChartOverview> {
               children: [
                 const SizedBox(height: defaultPadding),
                 Text(
-                  "150",
+                  "${widget.numberCollecte}",
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
@@ -55,7 +58,7 @@ class _ChartOverviewState extends State<ChartOverview> {
                       ),
                 ),
                 Text("(collectés et validés)",style: Theme.of(context).textTheme.bodySmall,),
-                Text("sur 450 indicateurs",style: Theme.of(context).textTheme.bodyMedium,)
+                Text("sur ${widget.nombreTotal} indicateurs",style: Theme.of(context).textTheme.bodyMedium,)
               ],
             ),
           ),
@@ -65,7 +68,7 @@ class _ChartOverviewState extends State<ChartOverview> {
   }
 
   List<PieChartSectionData> showingSections() {
-    return List.generate(3, (i) {
+    return List.generate(2, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 22.0 : 15.0;
       final radius = isTouched ? 40.0 : 30.0;
@@ -73,22 +76,9 @@ class _ChartOverviewState extends State<ChartOverview> {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: Colors.green,
-            value: 40,
-            title: '40',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            )
-          );
-        case 1:
-          return PieChartSectionData(
               color: Colors.amber,
-              value: 60,
-              title: '60',
+              value: widget.numberCollecte.toDouble(),
+              title: '${widget.numberCollecte}',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -97,11 +87,11 @@ class _ChartOverviewState extends State<ChartOverview> {
                 shadows: shadows,
               )
           );
-        case 2:
+        case 1:
           return PieChartSectionData(
               color: Colors.red,
-              value: 100,
-              title: '100',
+              value: widget.numberVide.toDouble(),
+              title: '${widget.numberVide}',
               radius: radius,
               titleStyle: TextStyle(
                 fontSize: fontSize,

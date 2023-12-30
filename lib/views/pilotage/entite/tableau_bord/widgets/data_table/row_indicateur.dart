@@ -402,10 +402,12 @@ class _RowIndicateurState extends State<RowIndicateur> {
                       }else {
                         _showMyDialog("Vous n'avez pas l'accès à validateur.");
                       }
+                      tableauBordController.updateSuiviDate(tableauBordController.currentYear.value);
                       await Future.delayed(const Duration(seconds: 1));
                       setState(() {
                         isValidatingMonth = false;
                       });
+
                     }
                 ),
               )
