@@ -19,8 +19,8 @@ class FiltreTableauBord extends StatefulWidget {
 }
 
 class _EntityWidgetWidgetState extends State<FiltreTableauBord> {
-
   bool isLoadingPrint = false;
+  bool isLoadingExcel = false;
   final ExportDataController exportDataController = ExportDataController();
   final EntitePilotageController entitePilotageController = Get.find();
   final TableauBordController tableauBordController = Get.find();
@@ -69,18 +69,23 @@ class _EntityWidgetWidgetState extends State<FiltreTableauBord> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
                 hoverColor: Colors.blue.withOpacity(0.2),
-                onTap: isLoadingPrint ? null : () async {
-                  setState(() {
-                    isLoadingPrint = true;
-                  });
-                  final result = await exportDataController.loadDataExport(entitePilotageController.currentEntite.value,tableauBordController.currentYear.value);
-                  if (result != null ) {
-                    await exportDataController.downloadPDF(result);
-                  }
-                  setState(() {
-                    isLoadingPrint = false;
-                  });
-                },
+                onTap: isLoadingPrint
+                    ? null
+                    : () async {
+                        setState(() {
+                          isLoadingPrint = true;
+                        });
+                        final result =
+                            await exportDataController.loadDataExport(
+                                entitePilotageController.currentEntite.value,
+                                tableauBordController.currentYear.value);
+                        if (result != null) {
+                          await exportDataController.downloadPDF(result);
+                        }
+                        setState(() {
+                          isLoadingPrint = false;
+                        });
+                      },
                 child: Container(
                   height: 40,
                   width: 120,
@@ -89,24 +94,84 @@ class _EntityWidgetWidgetState extends State<FiltreTableauBord> {
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: isLoadingPrint ?  Center(child: SizedBox(width: 25,height: 25,child: CircularProgressIndicator())) : const Row(
-                    children: [
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Icon(
-                        Icons.download_sharp,
-                        color: Colors.black,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text("Exporter"),
-                      SizedBox(
-                        width: 5,
-                      ),
-                    ],
+                  child: isLoadingPrint
+                      ? const Center(
+                          child: SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: CircularProgressIndicator()))
+                      : const Row(
+                          children: [
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.picture_as_pdf,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text("PDF"),
+                            SizedBox(
+                              width: 5,
+                            ),
+                          ],
+                        ),
+                ),
+              )),
+//exportation en excel
+          Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                hoverColor: Colors.blue.withOpacity(0.2),
+                onTap: isLoadingPrint
+                    ? null
+                    : () async {
+                        setState(() {
+                          isLoadingExcel = true;
+                        });
+                        final result =
+                            await exportDataController.loadDataExport(
+                                entitePilotageController.currentEntite.value,
+                                tableauBordController.currentYear.value);
+                        if (result != null) {
+                          await exportDataController.downloadExcel(result);
+                        }
+                        setState(() {
+                          isLoadingExcel = false;
+                        });
+                      },
+                child: Container(
+                  height: 40,
+                  width: 120,
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(20),
                   ),
+                  child: isLoadingExcel
+                      ? const Center(
+                          child: SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: CircularProgressIndicator()))
+                      : Row(
+                          children: [
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Image.asset('assets/icons/excel.png'),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            const Text("Excel"),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                          ],
+                        ),
                 ),
               )),
           Obx(() {
@@ -145,6 +210,9 @@ class _EntityWidgetWidgetState extends State<FiltreTableauBord> {
     if (acces.estEditeur == true) {
       return "Editeur";
     }
+    if (acces.estSpectateur == true) {
+      return "Spectateur";
+    }
     return "";
   }
 }
@@ -158,6 +226,7 @@ class YearFiltreWidget extends StatefulWidget {
 
 class _YearFiltreWidgetState extends State<YearFiltreWidget> {
   static const availbleYearList = <String>[
+    '2024',
     '2023',
     '2022',
     '2021',
@@ -230,7 +299,8 @@ class _YearFiltreWidgetState extends State<YearFiltreWidget> {
                   onSelected: (String newValue) {
                     setState(() {
                       _btn3SelectedYear = newValue;
-                      tableauBordController.changeYear(int.parse(_btn3SelectedYear));
+                      tableauBordController
+                          .changeYear(int.parse(_btn3SelectedYear));
                     });
                     tableauBordController.initialisation(context);
                   },
@@ -428,7 +498,7 @@ class _AxeFiltreWidgetState extends State<FiltreWidget> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: const Color(0xFFE5E5E7))),
-        child: Obx((){
+        child: Obx(() {
           final filtreProcessus = dropDownController.filtreProcessus;
           return Row(
             children: [
@@ -441,15 +511,18 @@ class _AxeFiltreWidgetState extends State<FiltreWidget> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if ( filtreProcessus.isNotEmpty ) Container(
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green
+              if (filtreProcessus.isNotEmpty)
+                Container(
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.green),
+                  width: 25,
+                  height: 25,
+                  child: Center(
+                      child: Text(
+                    "${filtreProcessus.length}",
+                    style: const TextStyle(color: Colors.white),
+                  )),
                 ),
-                width: 25,
-                height: 25,
-                child: Center(child: Text("${filtreProcessus.length}",style: const TextStyle(color: Colors.white),)),
-              ),
               const SizedBox(
                 width: 5,
               ),
@@ -467,8 +540,11 @@ class _AxeFiltreWidgetState extends State<FiltreWidget> {
                   },
                   padding: EdgeInsets.zero,
                   splashRadius: 15,
-                  icon: filtreProcessus.isEmpty ?  const Icon(Icons.filter_alt_off_rounded, color:  Colors.grey) :
-                  const Icon(Icons.filter_alt_outlined, color:  Colors.amber) )
+                  icon: filtreProcessus.isEmpty
+                      ? const Icon(Icons.filter_alt_off_rounded,
+                          color: Colors.grey)
+                      : const Icon(Icons.filter_alt_outlined,
+                          color: Colors.amber))
             ],
           );
         }),
@@ -483,7 +559,8 @@ class _AxeFiltreWidgetState extends State<FiltreWidget> {
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Expanded(child: Container(
+          Expanded(
+              child: Container(
             child: const Row(
               children: [
                 Expanded(
@@ -518,14 +595,16 @@ class _AxeFiltreWidgetState extends State<FiltreWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               OutlinedButton(
-                  style: OutlinedButton.styleFrom(foregroundColor: Colors.black),
+                  style:
+                      OutlinedButton.styleFrom(foregroundColor: Colors.black),
                   onPressed: () {
                     dropDownController.effacerFiltreProcessus();
                     Navigator.of(context).pop();
                   },
                   child: const Text("Effacer")),
               OutlinedButton(
-                  style: OutlinedButton.styleFrom(foregroundColor: Colors.green),
+                  style:
+                      OutlinedButton.styleFrom(foregroundColor: Colors.green),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -547,12 +626,11 @@ class CheckBoxWidget extends StatefulWidget {
 }
 
 class _CheckBoxWidgetState extends State<CheckBoxWidget> {
-
   final DropDownController dropDownController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return Obx((){
+    return Obx(() {
       final filtreProcessus = dropDownController.filtreProcessus;
       return Container(
         height: 40,
@@ -561,17 +639,23 @@ class _CheckBoxWidgetState extends State<CheckBoxWidget> {
         child: Row(
           children: [
             Checkbox(
-              checkColor: Colors.green, value: filtreProcessus.contains(widget.processus),
+                checkColor: Colors.green,
+                value: filtreProcessus.contains(widget.processus),
                 onChanged: (value) {
-                dropDownController.addRemoveProcessus(widget.processus,value!);
-              } ),
-            const SizedBox(width: 10,),
-            Flexible(child: CustomText(text: "${widget.processus}",fontStyle: FontStyle.italic,))
+                  dropDownController.addRemoveProcessus(
+                      widget.processus, value!);
+                }),
+            const SizedBox(
+              width: 10,
+            ),
+            Flexible(
+                child: CustomText(
+              text: "${widget.processus}",
+              fontStyle: FontStyle.italic,
+            ))
           ],
         ),
       );
     });
   }
 }
-
-

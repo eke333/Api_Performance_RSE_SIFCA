@@ -6,7 +6,6 @@ import '../../../../widgets/custom_text.dart';
 import '../../controllers/drop_down_controller.dart';
 import '../../controllers/entite_pilotage_controler.dart';
 
-
 class StrategieContainer extends StatefulWidget {
   const StrategieContainer({super.key});
 
@@ -15,7 +14,6 @@ class StrategieContainer extends StatefulWidget {
 }
 
 class _StrategieContainerState extends State<StrategieContainer> {
-
   @override
   Widget build(BuildContext context) {
     return const SizedBox(
@@ -28,79 +26,106 @@ class _StrategieContainerState extends State<StrategieContainer> {
               left: 0,
               bottom: 0,
               child: SizedBox(
-                width: 400,height: 200,
-                child: Padding(padding: EdgeInsets.all(8.0), child: StrategyButton(
-                  axeId: "axe_3",
-                  color: Color(0xFFFAAF7B),
-                  imagePilier: "assets/icons/social.png",
-                  titlePilier: "Communauté et innovation sociétale",
-                  enjeux: [
-                    {"key":"7","enjeu":"Inclusion sociale ét dévéloppementdes communautés"},
-                  ],
+                width: 400,
+                height: 200,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: StrategyButton(
+                    axeId: "axe_3",
+                    color: Color(0xFFFAAF7B),
+                    imagePilier: "assets/icons/social.png",
+                    titlePilier: "Communauté et innovation sociétale",
+                    enjeux: [
+                      {
+                        "key": "7",
+                        "enjeu":
+                            "Inclusion sociale ét dévéloppementdes communautés"
+                      },
+                    ],
+                  ),
                 ),
-                ),
-              )
-          ),
+              )),
           Positioned(
               left: 500,
               bottom: 300,
               child: SizedBox(
-                width: 400,height: 200,
-                child: Padding(padding: EdgeInsets.all(8.0), child: StrategyButton(
-                  axeId: "axe_1",
-                  color: Color(0xFF3F93D0),
-                  imagePilier: "assets/icons/gouvernance.png",
-                  titlePilier: "Gouvernance éthique",
-                  enjeux: [
-                    {"key":"1a","enjeu":"Gouvernance DD et stratégie"},
-                    {"key":"1b","enjeu":"Pilotage DD"},
-                    {"key":"2","enjeu":"Éthique des affaires et achats responsables"},
-                    {"key":"3","enjeu":"Intégration des attentes DD des clients et consommateurs"},
-                  ],
-                ),),
-              )
-          ),
+                width: 400,
+                height: 200,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: StrategyButton(
+                    axeId: "axe_1",
+                    color: Color(0xFF3F93D0),
+                    imagePilier: "assets/icons/gouvernance.png",
+                    titlePilier: "Gouvernance éthique",
+                    enjeux: [
+                      {
+                        "key": "1",
+                        "enjeu":
+                            "Gouvernance DD et stratégie & enjeu Pilotage DD"
+                      },
+                      {
+                        "key": "2",
+                        "enjeu": "Éthique des affaires et achats responsables"
+                      },
+                      {
+                        "key": "3",
+                        "enjeu":
+                            "Intégration des attentes DD des clients et consommateurs"
+                      },
+                    ],
+                  ),
+                ),
+              )),
           Positioned(
               left: 500,
               bottom: 0,
               child: SizedBox(
-                width: 400,height: 200,
-                child: Padding(padding: EdgeInsets.all(8.0), child: StrategyButton(
-                  axeId: "axe_2",
-                  color: Color(0xFFEABF64),
-                  imagePilier: "assets/icons/economie.png",
-                  titlePilier: "Emploi et conditions de travail",
-                  enjeux: [
-                    {"key":"4","enjeu":"Égalité de traitement"},
-                    {"key":"5","enjeu":"Conditions de travail"},
-                    {"key":"10","enjeu":"Amélioration du cadre de vie"},
-                  ],
-                ),),
-              )
-          ),
+                width: 400,
+                height: 200,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: StrategyButton(
+                    axeId: "axe_2",
+                    color: Color(0xFFEABF64),
+                    imagePilier: "assets/icons/economie.png",
+                    titlePilier: "Emploi et conditions de travail",
+                    enjeux: [
+                      {"key": "4", "enjeu": "Égalité de traitement"},
+                      {"key": "5", "enjeu": "Conditions de travail"},
+                      {"key": "10", "enjeu": "Amélioration du cadre de vie"},
+                    ],
+                  ),
+                ),
+              )),
           Positioned(
               left: 0,
               bottom: 300,
               child: SizedBox(
-                width: 400,height: 200,
-                child: Padding(padding: EdgeInsets.all(8.0), child: StrategyButton(
-                  axeId: "axe_4",
-                  color: Color(0xFF97C3A8),
-                  imagePilier: "assets/icons/environnement.png",
-                  titlePilier: "Environnement",
-                  enjeux: [
-                    {"key":"8","enjeu":"Changement climatique et déforestation"},
-                    {"key":"9","enjeu":"Gestion et traitement de l’eau"},
-                    {"key":"10","enjeu":"Gestion des ressources et déchets"},
-                  ],
-                ),),
-              )
-          ),
-          Positioned(
-              left: 375,
-              bottom: 175,
-              child: GeneralButton()
-          ),
+                width: 400,
+                height: 200,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: StrategyButton(
+                    axeId: "axe_4",
+                    color: Color(0xFF97C3A8),
+                    imagePilier: "assets/icons/environnement.png",
+                    titlePilier: "Environnement",
+                    enjeux: [
+                      {
+                        "key": "8",
+                        "enjeu": "Changement climatique et déforestation"
+                      },
+                      {"key": "9", "enjeu": "Gestion et traitement de l’eau"},
+                      {
+                        "key": "10",
+                        "enjeu": "Gestion des ressources et déchets"
+                      },
+                    ],
+                  ),
+                ),
+              )),
+          Positioned(left: 375, bottom: 175, child: GeneralButton()),
         ],
       ),
     );
@@ -113,7 +138,13 @@ class StrategyButton extends StatefulWidget {
   final String imagePilier;
   final List<Map> enjeux;
   final Color color;
-  const StrategyButton({super.key, required this.titlePilier, required this.imagePilier, required this.enjeux, required this.color, required this.axeId});
+  const StrategyButton(
+      {super.key,
+      required this.titlePilier,
+      required this.imagePilier,
+      required this.enjeux,
+      required this.color,
+      required this.axeId});
 
   @override
   State<StrategyButton> createState() => _StrategyButtonState();
@@ -126,23 +157,23 @@ class _StrategyButtonState extends State<StrategyButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: (){
+        onPressed: () {
           dropDownController.filtreViewAxe.value = {
-            "${widget.axeId}":true,
+            "${widget.axeId}": true,
           };
-          context.go("/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
+          context.go(
+              "/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
         },
-        onHover: (value){
-            if (value) {
-              setState(() {
-                elevation = 20;
-              });
-            }else {
-              setState(() {
-                elevation = 5;
-              });
-
-            }
+        onHover: (value) {
+          if (value) {
+            setState(() {
+              elevation = 20;
+            });
+          } else {
+            setState(() {
+              elevation = 5;
+            });
+          }
         },
         style: ElevatedButton.styleFrom(
           elevation: elevation,
@@ -158,56 +189,75 @@ class _StrategyButtonState extends State<StrategyButton> {
               children: [
                 Row(
                   children: [
-                    Image.asset("${widget.imagePilier}",width: 40,height: 40,),
-                    const SizedBox(width: 10,),
-                    Flexible(child: Text("${widget.titlePilier}",style: const TextStyle(color: Colors.black,fontSize: 18),))
+                    Image.asset(
+                      "${widget.imagePilier}",
+                      width: 40,
+                      height: 40,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Flexible(
+                        child: Text(
+                      "${widget.titlePilier}",
+                      style: const TextStyle(color: Colors.black, fontSize: 18),
+                    ))
                   ],
                 ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
                 Column(
-                  children: widget.enjeux.map((enjeu){
-                    return InkWell(
-                      radius: 10,
-                      hoverColor: primaryColor.withOpacity(0.5),
-                      onTap: (){
-                        dropDownController.filtreViewAxe.value = {
-                          "enjeu":true,
-                          "${widget.axeId}":true,
-                          "enjeu_${enjeu["key"]}":true,
-                        };
-                        context.go("/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  height: 25,
-                                  width: 25,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.black,
-                                      shape: BoxShape.circle
-                                  ),
-                                  child: Center(child: Text("${enjeu["key"]}")),
-                                ),
-                                const SizedBox(width: 5,),
-                                Flexible(child: CustomText(text: "${enjeu["enjeu"]}",size: 13,fontStyle: FontStyle.italic,))
-                              ],
-                            ),
-                            const SizedBox(height: 5,),
-                          ],
-                        ),
+                    children: widget.enjeux.map((enjeu) {
+                  return InkWell(
+                    radius: 10,
+                    hoverColor: primaryColor.withOpacity(0.5),
+                    onTap: () {
+                      dropDownController.filtreViewAxe.value = {
+                        "enjeu": true,
+                        "${widget.axeId}": true,
+                        "enjeu_${enjeu["key"]}": true,
+                      };
+                      context.go(
+                          "/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 25,
+                                width: 25,
+                                decoration: const BoxDecoration(
+                                    color: Colors.black,
+                                    shape: BoxShape.circle),
+                                child: Center(child: Text("${enjeu["key"]}")),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Flexible(
+                                  child: CustomText(
+                                text: "${enjeu["enjeu"]}",
+                                size: 13,
+                                fontStyle: FontStyle.italic,
+                              ))
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                        ],
                       ),
-                    );
-                  }).toList()
-                )
+                    ),
+                  );
+                }).toList())
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 }
 
@@ -225,52 +275,62 @@ class _GeneralButtonState extends State<GeneralButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: (){
+      onPressed: () {
         dropDownController.filtreViewAxe.value = {
-          "axe_0":true,
-          "axe_1":true,
-          "axe_2":true,
-          "axe_3":true,
-          "axe_4":true
+          "axe_0": true,
+          "axe_1": true,
+          "axe_2": true,
+          "axe_3": true,
+          "axe_4": true
         };
-        context.go("/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
+        context.go(
+            "/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
       },
-      onHover: (value){
+      onHover: (value) {
         if (value) {
           setState(() {
             elevation = 20;
           });
-        }else {
+        } else {
           setState(() {
             elevation = 5;
           });
-
         }
       },
       style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
           elevation: elevation,
           backgroundColor: Colors.brown,
-          padding: EdgeInsets.zero
-      ),
+          padding: EdgeInsets.zero),
       child: Container(
-        width: 150,height: 150,
-        child: Container(
-          width: 50,
-          height: 50,
-          color: Colors.transparent,
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomText(text: "Afficher",color: Colors.white,size: 18,),
-              CustomText(text: "Tous",color: Colors.white,size: 18,),
-              CustomText(text: "Les indicateurs",color: Colors.white,size: 18,)
-            ],
-          ),
-        )
-      ),
+          width: 150,
+          height: 150,
+          child: Container(
+            width: 50,
+            height: 50,
+            color: Colors.transparent,
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomText(
+                  text: "Afficher",
+                  color: Colors.white,
+                  size: 18,
+                ),
+                CustomText(
+                  text: "Tous",
+                  color: Colors.white,
+                  size: 18,
+                ),
+                CustomText(
+                  text: "Les indicateurs",
+                  color: Colors.white,
+                  size: 18,
+                )
+              ],
+            ),
+          )),
     );
   }
 }
-
