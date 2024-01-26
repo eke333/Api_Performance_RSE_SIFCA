@@ -8,7 +8,8 @@ import 'data_table/row_axe.dart';
 
 class DashBoardListView extends StatefulWidget {
   final List<IndicateurModel> indicateurs;
-  const DashBoardListView({Key? key, required this.indicateurs}) : super(key: key);
+  const DashBoardListView({Key? key, required this.indicateurs})
+      : super(key: key);
 
   @override
   State<DashBoardListView> createState() => _DashBoardListViewState();
@@ -32,7 +33,8 @@ class _DashBoardListViewState extends State<DashBoardListView> {
 
   Widget buildIndicateurWidget(List<IndicateurModel> indicateurs) {
     return Theme(
-      data: Theme.of(context).copyWith(scrollbarTheme: ScrollbarThemeData(
+      data: Theme.of(context).copyWith(
+          scrollbarTheme: ScrollbarThemeData(
         trackColor: MaterialStateProperty.all(Colors.black12),
         trackBorderColor: MaterialStateProperty.all(Colors.black38),
         thumbColor: MaterialStateProperty.all(Colors.black),
@@ -60,33 +62,41 @@ class _DashBoardListViewState extends State<DashBoardListView> {
     List<IndicateurModel> listIndicateurs = widget.indicateurs;
     return Column(
       children: [
-        RowAxeGeneral(title: "GÉNÉRAL",
+        RowAxeGeneral(
+          title: "GÉNÉRAL",
           color: Colors.brown,
           idAxe: "axe_0",
-          indicateurs: listIndicateurs,),
-        RowAxe(title: "Gouvernance éthique",
+          indicateurs: listIndicateurs,
+        ),
+        RowAxe(
+          title: "Gouvernance éthique",
           color: const Color(0xFF3F93D0),
           idAxe: "axe_1",
           imagePath: "assets/icons/gouvernance.png",
-          indicateurs: listIndicateurs,),
-        RowAxe(title: "Emploi et conditions de travail",
+          indicateurs: listIndicateurs,
+        ),
+        RowAxe(
+          title: "Emploi et conditions de travail",
           color: const Color(0xFFEABF64),
           idAxe: "axe_2",
           imagePath: "assets/icons/economie.png",
-          indicateurs: listIndicateurs,),
-        RowAxe(title: "Communauté et innovation sociétale",
-            color: const Color(0xFFFAAF7B),
-            idAxe: "axe_3",
-            imagePath: "assets/icons/social.png",
-            indicateurs: listIndicateurs,),
-        RowAxe(title: "Environnement",
+          indicateurs: listIndicateurs,
+        ),
+        RowAxe(
+          title: "Communauté et innovation sociétale",
+          color: const Color(0xFFFAAF7B),
+          idAxe: "axe_3",
+          imagePath: "assets/icons/social.png",
+          indicateurs: listIndicateurs,
+        ),
+        RowAxe(
+          title: "Environnement",
           color: const Color(0xFF97C3A8),
           idAxe: "axe_4",
           imagePath: "assets/icons/environnement.png",
-          indicateurs: listIndicateurs,),
+          indicateurs: listIndicateurs,
+        ),
       ],
     );
   }
-
-
 }

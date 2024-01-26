@@ -9,14 +9,12 @@ class PerformancePiliers extends StatefulWidget {
 }
 
 class _PerformancePiliersState extends State<PerformancePiliers> {
-
   late double _columnWidth;
   late double _columnSpacing;
   List<ChartSampleData>? chartData;
   TooltipBehavior? _tooltipBehavior;
-  bool _isLoaded = false ;
-  bool isCardView = true ;
-
+  bool _isLoaded = false;
+  bool isCardView = true;
 
   void initialisation() async {
     _columnWidth = 0.8;
@@ -24,13 +22,19 @@ class _PerformancePiliersState extends State<PerformancePiliers> {
     _tooltipBehavior = TooltipBehavior(enable: true);
     chartData = <ChartSampleData>[
       ChartSampleData(
-          x: 'Gouvernance', y: 16, secondSeriesYValue: 8, thirdSeriesYValue: 13),
+          x: 'Gouvernance',
+          y: 100,
+          secondSeriesYValue: 8,
+          thirdSeriesYValue: 13),
       ChartSampleData(
           x: 'Economie', y: 8, secondSeriesYValue: 10, thirdSeriesYValue: 7),
       ChartSampleData(
           x: 'Société', y: 12, secondSeriesYValue: 10, thirdSeriesYValue: 5),
       ChartSampleData(
-          x: 'Environnement', y: 4, secondSeriesYValue: 8, thirdSeriesYValue: 14)
+          x: 'Environnement',
+          y: 4,
+          secondSeriesYValue: 8,
+          thirdSeriesYValue: 14)
     ];
     await Future.delayed(const Duration(milliseconds: 2000));
     setState(() {
@@ -46,23 +50,25 @@ class _PerformancePiliersState extends State<PerformancePiliers> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoaded ? _buildSpacingColumnChart() : const Stack(
-      alignment: AlignmentDirectional.center,
-      children: [
-        SizedBox(
-            height: 50,
-            width: 50,
-            child: CircularProgressIndicator(
-              color: Colors.grey,
-              strokeWidth: 4,
-            )),
-        SizedBox(
-            height: 30,
-            width: 30,
-            child:
-                CircularProgressIndicator(color: Colors.amber, strokeWidth: 4)),
-      ],
-    );
+    return _isLoaded
+        ? _buildSpacingColumnChart()
+        : const Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(
+                    color: Colors.grey,
+                    strokeWidth: 4,
+                  )),
+              SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: CircularProgressIndicator(
+                      color: Colors.amber, strokeWidth: 4)),
+            ],
+          );
   }
 
   SfCartesianChart _buildSpacingColumnChart() {
@@ -70,8 +76,10 @@ class _PerformancePiliersState extends State<PerformancePiliers> {
       plotAreaBorderWidth: 0,
       title: ChartTitle(
           text: 'PERFORMANCE PAR AXE STRATEGIQUE',
-          textStyle: const TextStyle(fontWeight: FontWeight.bold,fontSize: 14,decoration: TextDecoration.underline)
-      ),
+          textStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              decoration: TextDecoration.underline)),
       primaryXAxis: CategoryAxis(
         title: AxisTitle(text: "Les axes stratégiques"),
         majorGridLines: const MajorGridLines(width: 0),
@@ -94,13 +102,13 @@ class _PerformancePiliersState extends State<PerformancePiliers> {
     return <ColumnSeries<ChartSampleData, String>>[
       ColumnSeries<ChartSampleData, String>(
 
-        /// To apply the column width here.
+          /// To apply the column width here.
           width: isCardView ? 0.8 : _columnWidth,
 
           /// To apply the spacing betweeen to two columns here.
           spacing: isCardView ? 0.2 : _columnSpacing,
           dataSource: chartData!,
-          color: const Color.fromRGBO(177, 183, 188, 1) ,
+          color: const Color.fromRGBO(177, 183, 188, 1),
           xValueMapper: (ChartSampleData sales, _) => sales.x as String,
           yValueMapper: (ChartSampleData sales, _) => sales.y,
           name: '2022'),

@@ -11,7 +11,6 @@ class DashBoardHeader extends StatefulWidget {
 }
 
 class _DashBoardHeaderState extends State<DashBoardHeader> {
-
   final TableauBordController tableauBordController = Get.find();
 
   @override
@@ -20,37 +19,76 @@ class _DashBoardHeaderState extends State<DashBoardHeader> {
       elevation: 1,
       color: Colors.brown,
       child: Container(
-        padding: const EdgeInsets.only(left: 2.0,right: 15),
-        child: Container(
-          height: 30,
-          width: double.maxFinite,
-          color: Colors.brown,
-          child: Obx((){
-            var annee = tableauBordController.currentYear.value;
-            var mois = tableauBordController.listMonth[tableauBordController.currentMonth.value-1];
-            return Row(
-              children: [
-                const DashBoardHeaderTitle(color: Colors.brown, size: 121,title: "Réf",),
-                const IndicateurTitle(color: Colors.brown, size:400,title: "Intitulé",),
-                const DashBoardHeaderTitle(color: Colors.brown, size: 170,title: "Processus",),
-                DashBoardHeaderTitle(color: Colors.brown, size: 150,title: "Réalisé ${annee}",),
-                MonthHeader(color: Colors.brown, size: 170,title: "${mois}",),
-                const DashBoardHeaderTitle(color: Colors.brown, size: 100,title: "Cible",),
-                const DashBoardHeaderTitle(color: Colors.brown, size: 104,title: "Ecart",),
-              ],
-            );
-          }),
-        )),
+          padding: const EdgeInsets.only(left: 2.0, right: 15),
+          child: Container(
+            height: 30,
+            width: double.maxFinite,
+            color: Colors.brown,
+            child: Obx(() {
+              var annee = tableauBordController.currentYear.value;
+              var mois = tableauBordController
+                  .listMonth[tableauBordController.currentMonth.value - 1];
+              return Row(
+                children: [
+                  const DashBoardHeaderTitle(
+                    color: Colors.brown,
+                    size: 121,
+                    title: "Réf",
+                  ),
+                  const IndicateurTitle(
+                    color: Colors.brown,
+                    size: 400,
+                    title: "Intitulé",
+                  ),
+                  const DashBoardHeaderTitle(
+                    color: Colors.brown,
+                    size: 170,
+                    title: "Processus",
+                  ),
+                  DashBoardHeaderTitle(
+                    color: Colors.brown,
+                    size: 150,
+                    title: "Réalisé ${annee}",
+                  ),
+                  MonthHeader(
+                    color: Colors.brown,
+                    size: 170,
+                    title: "${mois}",
+                  ),
+                  const DashBoardHeaderTitle(
+                    color: Colors.brown,
+                    size: 100,
+                    title: "Cible",
+                  ),
+                  const DashBoardHeaderTitle(
+                    color: Colors.brown,
+                    size: 104,
+                    title: "Ecart",
+                  ),
+                  
+                  const DashBoardHeaderTitle(
+                    color: Colors.brown,
+                    size: 121,
+                    title: "Actif/Inactif",
+                  ),
+                  
+                ],
+              );
+            }),
+          )),
     );
   }
 }
-
 
 class MonthHeader extends StatefulWidget {
   final double size;
   final Color color;
   final String title;
-  const MonthHeader({super.key, required this.size, required this.color, required this.title});
+  const MonthHeader(
+      {super.key,
+      required this.size,
+      required this.color,
+      required this.title});
 
   @override
   State<MonthHeader> createState() => _MonthHeaderState();
@@ -61,8 +99,8 @@ class _MonthHeaderState extends State<MonthHeader> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){},
-      onHover: (value){
+      onTap: () {},
+      onHover: (value) {
         setState(() {
           isHovering = value;
         });
@@ -70,12 +108,18 @@ class _MonthHeaderState extends State<MonthHeader> {
       child: Container(
         padding: const EdgeInsets.only(left: 2.0),
         width: widget.size,
-        color: isHovering ? const Color(0xFF8B735C) :widget.color,
+        color: isHovering ? const Color(0xFF8B735C) : widget.color,
         alignment: Alignment.centerLeft,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("${widget.title}",style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),),
+            Text(
+              "${widget.title}",
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),
@@ -83,12 +127,13 @@ class _MonthHeaderState extends State<MonthHeader> {
   }
 }
 
-
 class DashBoardHeaderTitle extends StatefulWidget {
   final double size;
   final Color color;
   final String title;
-  const DashBoardHeaderTitle({Key? key, required this.size, required this.color, required this.title}) : super(key: key);
+  const DashBoardHeaderTitle(
+      {Key? key, required this.size, required this.color, required this.title})
+      : super(key: key);
 
   @override
   State<DashBoardHeaderTitle> createState() => _DashBoardHeaderTitleState();
@@ -99,8 +144,8 @@ class _DashBoardHeaderTitleState extends State<DashBoardHeaderTitle> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){},
-      onHover: (value){
+      onTap: () {},
+      onHover: (value) {
         setState(() {
           isHovering = value;
         });
@@ -108,20 +153,25 @@ class _DashBoardHeaderTitleState extends State<DashBoardHeaderTitle> {
       child: Container(
         padding: const EdgeInsets.only(left: 2.0),
         width: widget.size,
-        color: isHovering ? const Color(0xFF8B735C) :widget.color,
+        color: isHovering ? const Color(0xFF8B735C) : widget.color,
         alignment: Alignment.centerLeft,
-        child: Text("${widget.title}",style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),),
+        child: Text(
+          "${widget.title}",
+          style: const TextStyle(
+              color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
 }
 
-
 class IndicateurTitle extends StatefulWidget {
   final double size;
   final Color color;
   final String title;
-  const IndicateurTitle({Key? key, required this.size, required this.color, required this.title}) : super(key: key);
+  const IndicateurTitle(
+      {Key? key, required this.size, required this.color, required this.title})
+      : super(key: key);
 
   @override
   State<IndicateurTitle> createState() => _IndicateurTitleState();
@@ -133,8 +183,8 @@ class _IndicateurTitleState extends State<IndicateurTitle> {
   Widget build(BuildContext context) {
     return Expanded(
       child: InkWell(
-        onTap: (){},
-        onHover: (value){
+        onTap: () {},
+        onHover: (value) {
           setState(() {
             isHovering = value;
           });
@@ -142,12 +192,15 @@ class _IndicateurTitleState extends State<IndicateurTitle> {
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.only(left: 2.0),
-          color: isHovering ? const Color(0xFF8B735C) :widget.color,
+          color: isHovering ? const Color(0xFF8B735C) : widget.color,
           alignment: Alignment.centerLeft,
-          child: Text("${widget.title}",style: const TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),),
+          child: Text(
+            "${widget.title}",
+            style: const TextStyle(
+                color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
   }
 }
-

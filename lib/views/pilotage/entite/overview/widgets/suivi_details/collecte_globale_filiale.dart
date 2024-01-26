@@ -118,10 +118,10 @@ class _CollecteGlobaleEntitesState extends State<CollecteGlobaleEntites> {
     return DataRow(
       cells: [
         DataCell(Text(entityInfo["nom"])),
-        DataCell(Text("${entityInfo["2022"]} %",style: TextStyle(fontWeight: FontWeight.bold,color: entityInfo["2022"] < 30 ?  Colors.red :
+        DataCell(Text("${entityInfo["2023"]} %",style: TextStyle(fontWeight: FontWeight.bold,color: entityInfo["2023"] < 30 ?  Colors.red :
         entityInfo["${year-1}"] < 60 ? Colors.yellow : entityInfo["${year-1}"] < 75 ?
         Colors.green : Colors.blue),)),
-        DataCell(Text("${entityInfo["2023"]} %",style: TextStyle(fontWeight: FontWeight.bold,color: entityInfo["2023"] < 30 ?  Colors.red :
+        DataCell(Text("${entityInfo["2024"]} %",style: TextStyle(fontWeight: FontWeight.bold,color: entityInfo["2024"] < 30 ?  Colors.red :
         entityInfo["${year}"] < 60 ? Colors.yellow : entityInfo["${year}"] < 75 ?
         Colors.green : Colors.blue),))
       ],
