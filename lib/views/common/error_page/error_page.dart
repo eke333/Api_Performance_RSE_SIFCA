@@ -5,6 +5,8 @@ import '../../../constants/constant_colors.dart';
 import '../../../widgets/custom_text.dart';
 
 class PageNotFound extends StatefulWidget {
+  const PageNotFound({super.key});
+
   @override
   State<PageNotFound> createState() => _PageNotFoundState();
 }

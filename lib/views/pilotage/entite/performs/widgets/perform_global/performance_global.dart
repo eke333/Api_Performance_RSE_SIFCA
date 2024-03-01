@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:styled_widget/styled_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../controllers/performs_data_controller.dart';
+import 'package:get/get.dart';
+import '../../../../controllers/entite_pilotage_controler.dart';
 
 class PerformanceGlobale extends StatefulWidget {
   const PerformanceGlobale({Key? key}) : super(key: key);
@@ -13,77 +15,130 @@ class PerformanceGlobale extends StatefulWidget {
 class _PerformanceGlobaleState extends State<PerformanceGlobale> {
   bool isCardView = true;
   bool isWebFullView = true;
+  bool _isLoaded = false;
+  String entiteName = "";
+  late double dataPerformGlobal = 0.0;
 
-  Widget noDataWidget(String message) {
-    return Center(
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        IconButton(
-          iconSize: 40,
-          icon: const Icon(
-            Icons.refresh,
-            color: Colors.green,
-          ),
-          onPressed: () {},
-          tooltip: "Réchager les données",
-        ).scale(all: 1),
-        const SizedBox(
-          width: 50,
-        ),
-        Center(
-            child: Text(
-          "${message}",
-          style: const TextStyle(fontSize: 20),
-        ))
-      ]),
-    );
+  final supabase = Supabase.instance.client;
+  final PerformsDataController performsDataController = Get.find();
+  final EntitePilotageController entitePilotageController = Get.find();
+
+  void initialisation() async {
+    final entiteID = entitePilotageController.currentEntite.value;
+    final idPerformGlobal = "${entiteID}_${performsDataController.annee.value}";
+    final List responsePerforms =
+        await supabase.from('Performance').select().eq('id', idPerformGlobal);
+    final List<dynamic> entite = await supabase
+        .from('Entites')
+        .select('nom_entite')
+        .eq('id_entite', entiteID);
+    var entiteval = entite.first["nom_entite"];
+      entiteName = entiteval;
+ 
+
+    dataPerformGlobal = responsePerforms.first["performs_global"];
+
+    await Future.delayed(const Duration(milliseconds: 2000));
+    setState(() {
+      _isLoaded = true;
+    });
   }
 
-  Widget loadingWidget() {
-    return const Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SpinKitPouringHourGlassRefined(
-            color: Colors.amber,
-            size: 50.0,
-          ),
-          SizedBox(
-            width: 50,
-          ),
-          Text(
-            "Veillez patienter SVP",
-            style: TextStyle(fontSize: 20),
-          )
-        ],
-      ),
-    );
+  // Widget noDataWidget(String message) {
+  //   return Center(
+  //     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+  //       IconButton(
+  //         iconSize: 40,
+  //         icon: const Icon(
+  //           Icons.refresh,
+  //           color: Colors.green,
+  //         ),
+  //         onPressed: () {},
+  //         tooltip: "Réchager les données",
+  //       ).scale(all: 1),
+  //       const SizedBox(
+  //         width: 50,
+  //       ),
+  //       Center(
+  //           child: Text(
+  //         message,
+  //         style: const TextStyle(fontSize: 20),
+  //       ))
+  //     ]),
+  //   );
+  // }
+
+  // Widget loadingWidget() {
+  //   return const Center(
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         SpinKitPouringHourGlassRefined(
+  //           color: Colors.amber,
+  //           size: 50.0,
+  //         ),
+  //         SizedBox(
+  //           width: 50,
+  //         ),
+  //         Text(
+  //           "Veillez patienter SVP",
+  //           style: TextStyle(fontSize: 20),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
+  @override
+  void initState() {
+    initialisation();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    const double data = 68;
+    double data = dataPerformGlobal;
 
-    return Column(
-      children: [
-        const Column(
-          children: [
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              "Performance Gloable 2023",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-            Text("Sucrivoire Siège",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-          ],
-        ),
-        _buildPerformanceGlobale(data),
-      ],
-    );
+    return _isLoaded
+        ? Column(
+            children: [
+              Column(
+                children: [
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Performance Gloable ${performsDataController.annee.value}",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  Text(entiteName,
+                      textAlign: TextAlign.center,
+                      style:
+                          const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              _buildPerformanceGlobale(data),
+            ],
+          )
+        : const Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(
+                    color: Colors.grey,
+                    strokeWidth: 4,
+                  )),
+              SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: CircularProgressIndicator(
+                      color: Colors.amber, strokeWidth: 4)),
+            ],
+          );
   }
 
   SfRadialGauge _buildPerformanceGlobale(double performGloabal) {
@@ -148,7 +203,8 @@ class _PerformanceGlobaleState extends State<PerformanceGlobale> {
                 positionFactor: 0.8,
                 widget: Text(
                   "${performGloabal.toStringAsFixed(2)} % ",
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               )
             ],
@@ -180,4 +236,9 @@ class _PerformanceGlobaleState extends State<PerformanceGlobale> {
       ],
     );
   }
+
+  // @override
+  // void dispose() {
+  //   super.dispose;
+  // }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../constants/constant_colors.dart';
 
 class PilierInfoModel {
   final String axeId;

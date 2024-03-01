@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../models/pilotage/indicateur_model.dart';
 import '../../../../widgets/privacy_widget.dart';
 import '../../controllers/drop_down_controller.dart';
 import '../../controllers/side_menu_controller.dart';

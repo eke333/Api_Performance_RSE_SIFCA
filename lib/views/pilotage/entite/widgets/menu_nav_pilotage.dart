@@ -197,7 +197,7 @@ class CustomMenuButton extends StatefulWidget {
 class _CustomMenuButtonState extends State<CustomMenuButton> {
   bool _isHovering = false;
   bool isSelected = false;
-  String _rootLocation = "/pilotage/espace/sucrivoire-siege";
+  final String _rootLocation = "/pilotage/espace/sucrivoire-siege";
 
   final SideMenuController sideMenuController = Get.find();
 

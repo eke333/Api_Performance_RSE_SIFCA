@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 class IndicateurModel {
   final int numero;
   final String reference;
@@ -16,28 +18,32 @@ class IndicateurModel {
   final String? processus;
   final String? frequence;
 
-  IndicateurModel({
-    required this.numero,
-    required this.reference,
-    required this.terminologie,
-    required this.axe,
-    required this.enjeu,
-    required this.intitule,
-    required this.definition,
-    required this.unite,
-    required this.type,
-    required this.gri,
-    required this.odd,
-    required this.formule,
-    required this.processus,
-    required this.frequence
-  });
 
-  factory IndicateurModel.fromRawJson(String str) => IndicateurModel.fromJson(json.decode(str));
+  IndicateurModel(
+      {required this.numero,
+      required this.reference,
+      required this.terminologie,
+      required this.axe,
+      required this.enjeu,
+      required this.intitule,
+      required this.definition,
+      required this.unite,
+      required this.type,
+      required this.gri,
+      required this.odd,
+      required this.formule,
+      required this.processus,
+      required this.frequence,});
+
+
+  factory IndicateurModel.fromRawJson(String str) =>
+      IndicateurModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory IndicateurModel.fromJson(Map<String, dynamic> json) => IndicateurModel(
+factory IndicateurModel.fromJson(Map<String, dynamic> json) =>
+
+  IndicateurModel(
     numero: json["numero"],
     reference: json["reference"],
     terminologie: json["terminologie"],
@@ -55,19 +61,19 @@ class IndicateurModel {
   );
 
   Map<String, dynamic> toJson() => {
-    "numero": numero,
-    "reference": reference,
-    "terminologie": terminologie,
-    "axe": axe,
-    "enjeu": enjeu,
-    "intitule": intitule,
-    "definition": definition,
-    "unite": unite,
-    "type": type,
-    "gri": gri,
-    "odd": odd,
-    "formule": formule,
-    "processus": processus,
-    "frequence": frequence,
-  };
+        "numero": numero,
+        "reference": reference,
+        "terminologie": terminologie,
+        "axe": axe,
+        "enjeu": enjeu,
+        "intitule": intitule,
+        "definition": definition,
+        "unite": unite,
+        "type": type,
+        "gri": gri,
+        "odd": odd,
+        "formule": formule,
+        "processus": processus,
+        "frequence": frequence,
+      };
 }

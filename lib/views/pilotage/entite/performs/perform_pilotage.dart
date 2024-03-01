@@ -14,9 +14,15 @@ class PerformPilotage extends StatefulWidget {
 
 class _PerformPilotageState extends State<PerformPilotage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(right: defaultPadding,bottom: defaultPadding,top: 5),
+      padding: const EdgeInsets.only(
+          right: defaultPadding, bottom: defaultPadding, top: 5),
       child: StyledScrollView(
         child: Column(
           children: [
@@ -30,32 +36,34 @@ class _PerformPilotageState extends State<PerformPilotage> {
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      child: const PerformanceGlobale()
+                      child: const PerformanceGlobale()),
+                  const SizedBox(
+                    width: 10,
                   ),
-                  const SizedBox(width: 10,),
-                  Expanded(child: Container(
-                      height: double.infinity,
-                      padding: const EdgeInsets.all(5),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: const PerformancePiliers()
-                    )
-                  )
+                  Expanded(
+                      child: Container(
+                          height: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          child: const PerformancePiliers()))
                 ],
               ),
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             Container(
-                width: double.infinity,
-                height: 500,
-                padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: const PerformanceEnjeux(),
+              width: double.infinity,
+              height: 500,
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              child: const PerformanceEnjeux(),
             )
           ],
         ),

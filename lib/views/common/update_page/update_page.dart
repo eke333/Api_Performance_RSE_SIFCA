@@ -49,10 +49,10 @@ class _UpdatedPageState extends State<UpdatedPage> {
                       const SizedBox(height: 20,),
                       OutlinedButton(onPressed: (){
                         context.go("/");
-                      }, child: Container(
+                      }, child: const SizedBox(
                         width: 200,
                         height: 40,
-                        child: const Center(child: Text("Aller à l'accueil général")),
+                        child: Center(child: Text("Aller à l'accueil général")),
                       )
                       )
                     ],

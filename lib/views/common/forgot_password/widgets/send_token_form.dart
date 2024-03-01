@@ -38,7 +38,7 @@ class _SendTokenToEmailFormState extends State<SendTokenToEmailForm> {
       setState(() {
         isLoadedPage = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(showSnackBar("${message}","",Colors.red,const Duration(seconds: 8)));
+      ScaffoldMessenger.of(context).showSnackBar(showSnackBar(message,"",Colors.red,const Duration(seconds: 8)));
     }
   }
 

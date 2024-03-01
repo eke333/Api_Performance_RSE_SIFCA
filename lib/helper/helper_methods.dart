@@ -34,7 +34,7 @@ void showAlert(String message,Icon icon) {
   Get.defaultDialog(
       title: "Alerte",
       titleStyle: const TextStyle(fontSize: 20,color: Colors.red,fontWeight: FontWeight.bold),
-      content: Container(
+      content: SizedBox(
         width: 200,
         height: 100,
         child: Column(

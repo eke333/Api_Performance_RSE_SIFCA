@@ -1,9 +1,6 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:perf_rse/helper/helper_methods.dart';
-import 'package:perf_rse/models/pilotage/acces_pilotage_model.dart';
 import 'package:perf_rse/models/pilotage/indicateur_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -222,9 +219,9 @@ class _IndicateursScreenState extends State<IndicateursScreen> {
             ),
           ),
         ),
-        SizedBox(width: 10,),
-        Text("Edition"),
-        SizedBox(width: 5,),
+        const SizedBox(width: 10,),
+        const Text("Edition"),
+        const SizedBox(width: 5,),
         Switch(value: edition, onChanged: (value){
           setState(() {
             edition = value;
@@ -242,7 +239,7 @@ class _IndicateursScreenState extends State<IndicateursScreen> {
       padding: const EdgeInsets.only(right: 10),
       child: isLoading ? loadingPageWidget() : Column(
         children: [
-          Container(height: 40,child: actionWidget(),),
+          SizedBox(height: 40,child: actionWidget(),),
           const SizedBox(height: 5,),
           Expanded(child: _buildDataGridForWeb())
         ],
@@ -358,18 +355,18 @@ class _EditIndicateurState extends State<EditIndicateur> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 5,),
+        const SizedBox(width: 5,),
         IconButton(onPressed: (){
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text("Indicateur ${widget.reference} -- Champ : ${widget.champ == "initule" ? "Initulé" : "Définition"}",style: TextStyle(color:Colors.red),),
+                title: Text("Indicateur ${widget.reference} -- Champ : ${widget.champ == "initule" ? "Initulé" : "Définition"}",style: const TextStyle(color:Colors.red),),
                 contentPadding: const EdgeInsets.all(30),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 titlePadding: const EdgeInsets.only(top: 20,right: 20,left: 20),
                 titleTextStyle: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),
-                content: Container(width: 400,height: 200,child: Column(
+                content: SizedBox(width: 400,height: 200,child: Column(
                   children: [
                     TextFormField(
                       controller: valueController,
@@ -389,7 +386,7 @@ class _EditIndicateurState extends State<EditIndicateur> {
                         ),
                         ElevatedButton(
                             onPressed: () async {
-                              await Supabase.instance.client.from('Indicateurs').update({'${widget.champ}': valueController.text}).eq('reference',widget.reference);
+                              await Supabase.instance.client.from('Indicateurs').update({widget.champ: valueController.text}).eq('reference',widget.reference);
                               Navigator.of(context).pop();
                             },
                             child: const Text('Valider')
@@ -401,7 +398,7 @@ class _EditIndicateurState extends State<EditIndicateur> {
                 ),),
               );
             },);
-        },splashRadius: 15, icon: Icon(Icons.edit,size: 20,color: Colors.green,))
+        },splashRadius: 15, icon: const Icon(Icons.edit,size: 20,color: Colors.green,))
       ],
     );
   }

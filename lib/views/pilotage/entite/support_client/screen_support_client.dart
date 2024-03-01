@@ -6,7 +6,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../helper/helper_methods.dart';
 import '../../../../widgets/custom_text.dart';
-import 'package:file_picker/file_picker.dart';
 
 
 class ScreenSupportClient extends StatefulWidget {
@@ -58,7 +57,7 @@ class _ScreenSupportClientState extends State<ScreenSupportClient> {
               const SizedBox(height: 5,),
               Card(
                 elevation: 3,
-                child: Container(
+                child: SizedBox(
                   width: 1000,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -86,7 +85,7 @@ class _ScreenSupportClientState extends State<ScreenSupportClient> {
                             const SizedBox(height: 20),
                             requestWidget(),
                             const SizedBox(height: 20),
-                            Text( fileState == true ? "Fichier : ${messageFormFile}" : "Joindre un document",style: const TextStyle(fontSize: 16,color: Color(0xFF3C3D3F)),),
+                            Text( fileState == true ? "Fichier : $messageFormFile" : "Joindre un document",style: const TextStyle(fontSize: 16,color: Color(0xFF3C3D3F)),),
                             const SizedBox(height: 10),
                             filePickerWidget(),
                             Visibility(
@@ -221,7 +220,7 @@ class _ScreenSupportClientState extends State<ScreenSupportClient> {
   }
 
   Widget requestWidget() {
-    return Container(
+    return SizedBox(
       height: 150,
       child: TextFormField(
         controller: _requestController,
@@ -230,6 +229,7 @@ class _ScreenSupportClientState extends State<ScreenSupportClient> {
           if (value !=null && value.length < 20 ) {
             return "Une erreur est survenue.";
           }
+          return null;
         },
         decoration: InputDecoration(
             hintText: "",
@@ -252,6 +252,7 @@ class _ScreenSupportClientState extends State<ScreenSupportClient> {
         if (value!=null && value.length < 10 ) {
           return "Une erreur est survenue.";
         }
+        return null;
       },
       decoration: InputDecoration(
           hintText: "",

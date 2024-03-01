@@ -34,7 +34,7 @@ class _RowEnjeuState extends State<RowEnjeu> {
 
   @override
   Widget build(BuildContext context) {
-    final indicateurs = widget.indicateurs.where((indicateur) => indicateur.enjeu == "${widget.idEnjeu}");
+    final indicateurs = widget.indicateurs.where((indicateur) => indicateur.enjeu == widget.idEnjeu);
     return Obx(() {
       bool isFiltreEnjeu = dropDownController.filtreViewAxe["enjeu"]??false;
       bool debloqueFunEnjeu = isFiltreEnjeu ? dropDownController.filtreViewAxe[widget.idEnjeu]?? false : true;

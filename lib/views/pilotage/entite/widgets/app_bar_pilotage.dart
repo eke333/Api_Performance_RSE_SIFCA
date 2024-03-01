@@ -90,7 +90,7 @@ class _AppBarPilotageState extends State<AppBarPilotage> {
               },
               radius: 20,
               child: CircleAvatar( backgroundColor: const Color(0xFFFFFF00),
-                  child: Center(child: CustomText(text: "${widget.shortName}",color: const Color(0xFFF1C232),weight: FontWeight.bold,),)),
+                  child: Center(child: CustomText(text: widget.shortName,color: const Color(0xFFF1C232),weight: FontWeight.bold,),)),
             ),//Image.asset("assets/images/person1.png", height: 50,width: 50, fit: BoxFit.fitWidth)),
           ],
         );

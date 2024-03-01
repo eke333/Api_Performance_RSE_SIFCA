@@ -159,7 +159,7 @@ class _StrategyButtonState extends State<StrategyButton> {
     return ElevatedButton(
         onPressed: () {
           dropDownController.filtreViewAxe.value = {
-            "${widget.axeId}": true,
+            widget.axeId: true,
           };
           context.go(
               "/pilotage/espace/${entitePilotageController.currentEntite.value}/tableau-de-bord/indicateurs");
@@ -190,7 +190,7 @@ class _StrategyButtonState extends State<StrategyButton> {
                 Row(
                   children: [
                     Image.asset(
-                      "${widget.imagePilier}",
+                      widget.imagePilier,
                       width: 40,
                       height: 40,
                     ),
@@ -199,7 +199,7 @@ class _StrategyButtonState extends State<StrategyButton> {
                     ),
                     Flexible(
                         child: Text(
-                      "${widget.titlePilier}",
+                      widget.titlePilier,
                       style: const TextStyle(color: Colors.black, fontSize: 18),
                     ))
                   ],
@@ -215,7 +215,7 @@ class _StrategyButtonState extends State<StrategyButton> {
                     onTap: () {
                       dropDownController.filtreViewAxe.value = {
                         "enjeu": true,
-                        "${widget.axeId}": true,
+                        widget.axeId: true,
                         "enjeu_${enjeu["key"]}": true,
                       };
                       context.go(
@@ -302,7 +302,7 @@ class _GeneralButtonState extends State<GeneralButton> {
           elevation: elevation,
           backgroundColor: Colors.brown,
           padding: EdgeInsets.zero),
-      child: Container(
+      child: SizedBox(
           width: 150,
           height: 150,
           child: Container(

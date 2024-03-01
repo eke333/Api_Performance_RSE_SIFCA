@@ -25,7 +25,7 @@ class _RowAxeState extends State<RowAxe> {
 
   @override
   Widget build(BuildContext context) {
-    final indicateurs = widget.indicateurs.where((indicateur) => indicateur.axe == "${widget.idAxe}").toList();
+    final indicateurs = widget.indicateurs.where((indicateur) => indicateur.axe == widget.idAxe).toList();
     return Obx((){
           bool isVisibleEnjeu = dropDownController.jsonDropDown[widget.idAxe]??false;
           bool isFiltrePilier = dropDownController.filtreViewAxe[widget.idAxe]??false;

@@ -51,7 +51,7 @@ class _ProgressBarState extends State<ProgressBar> {
           child: Padding(
               padding: const EdgeInsets.only(right: 30,left: 15,top: 12,bottom: 15),
               child: Text(
-                progressValue.toStringAsFixed(2) + ' %',
+                '${progressValue.toStringAsFixed(2)} %',
                 style: const TextStyle(fontSize: 14, color: Color(0xffFFFFFF)),
               ))),
     ]);

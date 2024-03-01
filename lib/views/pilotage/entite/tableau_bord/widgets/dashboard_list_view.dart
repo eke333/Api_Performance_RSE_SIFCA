@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../../../../../models/pilotage/data_indicateur_model.dart';
 import '../../../../../models/pilotage/indicateur_model.dart';
 import '/views/pilotage/controllers/tableau_controller.dart';
-import 'data_table/row_indicateur.dart';
 import 'data_table/row_axe.dart';
 
 class DashBoardListView extends StatefulWidget {

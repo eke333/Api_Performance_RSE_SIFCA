@@ -184,7 +184,7 @@ class _EntityWidgetWidgetState extends State<FiltreTableauBord> {
                   borderRadius: const BorderRadius.all(Radius.circular(30.0)),
                 ),
                 child: CustomText(
-                  text: "${acces}",
+                  text: acces,
                   size: 13,
                   color: Colors.green,
                 ));
@@ -285,7 +285,7 @@ class _YearFiltreWidgetState extends State<YearFiltreWidget> {
                 border: Border.all(color: const Color(0xFFE5E5E7))),
             child: Row(
               children: [
-                Text("${_btn3SelectedYear}",
+                Text(_btn3SelectedYear,
                     style: const TextStyle(fontSize: 15)),
                 const SizedBox(
                   width: 5,
@@ -340,16 +340,16 @@ class _MonthFiltreWidgetState extends State<MonthFiltreWidget> {
             return Row(
               children: [
                 Obx(() {
-                  var _currentMonth = tableauBordController.currentMonth.value;
+                  var currentMonth = tableauBordController.currentMonth.value;
                   return Checkbox(
-                      value: month["id"] == _currentMonth,
+                      value: month["id"] == currentMonth,
                       splashRadius: 15,
                       checkColor: Colors.blue,
                       side: MaterialStateBorderSide.resolveWith(
                         (states) {
                           return BorderSide(
                               width: 2.0,
-                              color: month["id"] == _currentMonth
+                              color: month["id"] == currentMonth
                                   ? Colors.blue
                                   : Colors.grey);
                         },
@@ -387,10 +387,10 @@ class _MonthFiltreWidgetState extends State<MonthFiltreWidget> {
             child: Row(
               children: [
                 Obx(() {
-                  var _currentMonth = tableauBordController.currentMonth.value;
-                  var _showMonth =
-                      tableauBordController.listMonth[_currentMonth - 1];
-                  return Text("${_showMonth}",
+                  var currentMonth0 = tableauBordController.currentMonth.value;
+                  var showMonth =
+                      tableauBordController.listMonth[currentMonth0 - 1];
+                  return Text(showMonth,
                       style: const TextStyle(fontSize: 15));
                 }),
                 const SizedBox(
@@ -399,14 +399,14 @@ class _MonthFiltreWidgetState extends State<MonthFiltreWidget> {
                 Obx(() {
                   var currentMonth = tableauBordController.currentMonth.value;
                   var currentYear = tableauBordController.currentYear.value;
-                  List<Map<String, dynamic>> _monthList = [];
+                  List<Map<String, dynamic>> monthList = [];
                   var datetime = DateTime.now();
                   if (currentYear > datetime.year) {
                     return Container();
                   }
                   if (currentYear == datetime.year) {
                     for (var i = 0; i < datetime.month; i++) {
-                      _monthList.add({
+                      monthList.add({
                         "id": i + 1,
                         "month": tableauBordController.listMonth[i]
                       });
@@ -429,11 +429,11 @@ class _MonthFiltreWidgetState extends State<MonthFiltreWidget> {
                         });
                       },
                       itemBuilder: (BuildContext context) =>
-                          _popUpMenuMonthItems(_monthList),
+                          _popUpMenuMonthItems(monthList),
                     );
                   } else if (currentYear < datetime.year) {
                     for (var i = 0; i < 12; i++) {
-                      _monthList.add({
+                      monthList.add({
                         "id": i + 1,
                         "month": tableauBordController.listMonth[i]
                       });
@@ -456,7 +456,7 @@ class _MonthFiltreWidgetState extends State<MonthFiltreWidget> {
                         });
                       },
                       itemBuilder: (BuildContext context) =>
-                          _popUpMenuMonthItems(_monthList),
+                          _popUpMenuMonthItems(monthList),
                     );
                   }
                   return Container();
@@ -650,7 +650,7 @@ class _CheckBoxWidgetState extends State<CheckBoxWidget> {
             ),
             Flexible(
                 child: CustomText(
-              text: "${widget.processus}",
+              text: widget.processus,
               fontStyle: FontStyle.italic,
             ))
           ],

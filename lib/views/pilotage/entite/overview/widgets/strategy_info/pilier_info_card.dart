@@ -39,7 +39,7 @@ class _PilierInfoCardState extends State<PilierInfoCard> {
       final kEntiteSuivi = suiviDocList.first["suivi_axe"][axeId];
       setState(() {
         entiteSuivi = kEntiteSuivi;
-        num kPercentage = entiteSuivi["indicateur_collectes"] / entiteSuivi["indicateur_total"] ;
+        num kPercentage = (entiteSuivi["indicateur_collectes"] / entiteSuivi["indicateur_total"]) * 100;
         percentage = num.parse(kPercentage.toStringAsFixed(2));
       });
     } catch (e) {
@@ -87,12 +87,12 @@ class _PilierInfoCardState extends State<PilierInfoCard> {
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(15)),
           ),
-          child: isLoading ? Center(
-            child: Container(
+          child: isLoading ? const Center(
+            child: SizedBox(
               width: 50,height: 50, child: CircularProgressIndicator(),
             ),
-          ) : (status == -1 ) ? Center(
-            child: Container(
+          ) : (status == -1 ) ? const Center(
+            child: SizedBox(
               width: 50,height: 50, child: Text("Aucune Donnée"),
             ),
           ) : Column(
@@ -114,7 +114,7 @@ class _PilierInfoCardState extends State<PilierInfoCard> {
                       widget.info.svgSrc!,
                     ),
                   ),
-                  Text("${percentage} %",style: TextStyle(
+                  Text("$percentage %",style: TextStyle(
                       color: 24 < 30 ?  Colors.red :
                       20 < 60 ? Colors.yellow : percentage < 75 ?
                       Colors.green : Colors.blue,fontWeight: FontWeight.bold

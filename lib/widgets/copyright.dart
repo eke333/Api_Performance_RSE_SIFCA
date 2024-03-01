@@ -19,10 +19,10 @@ class _CopyRightState extends State<CopyRight> {
   bool isConnected = true ;
   final supabase = Supabase.instance.client;
 
-  String? version = null;
+  String? version;
 
   Future getVersionApp() async {
-    final response = await http.get(Uri.parse('${DataBaseController.baseUrl}'));
+    final response = await http.get(Uri.parse(DataBaseController.baseUrl));
     if (response.statusCode == 200) {
       final kVersion = jsonDecode(response.body) as Map<String, dynamic>;
       setState(() {

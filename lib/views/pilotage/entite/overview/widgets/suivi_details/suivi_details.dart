@@ -34,16 +34,16 @@ class _SuiviDetailsState extends State<SuiviDetails> {
     final idSuivi = "${entiteID}_${suiviDataController.annee.value}";
     final List suiviDocList = await supabase.from('SuiviData').select().eq("id_suivi",idSuivi);
 
-    final String _entite = suiviDocList.first["nom_entite"];
-    final int _number = suiviDocList.first["indicateur_total"];
-    final int _numberValide = suiviDocList.first["indicateur_valides"];
-    final int _numberCollecte = suiviDocList.first["indicateur_collectes"];
+    final String entite = suiviDocList.first["nom_entite"];
+    final int number = suiviDocList.first["indicateur_total"];
+    int numberValide = suiviDocList.first["indicateur_valides"];
+    int numberCollecte = suiviDocList.first["indicateur_collectes"];
 
     setState(() {
-      eniteName = _entite;
-      numberTotal = _number;
-      numberCollecte = _numberCollecte;
-      numberValide = _numberValide;
+      eniteName = entite;
+      numberTotal = number;
+      numberCollecte = numberCollecte;
+      numberValide = numberValide;
     });
   }
 
@@ -87,26 +87,26 @@ class _SuiviDetailsState extends State<SuiviDetails> {
                 text:"Suivi des données ${suiviDataController.annee.value}",
                 weight: FontWeight.bold,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               ChartOverview(nombreTotal: numberTotal, numberVide: numberTotal-numberCollecte, numberCollecte: numberCollecte,),
               DataSuiviCard(
                 svgSrc: "assets/icons/data_validated.png",
                 title: "Données Validées",
-                nombre: "${numberTotal}",
+                nombre: "$numberTotal",
                 total: numberValide,
                 color: Colors.green,
               ),
               DataSuiviCard(
                 svgSrc: "assets/icons/data_collect.png",
                 title: "Données Collectées",
-                nombre: "${numberTotal}",
+                nombre: "$numberTotal",
                 total: numberCollecte,
                 color: Colors.amber,
               ),
               DataSuiviCard(
                 svgSrc: "assets/icons/no_data.png",
                 title: "Champs vides",
-                nombre: "${numberTotal}",
+                nombre: "$numberTotal",
                 total: numberTotal-numberCollecte,
                 color: Colors.red,
               ),

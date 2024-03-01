@@ -19,7 +19,7 @@ class SuiviDataController extends GetxController {
   void loadDataSuivi(int an) async {
     isLoading.value = true;
     annee.value = an;
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     isLoading.value = false;
   }
 

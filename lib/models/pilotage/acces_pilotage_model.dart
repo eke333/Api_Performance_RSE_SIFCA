@@ -35,7 +35,7 @@ class AccesPilotageModel {
     email: json["email"],
     entite: json["entite"],
     nomEntite: json["nom_entite"],
-    processus: json["processus"],
+    processus: json["processus"].toString(),
     estSpectateur: json["est_spectateur"],
     estEditeur: json["est_editeur"],
     estValidateur: json["est_validateur"],

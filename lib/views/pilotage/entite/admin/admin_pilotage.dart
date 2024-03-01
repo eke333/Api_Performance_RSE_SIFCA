@@ -18,7 +18,7 @@ class _AdministrationPilotageState extends State<AdministrationPilotage> {
       final adminCard = adminPilotageController.titleCard.value;
       return  Column(
         children: [
-          Row(
+          const Row(
             children: [
               ButtonCard(title: "Contributeurs",),
               SizedBox(width: 10,),
@@ -26,8 +26,8 @@ class _AdministrationPilotageState extends State<AdministrationPilotage> {
               SizedBox(width: 10,),
             ],
           ),
-          SizedBox(height: 10,),
-          Expanded(child: adminCard == "Contributeurs" ?  ContributeurScreen() : IndicateursScreen() )
+          const SizedBox(height: 10,),
+          Expanded(child: adminCard == "Contributeurs" ?  const ContributeurScreen() : const IndicateursScreen() )
         ],
       );
     });

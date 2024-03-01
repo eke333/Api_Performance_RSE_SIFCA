@@ -30,7 +30,7 @@ class RouteClass {
     navigatorKey: _rootNavigatorKey,
     initialLocation: supabase.auth.currentSession != null ? "/" : "/account/login",
     errorBuilder: (context, state) {
-      return PageNotFound();
+      return const PageNotFound();
     },
     routes: [
       GoRoute(
@@ -75,7 +75,7 @@ class RouteClass {
                   ShellRoute(
                     navigatorKey: _shellNavigatorKey,
                     builder: (BuildContext context, GoRouterState state, Widget child) {
-                      return EntityPilotageMain(child: child,entiteId: state.pathParameters['entiteId']);
+                      return EntityPilotageMain(entiteId: state.pathParameters['entiteId'], child: child);
                     },
                     routes: <RouteBase>[
                       GoRoute(

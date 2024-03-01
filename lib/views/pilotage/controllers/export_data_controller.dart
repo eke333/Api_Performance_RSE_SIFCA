@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
@@ -10,11 +8,7 @@ import 'dart:html' as html;
 import '../../../api/supabse_db.dart';
 import 'entite_pilotage_controler.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xcel;
-import 'package:path_provider/path_provider.dart';
-import 'package:open_file/open_file.dart';
-import 'package:universal_html/html.dart' show AnchorElement;
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:convert';
 
 class ExportDataController {
   final DataBaseController dataBaseController = DataBaseController();
@@ -79,7 +73,7 @@ class ExportDataController {
 
     final List<int> bytes = workbook.saveAsStream();
     final Uint8List excelBytes = Uint8List.fromList(bytes);
-    final String fileName = '${entite}_${annee}.xlsx';
+    final String fileName = '${entite}_$annee.xlsx';
 
     if (kIsWeb) {
       final html.Blob blob = html.Blob([excelBytes]);
@@ -111,7 +105,7 @@ class ExportDataController {
     // Créer un élément <a> pour télécharger le fichier PDF
     html.AnchorElement(href: url)
       ..setAttribute("download",
-          "indicateurs_performance_${entite}_${annne}_${version}.pdf")
+          "indicateurs_performance_${entite}_${annne}_$version.pdf")
       ..click(); // Simuler le clic sur le lien pour démarrer le téléchargement
 
     // Libérer l'URL de l'objet blob après le téléchargement
@@ -124,7 +118,7 @@ class ExportDataController {
       "Référence",
       'Indicateurs',
       'Unité',
-      'Réalisé ${annee}'
+      'Réalisé $annee'
     ];
     final List<List<String>> result = [initialRow];
 
@@ -167,7 +161,7 @@ class ExportDataController {
     // Add the table to the PDF
     pdf.addPage(
       pw.MultiPage(
-        margin: pw.EdgeInsets.only(
+        margin: const pw.EdgeInsets.only(
             left: 10, right: 10, top: 20, bottom: 20), // Ajuster les marges ici
         build: (pw.Context context) {
           return [
@@ -228,10 +222,10 @@ class ExportDataController {
             pw.SizedBox(height: 10),
             pw.TableHelper.fromTextArray(
               columnWidths: {
-                0: pw.FixedColumnWidth(50),
-                1: pw.FixedColumnWidth(100),
-                3: pw.FixedColumnWidth(85),
-                4: pw.FixedColumnWidth(140),
+                0: const pw.FixedColumnWidth(50),
+                1: const pw.FixedColumnWidth(100),
+                3: const pw.FixedColumnWidth(85),
+                4: const pw.FixedColumnWidth(140),
               },
               context: context,
               border: pw.TableBorder.all(),
@@ -240,9 +234,9 @@ class ExportDataController {
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.white,
               ),
-              cellStyle: pw.TextStyle(fontSize: 10),
+              cellStyle: const pw.TextStyle(fontSize: 10),
               oddRowDecoration:
-                  pw.BoxDecoration(color: PdfColor.fromInt(0xFFE5E5E5)),
+                  const pw.BoxDecoration(color: PdfColor.fromInt(0xFFE5E5E5)),
               headerDecoration:
                   pw.BoxDecoration(color: getColor(mapData["color"])),
               rowDecoration: const pw.BoxDecoration(

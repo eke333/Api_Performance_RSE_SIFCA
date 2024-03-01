@@ -10,7 +10,7 @@ class StyledScrollView extends StatefulWidget {
 
   final Widget child;
 
-  StyledScrollView({
+  const StyledScrollView({
     Key? key,
     required this.child,
     this.contentSize,

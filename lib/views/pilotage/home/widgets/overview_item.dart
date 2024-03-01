@@ -70,7 +70,7 @@ class _OverviewExpansionItemState extends State<OverviewExpansionItem> {
     }
     if (acces["est_admin"]) {
       EasyLoading.dismiss();
-      final path = "/pilotage/espace/${idEntite}/accueil";
+      final path = "/pilotage/espace/$idEntite/accueil";
       context.go(path);
       return true;
     }
@@ -78,7 +78,7 @@ class _OverviewExpansionItemState extends State<OverviewExpansionItem> {
     final bool checkEntite = (acces["entite"] == widget.entiteID);
     if (verfication && checkEntite) {
       EasyLoading.dismiss();
-      final path = "/pilotage/espace/${idEntite}/accueil";
+      final path = "/pilotage/espace/$idEntite/accueil";
       context.go(path);
       return true;
     }
@@ -139,7 +139,7 @@ class _OverviewExpansionItemState extends State<OverviewExpansionItem> {
             visible: isVisible,
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: Container(
+              child: SizedBox(
                 height: widget.height?? 100,
                 width: double.maxFinite,
                 child: StyledScrollView(

@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../models/pilotage/data_indicateur_row_model.dart';
 import '../models/pilotage/indicateur_model.dart';
+import '../models/pilotage/performs_model.dart';
 import '../models/common/user_model.dart';
 import '../models/pilotage/acces_pilotage_model.dart';
 
@@ -22,6 +24,20 @@ class DataBaseController {
     return indicateurs;
   }
 
+  //recuprer valeur de la cible de l'indicateur
+  Future<List<dynamic>> getCibleListIndicateur(String id) async {
+    try {
+      final List<dynamic> response =
+          await supabase.from('DataIndicateur').select('cibles').eq('id', id);
+      final data = response[0];
+      final result = data["cibles"];
+      return result;
+    } catch (e) {
+      print('Error fetching cible value:$e');
+      return [];
+    }
+  }
+
   Future<DataIndicateurRowModel> getAllDataRowIndicateur(
       String idDataIndicateur) async {
     try {
@@ -39,18 +55,49 @@ class DataBaseController {
           entite: data["entite"],
           annee: data["annee"],
           valeurs: data["valeurs"],
-          validations: data["validations"]);
+          validations: data["validations"],
+          ecarts: data["ecarts"],
+          cibles: data["cibles"]);
+      // if (result.ecarts.isEmpty) {
+      //   result.ecarts = List.generate(280, (_) => null);
+      // }
+      // if (result.cibles.isEmpty){
+      //   result.cibles = List.generate(280, (_) => null);
+      // }
       return result;
     } catch (e) {
       return DataIndicateurRowModel.init();
     }
   }
 
+  // Future<EntityPerfomsModel> getEntityPerforms(String idDataIndicateur) async {
+  //   try {
+  //     final List<dynamic> datas = await supabase
+  //         .from('Performance')
+  //         .select()
+  //         .eq('id', idDataIndicateur);
+
+  //     if (datas.isEmpty) {
+  //       return EntityPerfomsModel.init();
+  //     }
+
+  //     final data = datas[0];
+  //     final result = EntityPerfomsModel(
+  //         entite: data["entite"],
+  //         annee: data["annee"],
+  //         performsPiliers: data["performsPiliers"],
+  //         performsEnjeux: data["performsEnjeux"]);
+  //     return result;
+  //   } catch (e) {
+  //     return EntityPerfomsModel.init();
+  //   }
+  // }
+
   Future<bool> updateAPIDatabase(String id) async {
     final Map<String, dynamic> data = {"id": id};
 
     const String apiUrl =
-        "${baseUrl}/data-entite-indicateur/update-data-from-supabase";
+        "$baseUrl/data-entite-indicateur/update-data-from-supabase";
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -73,7 +120,7 @@ class DataBaseController {
       "annee": annee,
     };
 
-    const String apiUrl = "${baseUrl}/data-entite-suivi";
+    const String apiUrl = "$baseUrl/data-entite-suivi";
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -93,7 +140,7 @@ class DataBaseController {
   Future<bool> consolidation(int annee) async {
     final Map<String, dynamic> data = {"annee": annee};
 
-    const String apiUrl = "${baseUrl}/data-entite-indicateur/consolidation";
+    const String apiUrl = "$baseUrl/data-entite-indicateur/consolidation";
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -117,7 +164,7 @@ class DataBaseController {
       "entiteId": entite,
     };
 
-    const String apiUrl = "${baseUrl}/data-entite-indicateur/export-all-data";
+    const String apiUrl = "$baseUrl/data-entite-indicateur/export-all-data";
 
     final response = await http.post(
       Uri.parse(apiUrl),

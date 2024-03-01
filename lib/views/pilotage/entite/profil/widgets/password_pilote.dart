@@ -54,7 +54,7 @@ class _PasswordPiloteState extends State<PasswordPilote> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Echec", "Un problème est survenu.", Colors.red));
       }
-    } on Exception catch (e) {
+    } on Exception {
       ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Echec", "votre mot de passe actuel est incorrect.", Colors.red,const Duration(seconds: 6)));
     }
     EasyLoading.dismiss();

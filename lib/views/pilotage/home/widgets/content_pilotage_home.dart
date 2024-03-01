@@ -383,7 +383,7 @@ class _EntityTextButtonState extends State<EntityTextButton> {
     }
     if (acces["est_admin"]) {
       EasyLoading.dismiss();
-      final path = "/pilotage/espace/${idEntite}/accueil";
+      final path = "/pilotage/espace/$idEntite/accueil";
       await Future.delayed(const Duration(milliseconds: 100));
       context.go(path);
       return true;
@@ -392,7 +392,7 @@ class _EntityTextButtonState extends State<EntityTextButton> {
     final bool checkEntite = (acces["entite"] == widget.entiteID);
     if (verfication && checkEntite) {
       EasyLoading.dismiss();
-      final path = "/pilotage/espace/${idEntite}/accueil";
+      final path = "/pilotage/espace/$idEntite/accueil";
       await Future.delayed(const Duration(milliseconds: 100));
       context.go(path);
       return true;
@@ -411,7 +411,7 @@ class _EntityTextButtonState extends State<EntityTextButton> {
           goToEspaceEntitePilotage(widget.entiteID);
         },
         child: CustomText(
-          text: "${widget.title}",
+          text: widget.title,
           color: widget.color,
           weight: FontWeight.bold,
         ));

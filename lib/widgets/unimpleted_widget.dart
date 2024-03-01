@@ -8,7 +8,7 @@ class UnimplementedWidget{
       title: "Unimplemented Feature",
       titleStyle: const TextStyle(fontStyle: FontStyle.italic),
       radius: 10,
-      content: Container(
+      content: SizedBox(
           width: 250,height: 250,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

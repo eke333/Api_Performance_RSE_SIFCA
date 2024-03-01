@@ -71,10 +71,10 @@ class _ListeContributeurState extends State<ListeContributeur> {
                   )
                 ],
               ),
-              contributeurs.isEmpty ? Container(
+              contributeurs.isEmpty ? const SizedBox(
                 width: double.infinity,
                 height: 270,
-                child: Center(child: Container(width: 50,height: 50,
+                child: Center(child: SizedBox(width: 50,height: 50,
                 child: CircularProgressIndicator(),)),
               ) :
               SizedBox(

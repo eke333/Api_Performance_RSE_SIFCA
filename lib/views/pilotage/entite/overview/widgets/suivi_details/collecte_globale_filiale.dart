@@ -15,8 +15,7 @@ class CollecteGlobaleEntites extends StatefulWidget {
 }
 
 class _CollecteGlobaleEntitesState extends State<CollecteGlobaleEntites> {
-
-  List<Map<String,dynamic>> entityInfos  = [];
+  List<Map<String, dynamic>> entityInfos = [];
   final DataBaseController apiClient = DataBaseController();
   int status = 0;
   final supabase = Supabase.instance.client;
@@ -24,29 +23,34 @@ class _CollecteGlobaleEntitesState extends State<CollecteGlobaleEntites> {
   final year = DateTime.now().year;
 
   void initialisation() async {
-    List<Map<String,dynamic>> kEntityInfos  = [];
+    List<Map<String, dynamic>> kEntityInfos = [];
     try {
       final entiteID = entitePilotageController.currentEntite.value;
-      final List suiviDocList = await supabase.from('SuiviData').select().gte("annee", year-1);
-      final List entiteList = await supabase.from('Entites').select().eq("id_entite", entiteID);
+      final List suiviDocList =
+          await supabase.from('SuiviData').select().gte("annee", year - 1);
+      final List entiteList =
+          await supabase.from('Entites').select().eq("id_entite", entiteID);
       final List affichageEnites = entiteList.first["filtre_entite_id"];
-      for (var kEniteId in affichageEnites ) {
-        Map<String,dynamic> doc = {
-          "${year}":0,"${year-1}":0
-        };
-        final ligneAnneeN = suiviDocList.firstWhere((element) => (element["annee"] == year && element["id_entite"] == kEniteId ) );
+      for (var kEniteId in affichageEnites) {
+        Map<String, dynamic> doc = {"$year": 0, "${year - 1}": 0};
+        final ligneAnneeN = suiviDocList.firstWhere((element) =>
+            (element["annee"] == year && element["id_entite"] == kEniteId));
         doc["nom"] = ligneAnneeN["nom_entite"];
-        num percentage = (ligneAnneeN["indicateur_collectes"] / ligneAnneeN["indicateur_total"]) ;
-        doc["${year}"] = num.parse(percentage.toStringAsFixed(2));
+        num percentage = (ligneAnneeN["indicateur_collectes"] /
+            ligneAnneeN["indicateur_total"]);
+        doc["$year"] = num.parse(percentage.toStringAsFixed(2));
 
         try {
-          final ligneAnneeN1 = suiviDocList.firstWhere((element) => (element["annee"] == year-1 && element["id_entite"] == kEniteId ));
-          if (ligneAnneeN1 != null ) {
-            doc["${year-1}"] = ligneAnneeN1["indicateur_collectes"] / ligneAnneeN1["indicateur_total"];
+          final ligneAnneeN1 = suiviDocList.firstWhere((element) =>
+              (element["annee"] == year - 1 &&
+                  element["id_entite"] == kEniteId));
+          if (ligneAnneeN1 != null) {
+            doc["${year - 1}"] = ligneAnneeN1["indicateur_collectes"] /
+                ligneAnneeN1["indicateur_total"];
           }
         } catch (e) {
-          doc["${year-1}"] = 0;
-          apiClient.updateSuiviDataEntite(kEniteId, year-1);
+          doc["${year - 1}"] = 0;
+          apiClient.updateSuiviDataEntite(kEniteId, year - 1);
         }
 
         kEntityInfos.add(doc);
@@ -78,38 +82,43 @@ class _CollecteGlobaleEntitesState extends State<CollecteGlobaleEntites> {
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        child:  entityInfos.isEmpty ? Container(
-          width: double.infinity,
-          height: 300,
-          child: Center(
-            child: Container(
-              width: 50,height: 50,
-              child: status == -1 ? Text("Aucune donnée") : CircularProgressIndicator(),),
-          ),
-        ) : Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DataTable(
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                columns:  [
-                  DataColumn(
-                    label: Text("Filiale/Entités"),
+        child: entityInfos.isEmpty
+            ? SizedBox(
+                width: double.infinity,
+                height: 300,
+                child: Center(
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: status == -1
+                        ? const Text("Aucune donnée")
+                        : const CircularProgressIndicator(),
                   ),
-                  DataColumn(
-                    label: Text("${year-1}"),
-                  ),
-                  DataColumn(
-                    label: Text("${year}"),
-                  ),
+                ),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DataTable(
+                      columnSpacing: 12,
+                      horizontalMargin: 12,
+                      columns: [
+                        const DataColumn(
+                          label: Text("Filiale/Entités"),
+                        ),
+                        DataColumn(
+                          label: Text("${year - 1}"),
+                        ),
+                        DataColumn(
+                          label: Text("$year"),
+                        ),
+                      ],
+                      rows: List.generate(
+                        entityInfos.length,
+                        (index) => dataRow(entityInfos[index]),
+                      ))
                 ],
-                rows: List.generate(
-                  entityInfos.length,
-                      (index) => dataRow(entityInfos[index]),
-                )
-            )
-          ],
-        ),
+              ),
       ),
     );
   }
@@ -118,12 +127,32 @@ class _CollecteGlobaleEntitesState extends State<CollecteGlobaleEntites> {
     return DataRow(
       cells: [
         DataCell(Text(entityInfo["nom"])),
-        DataCell(Text("${entityInfo["2023"]} %",style: TextStyle(fontWeight: FontWeight.bold,color: entityInfo["2023"] < 30 ?  Colors.red :
-        entityInfo["${year-1}"] < 60 ? Colors.yellow : entityInfo["${year-1}"] < 75 ?
-        Colors.green : Colors.blue),)),
-        DataCell(Text("${entityInfo["2024"]} %",style: TextStyle(fontWeight: FontWeight.bold,color: entityInfo["2024"] < 30 ?  Colors.red :
-        entityInfo["${year}"] < 60 ? Colors.yellow : entityInfo["${year}"] < 75 ?
-        Colors.green : Colors.blue),))
+        DataCell(Text(
+          "${(entityInfo["2023"] * 100).toStringAsFixed(2)} %",
+          style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: entityInfo["2023"] < 30
+                  ? Colors.red
+                  : entityInfo["${year - 1}"] < 60
+                      ? Colors.yellow
+                      : entityInfo["${year - 1}"] < 75
+                          ? Colors.green
+                          : Colors.blue),
+        )),
+        DataCell(Text(
+          "${(entityInfo["2024"] * 100).toStringAsFixed(2)} %",
+          style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: entityInfo["2024"] < 30
+                  ? Colors.red
+                  : entityInfo["$year"] < 60
+                      ? Colors.yellow
+                      : entityInfo["$year"] < 75
+                          ? Colors.green
+                          : Colors.blue),
+        ))
       ],
     );
   }

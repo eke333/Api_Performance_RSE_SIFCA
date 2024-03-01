@@ -28,13 +28,13 @@ class OverviewPilotageController extends GetxController {
       final List<Map<String,dynamic>> accesPilotagesList = await supabase.from('AccesPilotage').select();
 
       for (var user in usersList ) {
-        final accesPilotageJson = accesPilotagesList.firstWhere((element) => element["email"] == user["email"],orElse: null) ;
+        final accesPilotageJson = accesPilotagesList.firstWhere((element) => element["email"] == user["email"],orElse: () => {}) ;
         final entite = accesPilotageJson == null ?  "----" : accesPilotageJson["nom_entite"] ;
 
         final acces = accesPilotageJson != null ? getAccesTypeUtils(AccesPilotageModel.fromJson(accesPilotageJson)) : "---" ;
 
         final kUser = ContributeurModel(
-          entite:"${entite}",nom: user["nom"], prenom: user["prenom"], access: "${acces}", filiale: "${user["entreprise"]}",
+          entite:"$entite",nom: user["nom"], prenom: user["prenom"], access: acces, filiale: "${user["entreprise"]}",
         );
 
         listUserEntite.add(kUser);

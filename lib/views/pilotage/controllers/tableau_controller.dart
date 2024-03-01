@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../api/supabse_db.dart';
 import '../../../controller/time_system_controller.dart';
@@ -18,7 +17,7 @@ class TableauBordController extends GetxController {
 
   final indicateursList = <IndicateurModel>[].obs;
 
-  Map<String, dynamic>? dataMapExport = null;
+  Map<String, dynamic>? dataMapExport;
   final indicateursListApparente = <IndicateurModel>[].obs;
 
   final dataIndicateur = DataIndicateurRowModel.init().obs;
@@ -80,13 +79,13 @@ class TableauBordController extends GetxController {
     if (dropDownController.filtreProcessus.isEmpty) {
       indicateursListApparente.value = indicateursList;
     } else {
-      final List<IndicateurModel> _Klist = [];
+      final List<IndicateurModel> Klist = [];
       for (var indicateur in indicateursList) {
         if (dropDownController.filtreProcessus.contains(indicateur.processus)) {
-          _Klist.add(indicateur);
+          Klist.add(indicateur);
         }
       }
-      indicateursListApparente.value = _Klist;
+      indicateursListApparente.value = Klist;
     }
   }
 
@@ -118,6 +117,7 @@ class TableauBordController extends GetxController {
 
   void initialisation(BuildContext context) async {
     allYearsList.value = TimeSystemController.years;
+    //dataCibleList.value = await dataBaseController.getValeurCibleIndicateur();
     isLoading.value = true;
     indicateursList.value = await dataBaseController.getAllIndicateur();
     await initialisationDataIndicateur();
@@ -162,7 +162,7 @@ class TableauBordController extends GetxController {
 
     for (var entite in listEntites) {
       for (var an in annnes) {
-        final idDataIndicateur = '${entite}_${an}';
+        final idDataIndicateur = '${entite}_$an';
         final List datasEntite = await supabase
             .from('DataIndicateur')
             .select()
@@ -236,6 +236,11 @@ class TableauBordController extends GetxController {
       );
     }
   }
+/*
+  Future getValeurCibleIndicateur() async {
+    final valeurCible = 
+  }
+  */
 
   void refreshData() async {
     allYearsList.value = TimeSystemController.years;
@@ -271,7 +276,7 @@ class TableauBordController extends GetxController {
       final currentEntite = entitePilotageController.currentEntite.value;
       final Map<String, dynamic> data = {
         "annee": currentYear.value,
-        "entite": "${currentEntite}",
+        "entite": currentEntite,
         "valeur": valeur,
         "ligne": numeroLigne,
         "colonne": colonne,
@@ -301,6 +306,55 @@ class TableauBordController extends GetxController {
     }
   }
 
+  Future<bool> renseignerDataCible(
+      {required num dataCible,
+      required int numeroLigne,
+      required int colonne, required String type, required String formule}) async {
+    try {
+      final currentEntite = entitePilotageController.currentEntite.value;
+      final Map<String, dynamic> data = {
+        "annee": currentYear.value,
+        "entite": currentEntite,
+        "datacible": dataCible,
+        "ligne": numeroLigne,
+        "colonne": colonne,
+        "type": type,
+        "formule": formule,
+      };
+
+      const String apiUrl =
+          "${DataBaseController.baseUrl}/data-entite-indicateur/compute-performs";
+
+      var idEntite =
+          '${entitePilotageController.currentEntite.value}_${currentYear.value}';
+      var listCibles =
+          await dataBaseController.getCibleListIndicateur(idEntite);
+      if (listCibles.isEmpty) {
+        listCibles = List.generate(280, (_) => null);
+      }
+      listCibles[numeroLigne] = dataCible;
+      await supabase
+          .from('DataIndicateur')
+          .update({'cibles': listCibles}).eq('id', idEntite);
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("Erreur lors de la mise à jour de la cible : $e");
+      return false;
+    }
+  }
+
   Future<bool> validerIndicateurMois(
       {required bool valide,
       required int numeroLigne,
@@ -309,12 +363,45 @@ class TableauBordController extends GetxController {
       final currentEntite = entitePilotageController.currentEntite.value;
       final Map<String, dynamic> data = {
         "annee": currentYear.value,
-        "entite": "${currentEntite}",
+        "entite": currentEntite,
         "valide": valide,
         "ligne": numeroLigne,
         "colonne": colonne
       };
 
+      const String apiUrl =
+          "${DataBaseController.baseUrl}/data-entite-indicateur/update-validation";
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> annulerValidationMois(
+      {required bool valide,
+      required int numeroLigne,
+      required int colonne}) async {
+    try {
+      final currentEntite = entitePilotageController.currentEntite.value;
+      final Map<String, dynamic> data = {
+        "annee": currentYear.value,
+        "entite": currentEntite,
+        "valide": valide,
+        "ligne": numeroLigne,
+        "colonne": colonne
+      };
       const String apiUrl =
           "${DataBaseController.baseUrl}/data-entite-indicateur/update-validation";
 

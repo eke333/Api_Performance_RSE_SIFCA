@@ -172,7 +172,6 @@ class ThemeProvider {
       tabBarTheme: tabBarTheme(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       scaffoldBackgroundColor: colorScheme.background,
-      useMaterial3: true,
     );
   }
 

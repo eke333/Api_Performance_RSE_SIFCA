@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:get/get.dart';
+import '../../../../controllers/performs_data_controller.dart';
+import '../../../../controllers/entite_pilotage_controler.dart';
 
 class PerformancePiliers extends StatefulWidget {
   const PerformancePiliers({Key? key}) : super(key: key);
@@ -15,25 +19,57 @@ class _PerformancePiliersState extends State<PerformancePiliers> {
   TooltipBehavior? _tooltipBehavior;
   bool _isLoaded = false;
   bool isCardView = true;
+  String entiteName = "";
+
+  final supabase = Supabase.instance.client;
+  final EntitePilotageController entitePilotageController = Get.find();
+  final PerformsDataController performsDataController = Get.find();
 
   void initialisation() async {
+    final entiteID = entitePilotageController.currentEntite.value;
+    final idPerformsA = "${entiteID}_${performsDataController.annee.value}";
+    final idPerformsB = "${entiteID}_${performsDataController.annee.value - 1}";
+    final List performsDataListA =
+        await supabase.from('Performance').select().eq('id', idPerformsA);
+    final List performsDataListB =
+        await supabase.from('Performance').select().eq('id', idPerformsB);
+    // final List<dynamic> entite = await supabase
+    //     .from('Entites')
+    //     .select('nom_entite')
+    //     .eq('id_entite', entiteID);
+    // var entiteVal = entite.first["nom_entite"];
+    // setState(() {
+    //   entiteName = entiteVal;
+    // });
+
+    final datasPilierA = performsDataListA.first["performs_piliers"];
+    final datasPilierB = performsDataListB.first["performs_piliers"];
+
+    final datasPilierListA = calculPerforms(datasPilierA);
+    final datasPilierListB = calculPerforms(datasPilierB);
+
     _columnWidth = 0.8;
     _columnSpacing = 0.2;
     _tooltipBehavior = TooltipBehavior(enable: true);
     chartData = <ChartSampleData>[
       ChartSampleData(
           x: 'Gouvernance',
-          y: 100,
-          secondSeriesYValue: 8,
+          y: datasPilierListB[0] ?? 0,
+          secondSeriesYValue:
+              datasPilierListA[0] ?? 0,
           thirdSeriesYValue: 13),
       ChartSampleData(
-          x: 'Economie', y: 8, secondSeriesYValue: 10, thirdSeriesYValue: 7),
+          x: 'Emploi',
+          y: datasPilierListB[1] ?? 0,
+          secondSeriesYValue:
+              datasPilierListA[1] ?? 0,
+          thirdSeriesYValue: 7),
       ChartSampleData(
-          x: 'Société', y: 12, secondSeriesYValue: 10, thirdSeriesYValue: 5),
+          x: 'Société', y: datasPilierListB[2] ?? 0, secondSeriesYValue: datasPilierListA[2] ?? 0, thirdSeriesYValue: 5),
       ChartSampleData(
           x: 'Environnement',
-          y: 4,
-          secondSeriesYValue: 8,
+          y: datasPilierListB[3] ?? 0,
+          secondSeriesYValue: datasPilierListA[3] ?? 0,
           thirdSeriesYValue: 14)
     ];
     await Future.delayed(const Duration(milliseconds: 2000));
@@ -86,9 +122,9 @@ class _PerformancePiliersState extends State<PerformancePiliers> {
       ),
       primaryYAxis: NumericAxis(
           title: AxisTitle(text: "Performance en %"),
-          maximum: 20,
+          maximum: 100,
           minimum: 0,
-          interval: 4,
+          interval: 1,
           axisLine: const AxisLine(width: 0),
           majorTickLines: const MajorTickLines(size: 0)),
       series: _getDefaultColumn(),
@@ -109,23 +145,38 @@ class _PerformancePiliersState extends State<PerformancePiliers> {
           spacing: isCardView ? 0.2 : _columnSpacing,
           dataSource: chartData!,
           color: const Color.fromRGBO(177, 183, 188, 1),
-          xValueMapper: (ChartSampleData sales, _) => sales.x as String,
+          xValueMapper: (ChartSampleData sales, _) => sales.x,
           yValueMapper: (ChartSampleData sales, _) => sales.y,
-          name: '2022'),
+          name: '${performsDataController.annee.value - 1}'),
       ColumnSeries<ChartSampleData, String>(
           dataSource: chartData!,
           width: isCardView ? 0.8 : _columnWidth,
           spacing: isCardView ? 0.2 : _columnSpacing,
           color: Colors.blue,
-          xValueMapper: (ChartSampleData sales, _) => sales.x as String,
+          xValueMapper: (ChartSampleData sales, _) => sales.x,
           yValueMapper: (ChartSampleData sales, _) => sales.secondSeriesYValue,
-          name: '2023'),
+          name: '${performsDataController.annee.value}'),
     ];
+  }
+
+  List calculPerforms(List listdata) {
+    if (listdata.isEmpty) {
+      return [];
+    }
+
+    //List result = [];
+    for (var element in listdata) {
+      if (element != null) {
+        //result.add(-element + 100);
+        listdata[listdata.indexOf(element)] = -element + 100;
+      }
+    }
+    return listdata;
   }
 
   @override
   void dispose() {
-    chartData!.clear();
+    //chartData!.clear();
     super.dispose();
   }
 }
@@ -136,9 +187,9 @@ class ChartSampleData {
   final double secondSeriesYValue;
   final double thirdSeriesYValue;
   ChartSampleData({
-    required double this.thirdSeriesYValue,
-    required String this.x,
-    required double this.y,
-    required double this.secondSeriesYValue,
+    required this.thirdSeriesYValue,
+    required this.x,
+    required this.y,
+    required this.secondSeriesYValue,
   });
 }

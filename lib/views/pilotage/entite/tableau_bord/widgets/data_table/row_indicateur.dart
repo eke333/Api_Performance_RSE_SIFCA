@@ -29,6 +29,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
 
   bool isValidatingMonth = false;
   bool isValidatingRealise = false;
+  var valideState = false;
   final storage = const FlutterSecureStorage();
   final supabase = Supabase.instance.client;
 
@@ -98,7 +99,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
                   children: [
                     Flexible(
                       child: Text(
-                        "${widget.indicateur.intitule}",
+                        widget.indicateur.intitule,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 12),
                         overflow: TextOverflow.ellipsis,
@@ -115,7 +116,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
               width: 172,
               color: Colors.transparent,
               alignment: Alignment.centerLeft,
-              child: Text("${widget.indicateur.processus ?? ""}",
+              child: Text(widget.indicateur.processus ?? "",
                   style: const TextStyle(
                       fontStyle: FontStyle.italic, fontSize: 12)),
             ),
@@ -138,44 +139,28 @@ class _RowIndicateurState extends State<RowIndicateur> {
             //cible
             Container(
               height: 40,
-              width: 100,
+              width: 130,
               color: Colors.transparent,
               alignment: Alignment.centerLeft,
-              child:
-                  const Text("---", style: TextStyle(color: Colors.blueAccent)),
+              child: builCibleColumn(context),
             ),
             //ecart
             Container(
               height: 40,
               width: 100,
               color: Colors.transparent,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("--- %", style: TextStyle(color: Colors.green)),
-                  Visibility(
-                      visible: isHovering,
-                      child: IconButton(
-                          splashRadius: 15,
-                          onPressed: () {
-                            sideMenuController.controlMenuEnd();
-                          },
-                          icon: const Icon(
-                            Icons.help,
-                            size: 15,
-                            color: Colors.grey,
-                          )))
-                ],
-              ),
+              alignment: Alignment.center,
+              child: buildEcartsColumn(),
             ),
             //actif/inactif
             Container(
               height: 40,
-              width: 120,
+              width: 100,
               color: Colors.transparent,
               alignment: Alignment.centerLeft,
-              child: acess ? _toggleButons : const Text("---", style: TextStyle(color: Colors.black)),
+              child: acess
+                  ? _toggleButons
+                  : const Text("---", style: TextStyle(color: Colors.black)),
             )
           ]),
         ),
@@ -209,17 +194,16 @@ class _RowIndicateurState extends State<RowIndicateur> {
             content: Text("Voulez vous $selection l'indicateur ?"),
             actions: [
               TextButton(
-                child: Text(
+                child: const Text(
                   "Non",
-                  style:
-                      TextStyle(color: const Color.fromARGB(255, 114, 244, 54)),
+                  style: TextStyle(color: Color.fromARGB(255, 114, 244, 54)),
                 ),
                 onPressed: () {
                   Navigator.pop(dialogContext, true);
                 },
               ),
               TextButton(
-                child: Text(
+                child: const Text(
                   "Oui",
                   style: TextStyle(color: Color.fromARGB(255, 232, 142, 31)),
                 ),
@@ -344,6 +328,44 @@ class _RowIndicateurState extends State<RowIndicateur> {
     });
   }
 
+  Widget buildEcartsColumn() {
+    return Obx(() {
+      int numeroLigne = widget.indicateur.numero - 1;
+
+      var valeur = getValeurEcart(numeroLigne);
+
+      return Row(
+        children: [
+          Container(
+            height: 40,
+            width: 80,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                Text(
+                  "${valeur != null ? valeur.toStringAsFixed(2) : "---"} %",
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.blue),
+                ),
+                const SizedBox(
+                  width: 3,
+                ),
+                // Container(
+                //   height: 35,
+                //   color: Colors.grey,
+                //   width: 2,
+                // )
+              ],
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
   String formatNumber(dynamic number) {
     if (number is int) {
       if (number >= 1e9) {
@@ -365,7 +387,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
       } else if (number > 0 && number < 0.10) {
         return '${(number * 1000).toStringAsFixed(2)} e-3';
       } else {
-        return '${number.toStringAsFixed(2)}';
+        return number.toStringAsFixed(2);
       }
     } else {
       return '---';
@@ -412,7 +434,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text("${message}"),
+                Text(message),
                 const SizedBox(
                   height: 20,
                 ),
@@ -485,7 +507,7 @@ class _RowIndicateurState extends State<RowIndicateur> {
                     width: 64,
                     height: 40,
                     alignment: Alignment.center,
-                    child: Text("${formatNumber(valeur) ?? ""}")),
+                    child: Text(formatNumber(valeur) ?? "")),
                 Container(
                     width: 32,
                     height: 40,
@@ -548,25 +570,37 @@ class _RowIndicateurState extends State<RowIndicateur> {
                                       ? Colors.green
                                       : Colors.transparent),
                               onChanged: (valeur == null ||
-                                      valide == true ||
-                                      isValidatingMonth == true ||
-                                      valideRealise == true)
+                                      valideRealise == true ||
+                                      isValidatingMonth == true)
                                   ? null
                                   : (value) async {
-                                      setState(() {
-                                        isValidatingMonth = true;
-                                      });
                                       final acces =
                                           await checkAccesValidation();
                                       if (acces) {
-                                        final validation = value;
-                                        if (validation != null) {
+                                        var validation = value;
+                                        if (validation == true) {
                                           await validerIndicateur(
-                                              validation,
+                                              validation!,
                                               valeur,
                                               widget.indicateur.numero - 1,
                                               currentMonth,
                                               widget.indicateur.reference);
+                                          setState(() {
+                                            isValidatingMonth = true;
+                                          });
+                                        }
+                                        if (validation == false) {
+                                          await annulerValidationIndic(
+                                              validation!,
+                                              widget.indicateur.numero - 1,
+                                              currentMonth,
+                                              widget.indicateur.reference);
+                                          await tableauBordController.updateDataIndicateur();
+                                          setState(() {
+                                            isValidatingMonth = false;
+                                            valide = false;
+                                            valideState = true;
+                                          });
                                         }
                                       } else {
                                         _showMyDialog(
@@ -605,6 +639,52 @@ class _RowIndicateurState extends State<RowIndicateur> {
     });
   }
 
+  //widget pour la editer la cible
+  Widget builCibleColumn(BuildContext context) {
+    return Obx(() {
+      int numeroLigne = widget.indicateur.numero - 1;
+      int currentMonth = tableauBordController.currentMonth.value;
+      var dataCible = getValeurCible(numeroLigne);
+
+      return Row(
+        children: [
+          Container(
+              width: 64,
+              height: 60,
+              alignment: Alignment.center,
+              child: Text(formatNumber(dataCible) ?? "")),
+          Container(
+            width: 32,
+            height: 40,
+            alignment: Alignment.centerLeft,
+            child: IconButton(
+              splashRadius: 15,
+              splashColor: Colors.amber,
+              onPressed: () async {
+                final acces = checkAccesProfil();
+                if (acces) {
+                  renseignerDonneeCible(context, widget.indicateur, dataCible,
+                      numeroLigne, currentMonth);
+                } else {
+                  _showMyDialog("Vous n'avez pas droit a cette action");
+                }
+              },
+              icon: const Icon(
+                Icons.edit,
+                size: 12,
+              ),
+            ),
+          ),
+          Container(
+            height: 35,
+            color: Colors.grey,
+            width: 2,
+          )
+        ],
+      );
+    });
+  }
+
   Future validerIndicateur(
       bool valide, num? valeur, int numero, int colonne, String idLigne) async {
     if (valeur == null) {
@@ -627,6 +707,21 @@ class _RowIndicateurState extends State<RowIndicateur> {
         ScaffoldMessenger.of(context)
             .showSnackBar(showSnackBar("Echec", message, Colors.red));
       }
+    }
+  }
+
+  Future annulerValidationIndic(
+      bool valide, int numero, int colonne, String idLigne) async {
+    var result = await tableauBordController.annulerValidationMois(
+        valide: valide, numeroLigne: numero, colonne: colonne);
+    var message = "Validation annulee avec succes";
+    if (result == true) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(showSnackBar("Succes", message, Colors.green));
+    } else {
+      var message = "Validation non annulee";
+      ScaffoldMessenger.of(context)
+          .showSnackBar(showSnackBar("Echec", message, Colors.red));
     }
   }
 
@@ -662,10 +757,42 @@ class _RowIndicateurState extends State<RowIndicateur> {
     return false;
   }
 
+  Future<bool> renseignerDonneeCible(
+      BuildContext context,
+      IndicateurModel indicator,
+      num? value,
+      int? numeroLigne,
+      int? colonne) async {
+    DashBoardUtils.editDataCible(
+        context, indicator, value, numeroLigne!, colonne!);
+    return true;
+  }
+
   num? getValeur(int numeroLigne, int colonne) {
     try {
       final value = tableauBordController
           .dataIndicateur.value.valeurs[numeroLigne][colonne];
+      return value;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  num? getValeurEcart(int numeroLigne) {
+    try {
+      final value =
+          tableauBordController.dataIndicateur.value.ecarts[numeroLigne];
+      return value;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  //recuperer valeur de la cible courante
+  num? getValeurCible(int numeroLigne) {
+    try {
+      final value = tableauBordController
+          .dataIndicateur.value.cibles[numeroLigne]; //dataCibleList
       return value;
     } catch (e) {
       return null;

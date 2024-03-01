@@ -8,7 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EntitePilotageController extends GetxController{
 
-  Uint8List? bytesLogo = null;
+  Uint8List? bytesLogo;
   final currentEntite = "".obs;
   final supabase = Supabase.instance.client;
   final entites = [].obs;
@@ -53,10 +53,6 @@ class EntitePilotageController extends GetxController{
   }
 
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
 }
 

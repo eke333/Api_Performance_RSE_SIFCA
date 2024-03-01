@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quds_popup_menu/quds_popup_menu.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,7 +53,7 @@ class _HeaderMainPageState extends State<HeaderMainPage> {
               children: [
                 Center(
                   child: CustomText(
-                    text: "${prenom} ${nom}",
+                    text: "$prenom $nom",
                     color: Colors.white,
                     weight: FontWeight.bold,
                     size: 20,
@@ -64,7 +63,7 @@ class _HeaderMainPageState extends State<HeaderMainPage> {
                   width: 20,
                 ),
                 QudsPopupButton(
-                  items: getMenuItems(shortName: "${prenom![0]}${nom![0]}",name: "${prenom} ${nom}",email: email!),
+                  items: getMenuItems(shortName: "${prenom![0]}${nom![0]}",name: "$prenom $nom",email: email!),
                   child: CircleAvatar(
                     backgroundColor: const Color(0xFFFFFF00),
                     child: Center(
@@ -124,10 +123,10 @@ class _HeaderMainPageState extends State<HeaderMainPage> {
             ),
           ),
           title: Text(
-            "${name}",
+            name,
             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
           ),
-          subTitle: Text('${email}'),
+          subTitle: Text(email),
           onPressed: () {}),
       QudsPopupMenuDivider(),
       QudsPopupMenuWidget(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../api/supabse_db.dart';
 import '../../../../../helper/helper_methods.dart';
@@ -73,7 +72,7 @@ class _InfosCompteState extends State<InfosCompte> {
                         const SizedBox(
                           height: 5,
                         ),
-                        textNonModifiable("${profilController.userModel.value.email}"),
+                        textNonModifiable(profilController.userModel.value.email),
                       ],
                     ),
                     const SizedBox(

@@ -367,10 +367,10 @@ class _InfosPiloteState extends State<InfosPilote> {
               ),
             ),
             title: Text(
-              '${prenom} ${nom}',
+              '$prenom $nom',
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('${email}'),
+            subtitle: Text(email),
           );
         }),
       ),

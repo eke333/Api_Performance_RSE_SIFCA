@@ -65,11 +65,11 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       final email = result.user?.email;
-      final acces_token = result.session?.accessToken;
+      final accesToken = result.session?.accessToken;
 
-      if (email != null && acces_token != null) {
+      if (email != null && accesToken != null) {
         final date = DateTime.now();
-        await storage.write(key: 'expiration', value: "${date.toString()}");
+        await storage.write(key: 'expiration', value: date.toString());
         await storage.write(key: 'logged', value: "true");
         await storage.write(key: 'email', value: email);
         await Future.delayed(const Duration(milliseconds: 100));
@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
         });
         ScaffoldMessenger.of(context).showSnackBar(showSnackBar("Echec", message, Colors.red));
       }
-    } on Exception catch (e) {
+    } on Exception {
       const message = "Vos identifiants sont incorrects";
       await Future.delayed(const Duration(milliseconds: 15));
       setState(() {

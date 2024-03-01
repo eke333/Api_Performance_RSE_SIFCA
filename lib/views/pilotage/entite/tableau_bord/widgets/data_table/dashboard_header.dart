@@ -48,12 +48,12 @@ class _DashBoardHeaderState extends State<DashBoardHeader> {
                   DashBoardHeaderTitle(
                     color: Colors.brown,
                     size: 150,
-                    title: "Réalisé ${annee}",
+                    title: "Réalisé $annee",
                   ),
                   MonthHeader(
                     color: Colors.brown,
                     size: 170,
-                    title: "${mois}",
+                    title: mois,
                   ),
                   const DashBoardHeaderTitle(
                     color: Colors.brown,
@@ -114,7 +114,7 @@ class _MonthHeaderState extends State<MonthHeader> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "${widget.title}",
+              widget.title,
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 15,
@@ -156,7 +156,7 @@ class _DashBoardHeaderTitleState extends State<DashBoardHeaderTitle> {
         color: isHovering ? const Color(0xFF8B735C) : widget.color,
         alignment: Alignment.centerLeft,
         child: Text(
-          "${widget.title}",
+          widget.title,
           style: const TextStyle(
               color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
         ),
@@ -195,7 +195,7 @@ class _IndicateurTitleState extends State<IndicateurTitle> {
           color: isHovering ? const Color(0xFF8B735C) : widget.color,
           alignment: Alignment.centerLeft,
           child: Text(
-            "${widget.title}",
+            widget.title,
             style: const TextStyle(
                 color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
           ),

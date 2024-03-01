@@ -29,7 +29,7 @@ class _ScreenConnexionHistoriqueState extends State<ScreenConnexionHistorique> {
         dataHistory = [];
       });
     }
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     setState(() {
       isLoading = false;
     });
@@ -46,16 +46,16 @@ class _ScreenConnexionHistoriqueState extends State<ScreenConnexionHistorique> {
   Widget build(BuildContext context) {
     return SelectionArea(child: Scaffold(
       body: Padding(
-        padding: EdgeInsets.only(top: 16,left: 10),
+        padding: const EdgeInsets.only(top: 16,left: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Text("Journal d'activités",style: TextStyle(fontSize: 24,color: Color(0xFF3C3D3F),fontWeight: FontWeight.bold),),
-                SizedBox(width: 20,),
-                IconButton(padding: EdgeInsets.zero,onPressed: (){ loadingData(); },splashRadius: 20, icon: Icon(Icons.refresh,color: Colors.green,size: 30,))
+                const Text("Journal d'activités",style: TextStyle(fontSize: 24,color: Color(0xFF3C3D3F),fontWeight: FontWeight.bold),),
+                const SizedBox(width: 20,),
+                IconButton(padding: EdgeInsets.zero,onPressed: (){ loadingData(); },splashRadius: 20, icon: const Icon(Icons.refresh,color: Colors.green,size: 30,))
               ],
             ),
             const SizedBox(height: 5,),
@@ -83,7 +83,7 @@ class _ScreenConnexionHistoriqueState extends State<ScreenConnexionHistorique> {
             child: Text("Aucune donnée",style:TextStyle(fontSize: 20) ,),
           ),
           const SizedBox(height: 10,),
-          IconButton(padding: EdgeInsets.zero,onPressed: (){ loadingData();}, icon: Icon(Icons.refresh,color: Colors.green,size: 40,))
+          IconButton(padding: EdgeInsets.zero,onPressed: (){ loadingData();}, icon: const Icon(Icons.refresh,color: Colors.green,size: 40,))
         ],
       ),
     );
@@ -117,11 +117,11 @@ class _ScreenConnexionHistoriqueState extends State<ScreenConnexionHistorique> {
   DataRow historiqueDataRow(int index) {
     return DataRow(
       cells: [
-        DataCell(Text("${index+1}",style: TextStyle(fontSize: 20),)),
-        DataCell(Text("${dataHistory[index]["user"]}",style: TextStyle(fontSize: 20))),
-        DataCell(Text("${dataHistory[index]["action"]}",style: TextStyle(fontSize: 20))),
-        DataCell(Text("${formatDate(dataHistory[index]["date"])}",style: TextStyle(fontSize: 20))),
-        DataCell(Container(width: 400,child: Text("${dataHistory[index]["localisation"]}",style: TextStyle(fontSize: 20)))),
+        DataCell(Text("${index+1}",style: const TextStyle(fontSize: 20),)),
+        DataCell(Text("${dataHistory[index]["user"]}",style: const TextStyle(fontSize: 20))),
+        DataCell(Text("${dataHistory[index]["action"]}",style: const TextStyle(fontSize: 20))),
+        DataCell(Text(formatDate(dataHistory[index]["date"]),style: const TextStyle(fontSize: 20))),
+        DataCell(SizedBox(width: 400,child: Text("${dataHistory[index]["localisation"]}",style: const TextStyle(fontSize: 20)))),
       ],
     );
   }
