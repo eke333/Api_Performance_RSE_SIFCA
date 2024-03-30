@@ -1,19 +1,19 @@
 from dbkeys import supabase
 from utils_data import readDataJson
+from utils import checkProcessValue
 from flask_restful import Resource
 from flask import request, make_response
 
 
 class SuiviDataIndicateur(Resource):
 
-    def updateSuiviIndicateur(self,entiteId, annee):
+    def updateSuiviIndicateur(self,entiteId, annee, processus, numeroLigne, colonne):
 
         try:
             suiviMap = {"indicateur_total": 280, "indicateur_valides": 0, "indicateur_collectes": 0,
-                        "suivi_mensuel": {},"suivi_axe": {}}
+                        "suivi_mensuel": {},"suivi_axe": {}, "suivi_processus": {}}
             ########################
             entiteList = supabase.table('Entites').select("nom_entite").eq("id_entite", entiteId).execute().data
-            #print(entiteList)
             nomEntite = entiteList[0]["nom_entite"]
 
             idSuivi = f"{entiteId}_{annee}"
@@ -29,6 +29,27 @@ class SuiviDataIndicateur(Resource):
 
             dataValeurList = readDataJson(entiteId, f"{entiteId}_data_{annee}.json")
             dataValidationList = readDataJson(entiteId, f"{entiteId}_validation_{annee}.json")
+
+            # Suivi par processus
+            listProcessus = supabase.table('Indicateurs').select("processus").order('numero', desc=False).execute().data
+
+            value = checkProcessValue(numeroLigne, listProcessus)
+
+            if(value):
+                suiviDicProcessus = isExist[0]['suivi_processus']
+                indexesProcessus = []
+
+                for index, dico in enumerate(listProcessus):
+                    if dico.get('processus') == f'{processus}':
+                        indexesProcessus.append(index)
+                dataProcessSuivi = 0
+                for index in indexesProcessus:
+                    if dataValeurList[index][colonne] != None:
+                        dataProcessSuivi += 1
+                if suiviDicProcessus[f'{processus}'][f'{colonne}'] != dataProcessSuivi:
+                    suiviDicProcessus[f'{processus}'][f'{colonne}'] = dataProcessSuivi
+                suiviMap["suivi_processus"] = suiviDicProcessus
+            ####################
 
             axesMap = {}
 
@@ -136,8 +157,11 @@ class SuiviDataIndicateur(Resource):
 
         annee = args["annee"]
         entite = args["entite"]
+        processus = args["processus"]
+        numeroLigne = args["numeroLigne"]
+        colonne = args["colonne"]
 
-        self.updateSuiviIndicateur(entite,annee)
+        self.updateSuiviIndicateur(entite,annee, processus, numeroLigne, colonne)
 
 
         return {"status":True}

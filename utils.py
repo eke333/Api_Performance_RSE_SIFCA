@@ -1,3 +1,4 @@
+import re
 def AplusB(A, B):
     if A != None and B != None:
         return A + B
@@ -14,6 +15,18 @@ def PerformGlobal(liste):
         return None  
     average = sum(filtreList) / len(filtreList)
     return average
+
+def extraire_chiffres(chaine):
+    chiffres = re.findall(r'\d+', chaine)
+    chiffres_concatenes = ''.join(chiffres)
+    return chiffres_concatenes
+
+def checkProcessValue(index, listDic):
+    value = listDic[index].get('processus')
+    
+    if value is not None:
+        return True
+    return False
 
 def AfoisB(A, B):
     if A != None and B != None:

@@ -3,7 +3,7 @@ from flask import request, make_response
 import copy
 from data import calculated_keys
 from dbkeys import supabase
-from utils import formuleCalcules, formuleSomme, formuleDernierMois, formuleMoyenne, PerformGlobal
+from utils import formuleCalcules, formuleSomme, formuleDernierMois, formuleMoyenne, PerformGlobal, extraire_chiffres
 from utils_data import readDataJson, saveDataInJson
 
 class GetDataEntiteIndicateur(Resource):
@@ -38,10 +38,11 @@ class UpdateDataEntiteIndicateur(Resource):
         responseListEcart = supabase.table('DataIndicateur').select("ecarts").eq("id", id).execute().data
         dicTemp = responseListEcart[0]
         listEcart = dicTemp['ecarts']
-        responseDataCible = supabase.table('DataIndicateur').select("cibles").eq("id", id).execute().data
-        dataTemp = responseDataCible[0]
-        dataList = dataTemp['cibles']
-        dataCible = dataList[ligne]
+        # L'ecart est determine a partir du realise du mois actuel (cumul jusqu'au mois actuel) et le realise de l'annee derniere
+        # responseDataCible = supabase.table('DataIndicateur').select("cibles").eq("id", id).execute().data
+        # dataTemp = responseDataCible[0]
+        # dataList = dataTemp['cibles']
+        # dataCible = dataList[ligne]
 
         indicesListAxes = [16, 46, 206, 221, 280]
         indicesListEnjeux = [16, 21, 27, 34, 46, 181, 200, 206, 221, 245, 262, 280]
@@ -49,56 +50,58 @@ class UpdateDataEntiteIndicateur(Resource):
         listAxes = []
         listEnjeux = []
 
-        dataValeurList = readDataJson(entite,f"{entite}_data_{annee}.json")
+        dataValeurListN1 = readDataJson(entite,f"{entite}_data_{annee}.json")
+        dataValeurListN2 = readDataJson(entite,f"{entite}_data_{annee - 1}.json")
         dataValidationList = readDataJson(entite, f"{entite}_validation_{annee}.json")
 
         isValide = dataValidationList[ligne][colonne]
+        realiseLastYear = dataValeurListN2[ligne][0]
 
         if isValide == True :
             return  {"status":False,"message":"La donnée est déja validée"}
 
-        dataValeurList[ligne][colonne] = valeur
+        dataValeurListN1[ligne][colonne] = valeur
 
         # Formule Colonne "Réalisé" ligne primaire
 
         if type == "Primaire" :
 
             if formule == "Somme" :
-                listTemp = copy.deepcopy(dataValeurList[ligne])
+                listTemp = copy.deepcopy(dataValeurListN1[ligne])
                 listCalcul = listTemp[1:]
                 sommeList = formuleSomme(listCalcul)
                 if sommeList != None:
-                    dataValeurList[ligne][0] = sommeList
-                    if dataCible != None:
-                        dataEcart = ((dataCible - sommeList) / dataCible) * 100
+                    dataValeurListN1[ligne][0] = sommeList
+                    if realiseLastYear != None:
+                        dataEcart = ((realiseLastYear - sommeList) / realiseLastYear) * 100
                         listEcart[ligne] = dataEcart
 
             elif formule == "Dernier mois renseigné" :
-                listTemp = copy.deepcopy(dataValeurList[ligne])
+                listTemp = copy.deepcopy(dataValeurListN1[ligne])
                 listCalcul = listTemp[1:]
                 dernierMoisList = formuleDernierMois(listCalcul)
                 if dernierMoisList != None:
-                    dataValeurList[ligne][0] = dernierMoisList
-                    if dataCible != None:
-                        dataEcart = ((dataCible - dernierMoisList) / dataCible) * 100
+                    dataValeurListN1[ligne][0] = dernierMoisList
+                    if realiseLastYear != None:
+                        dataEcart = ((realiseLastYear - dernierMoisList) / realiseLastYear) * 100
                         listEcart[ligne] = dataEcart
 
             elif formule == "Moyenne" :
-                listTemp = copy.deepcopy(dataValeurList[ligne])
+                listTemp = copy.deepcopy(dataValeurListN1[ligne])
                 listCalcul = listTemp[1:]
                 moyenneList = formuleMoyenne(listCalcul)
                 if moyenneList != None:
-                    dataValeurList[ligne][0] = moyenneList
-                    if dataCible != None:
-                        dataEcart = ((dataCible - moyenneList) / dataCible) * 100
+                    dataValeurListN1[ligne][0] = moyenneList
+                    if realiseLastYear != None:
+                        dataEcart = ((realiseLastYear - moyenneList) / realiseLastYear) * 100
                         listEcart[ligne] = dataEcart
 
         # Formule Colonne ligne calculés
         for index in calculated_keys :
 
-            dataRow = formuleCalcules(index, dataValeurList)
+            dataRow = formuleCalcules(index, dataValeurListN1)
             if dataRow != None:
-                dataValeurList[index - 1] = dataRow
+                dataValeurListN1[index - 1] = dataRow
 
         #Calcul de la performance Globale
         globalPerfData = PerformGlobal(listEcart)
@@ -140,97 +143,120 @@ class UpdateDataEntiteIndicateur(Resource):
         supabase.table('Performance').update({'performs_enjeux': listEnjeux}).eq('id',id).execute()
         supabase.table('Performance').update({'performs_global': globalPerfData}).eq('id', id).execute()
 
-        saveDataInJson(dataValeurList,entite,f"{entite}_data_{annee}.json")
-        supabase.table('DataIndicateur').update({'valeurs': dataValeurList}).eq('id',id).execute()
+        saveDataInJson(dataValeurListN1,entite,f"{entite}_data_{annee}.json")
+        supabase.table('DataIndicateur').update({'valeurs': dataValeurListN1}).eq('id',id).execute()
         supabase.table('DataIndicateur').update({"ecarts" : listEcart}).eq('id',id).execute()
 
         return {"status":True}
 
-class ComputePerformsEntite(Resource):
+# # class ComputePerformsEntite(Resource):
+#     def post(self):
+#         args = request.get_json()
+
+#         annee = args["annee"]
+#         entite = args["entite"]
+#         colonne = args["colonne"]
+#         ligne = args["ligne"]
+#         valeurCible = args["datacible"]
+#         type = args["type"]
+#         formule = args["formule"]
+
+#         id = f"{entite}_{annee}"
+
+#         responseListEcart = supabase.table('DataIndicateur').select("ecarts").eq("id", id).execute().data
+#         dicTemp = responseListEcart[0]
+#         listEcart = dicTemp['ecarts']
+#         responseRealise = supabase.table('DataIndicateur').select("valeurs").eq("id", id).execute().data
+#         dicTemp = responseRealise[0]
+#         listValeurs = dicTemp['valeurs']
+#         dataRealise = listValeurs[ligne][0]
+
+#         indicesList = [16, 46, 207, 222, 280]
+#         indicesListEnjeux = [16, 21, 27, 34, 46, 181, 200, 206, 221, 245, 262, 280]
+
+#         listAxes = []
+#         listEnjeux = []
+
+#         if type == "Primaire":
+
+#             if formule == "Somme":
+#                 if dataRealise != None:
+#                     dataEcart = ((valeurCible - dataRealise) / valeurCible) * 100
+#                     listEcart[ligne] = dataEcart
+            
+#             elif formule == "Dernier mois renseigné":
+#                 if dataRealise != None:
+#                     dataEcart = ((valeurCible - dataRealise) / valeurCible) * 100
+#                     listEcart[ligne] = dataEcart
+
+#             elif formule == "Moyenne":
+#                 if dataRealise != None:
+#                     dataEcart = ((valeurCible - dataRealise) / valeurCible) * 100
+#                     listEcart[ligne] = dataEcart
+
+#         globalPerfData = PerformGlobal(listEcart)
+
+#         #decoupage de listEcart pous definir listes des Axes pour performances
+#         for i in range(len(indicesList) - 1):
+#             axeList = listEcart[indicesList[i]:indicesList[i + 1]]
+#             listAxes.append(axeList)
+#         for index, item in enumerate(listAxes):
+#             l = []
+#             count = 0
+#             for data in item:
+#                 if data != None:
+#                     l.append(data)
+#                     count += 1
+#             if l != [] :
+#                 listAxes[index] = sum(l) / count
+#             else:
+#                 listAxes[index] = None
+
+#         #decoupage de listEcart pous definir listes des Enjeux pour performances Enjeux
+#         for i in range(len(indicesListEnjeux) - 1):
+#             enjeuList = listEcart[indicesListEnjeux[i]:indicesListEnjeux[i + 1]]
+#             listEnjeux.append(enjeuList)
+#         for index, item in enumerate(listEnjeux):
+#             l = []
+#             count = 0
+#             for data in item:
+#                 if data != None:
+#                     l.append(data)
+#                     count += 1
+#             if l != [] :
+#                 listEnjeux[index] = sum(l) / count
+#             else:
+#                 listEnjeux[index] = None
+        
+#         supabase.table('Performance').update({'performs_piliers': listAxes}).eq('id',id).execute()
+#         supabase.table('Performance').update({'performs_enjeux': listEnjeux}).eq('id',id).execute()
+#         supabase.table('Performance').update({'performs_global': globalPerfData}).eq('id', id).execute()
+#         supabase.table('DataIndicateur').update({"ecarts" : listEcart}).eq('id',id).execute()
+
+#         return {"status":True}
+class ChangeStatusEntityIndic(Resource):
     def post(self):
         args = request.get_json()
 
         annee = args["annee"]
         entite = args["entite"]
-        colonne = args["colonne"]
-        ligne = args["ligne"]
-        valeurCible = args["datacible"]
-        type = args["type"]
-        formule = args["formule"]
+        indexValue = args["statusButton"]
+        numeroLigne = args["ligne"]
 
         id = f"{entite}_{annee}"
 
-        responseListEcart = supabase.table('DataIndicateur').select("ecarts").eq("id", id).execute().data
-        dicTemp = responseListEcart[0]
-        listEcart = dicTemp['ecarts']
-        responseRealise = supabase.table('DataIndicateur').select("valeurs").eq("id", id).execute().data
-        dicTemp = responseRealise[0]
-        listValeurs = dicTemp['valeurs']
-        dataRealise = listValeurs[ligne][0]
-
-        indicesList = [16, 46, 207, 222, 280]
-        indicesListEnjeux = [16, 21, 27, 34, 46, 181, 200, 206, 221, 245, 262, 280]
-
-        listAxes = []
-        listEnjeux = []
-
-        if type == "Primaire":
-
-            if formule == "Somme":
-                if dataRealise != None:
-                    dataEcart = ((valeurCible - dataRealise) / valeurCible) * 100
-                    listEcart[ligne] = dataEcart
-            
-            elif formule == "Dernier mois renseigné":
-                if dataRealise != None:
-                    dataEcart = ((valeurCible - dataRealise) / valeurCible) * 100
-                    listEcart[ligne] = dataEcart
-
-            elif formule == "Moyenne":
-                if dataRealise != None:
-                    dataEcart = ((valeurCible - dataRealise) / valeurCible) * 100
-                    listEcart[ligne] = dataEcart
-
-        globalPerfData = PerformGlobal(listEcart)
-
-        #decoupage de listEcart pous definir listes des Axes pour performances
-        for i in range(len(indicesList) - 1):
-            axeList = listEcart[indicesList[i]:indicesList[i + 1]]
-            listAxes.append(axeList)
-        for index, item in enumerate(listAxes):
-            l = []
-            count = 0
-            for data in item:
-                if data != None:
-                    l.append(data)
-                    count += 1
-            if l != [] :
-                listAxes[index] = sum(l) / count
-            else:
-                listAxes[index] = None
-
-        #decoupage de listEcart pous definir listes des Enjeux pour performances Enjeux
-        for i in range(len(indicesListEnjeux) - 1):
-            enjeuList = listEcart[indicesListEnjeux[i]:indicesListEnjeux[i + 1]]
-            listEnjeux.append(enjeuList)
-        for index, item in enumerate(listEnjeux):
-            l = []
-            count = 0
-            for data in item:
-                if data != None:
-                    l.append(data)
-                    count += 1
-            if l != [] :
-                listEnjeux[index] = sum(l) / count
-            else:
-                listEnjeux[index] = None
+        responseListStatus = supabase.table('DataIndicateur').select("status_entity").eq("id", id).execute().data
+        dicTemp = responseListStatus[0]
+        listStatus = dicTemp['status_entity']
+        if indexValue == 0:
+            listStatus[numeroLigne] = False
+        else:
+            listStatus[numeroLigne] = True
         
-        supabase.table('Performance').update({'performs_piliers': listAxes}).eq('id',id).execute()
-        supabase.table('Performance').update({'performs_enjeux': listEnjeux}).eq('id',id).execute()
-        supabase.table('Performance').update({'performs_global': globalPerfData}).eq('id', id).execute()
-        supabase.table('DataIndicateur').update({"ecarts" : listEcart}).eq('id',id).execute()
+        supabase.table('DataIndicateur').update({"status_entity": listStatus}).eq('id', id).execute()
 
         return {"status":True}
+
 
 class UpdateAllDataEntiteIndicateur(Resource):
     # Mise à jour des données indicateurs
@@ -254,12 +280,12 @@ class UpdateDataEntiteIndicateurFromSupabase(Resource):
         args = request.get_json()
 
         id = args["id"]
+        annee = extraire_chiffres(id)
 
         response = supabase.table('DataIndicateur').select("*").eq("id",id).execute().data
         data = response[0]
 
         entite = data["entite"]
-        annee = data["annee"]
         dataValeurList = data["valeurs"]
         dataValidationsList = data["validations"]
 

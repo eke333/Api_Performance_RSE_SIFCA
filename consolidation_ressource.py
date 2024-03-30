@@ -7,7 +7,7 @@ from flask import request
 
 from dbkeys import supabase
 from utils import PerformGlobal
-from utils_data import  saveDataInJson, dataListGen
+from utils_data import  readDataJson, saveDataInJson, dataListGen
 
 consolidationFiliale = {
     "sucrivoire": ["sucrivoire-siege", "sucrivoire-borotou-koro", "sucrivoire-zuenoula"],
@@ -39,14 +39,8 @@ class ScriptConsolidation(Resource) :
         data = response[0]
         dataValeurList = data["valeurs"]
         dataValidationList = data["validations"]
-        
-        #test
-        # responseDatasIndic = supabase.table('Indicateurs').select("formule").execute().data
-        # listTemp = [data["formule"] for data in responseDatasIndic]
-        # dicTemp = responseDatasIndic[0]
-        # print(listTemp)
 
-        #Algo filtre des valeurs que validees
+        #Algo recup valeurs validees
         listZip = list(zip(dataValeurList, dataValidationList))
         listResult = []
         max_length = max(len(sublist) for sublist in dataValeurList)
@@ -114,53 +108,60 @@ class ScriptConsolidation(Resource) :
                 result = dataListGen()
                 self.updateAllEntiteDataMatrice(consoEntite, result, annee)
     
-    def computePerformEntity(self, entite, dataValeurList, annee):
+    def computePerformEntity(self, entite, dataValeurListN1, annee):
         id = f"{entite}_{annee}"
+        #print(id)
         #print(entite)
+        dataValeurListN2 = readDataJson(entite,f"{entite}_data_{annee - 1}.json")
         responseListEcart = supabase.table('DataIndicateur').select("ecarts").eq("id", id).execute().data
-        responseDataCible = supabase.table('DataIndicateur').select("cibles").eq("id", id).execute().data
-        responseFormules = supabase.table('Indicateurs').select('formule').execute().data
-        responseTypes = supabase.table('Indicateurs').select('type').execute().data
-        listTypes = [data["type"] for data in responseTypes]
-        #print(listTypes)
-        listFormules = [data["formule"] for data in responseFormules]
-        #print(listFormules)
+        # responseDataCible = supabase.table('DataIndicateur').select("cibles").eq("id", id).execute().data
+        # responseFormules = supabase.table('Indicateurs').select('formule').execute().data
+        # responseTypes = supabase.table('Indicateurs').select('type').execute().data
+        # listTypes = [data["type"] for data in responseTypes]
+        # listFormules = [data["formule"] for data in responseFormules]
         dicTemp = responseListEcart[0]
         listEcart = dicTemp['ecarts']
-        #print(listEcart)
-        dataTemp = responseDataCible[0]
-        listCible = dataTemp['cibles']
-        #print(listCible)
+        # dataTemp = responseDataCible[0]
+        # listCible = dataTemp['cibles']
 
         indicesListAxes = [16, 46, 206, 221, 280]
         indicesListEnjeux = [16, 21, 27, 34, 46, 181, 200, 206, 221, 245, 262, 280]
         listAxes = []
         listEnjeux = []
+        #print(dataValeurListN2)
 
-        for i, type_value in enumerate(listTypes):
-            if type_value == 'Primaire':
-                formule = listFormules[i]
-                dataCible = listCible[i]
-                dataRealise = dataValeurList[i][0]
-                #print(dataRealise)
+        for i, (rowN1, rowN2) in enumerate (zip(dataValeurListN1, dataValeurListN2)):
+            dataRealiseN1 = rowN1[0]
+            dataRealiseN2 = rowN2[0]
+
+            if dataRealiseN2 != None and dataRealiseN1 != None:
+                dataEcart = ((dataRealiseN2 - dataRealiseN1) / dataRealiseN2) * 100
+                listEcart[i] = dataEcart
+
+        # for i, type_value in enumerate(listTypes):
+        #     if type_value == 'Primaire':
+        #         formule = listFormules[i]
+        #         dataCible = listCible[i]
+        #         dataRealise = dataValeurListN1[i][0]
                 
-                if formule == "Somme":
-                    if dataCible != None and dataRealise != None:
-                        dataEcart = ((dataCible - dataRealise) / dataCible) * 100
-                        listEcart[i] = dataEcart
+        #         if formule == "Somme":
+        #             if dataCible != None and dataRealise != None:
+        #                 dataEcart = ((dataCible - dataRealise) / dataCible) * 100
+        #                 listEcart[i] = dataEcart
                 
-                elif formule == "Dernier mois renseigné":
-                        if dataCible != None and dataRealise != None:
-                            dataEcart = ((dataCible - dataRealise) / dataCible) * 100
-                            listEcart[i] = dataEcart
+        #         elif formule == "Dernier mois renseigné":
+        #                 if dataCible != None and dataRealise != None:
+        #                     dataEcart = ((dataCible - dataRealise) / dataCible) * 100
+        #                     listEcart[i] = dataEcart
                 
-                elif formule == "Moyenne":
-                        if dataCible != None and dataRealise != None:
-                            dataEcart = ((dataCible - dataRealise) / dataCible) * 100
-                            listEcart[i] = dataEcart
+        #         elif formule == "Moyenne":
+        #                 if dataCible != None and dataRealise != None:
+        #                     dataEcart = ((dataCible - dataRealise) / dataCible) * 100
+        #                     listEcart[i] = dataEcart
         
         #Calcul de la performance Globale
         globalPerfData = PerformGlobal(listEcart)
+        #print(globalPerfData)
 
         #decoupage de listEcart pous definir listes des Axes pour performances Axes
         for i in range(len(indicesListAxes) - 1):
@@ -207,7 +208,7 @@ class ScriptConsolidation(Resource) :
         print(datetime.now())
         self.scriptConsolidation(annee,consolidationFiliale)
         time.sleep(1)
-        #self.scriptConsolidation(annee, consolidationFiliere)
+        self.scriptConsolidation(annee, consolidationFiliere)
         time.sleep(1)
         #self.scriptConsolidation(annee, consolidationGroupe)
         time.sleep(1)
