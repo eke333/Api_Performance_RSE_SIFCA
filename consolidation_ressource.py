@@ -6,7 +6,7 @@ from flask_restful import Resource
 from flask import request
 
 from dbkeys import supabase
-from utils import PerformGlobal
+from utils import PerformGlobal, indexes_by
 from utils_data import  readDataJson, saveDataInJson, dataListGen
 
 consolidationFiliale = {
@@ -110,25 +110,17 @@ class ScriptConsolidation(Resource) :
     
     def computePerformEntity(self, entite, dataValeurListN1, annee):
         id = f"{entite}_{annee}"
-        #print(id)
-        #print(entite)
+
         dataValeurListN2 = readDataJson(entite,f"{entite}_data_{annee - 1}.json")
         responseListEcart = supabase.table('DataIndicateur').select("ecarts").eq("id", id).execute().data
-        # responseDataCible = supabase.table('DataIndicateur').select("cibles").eq("id", id).execute().data
-        # responseFormules = supabase.table('Indicateurs').select('formule').execute().data
-        # responseTypes = supabase.table('Indicateurs').select('type').execute().data
-        # listTypes = [data["type"] for data in responseTypes]
-        # listFormules = [data["formule"] for data in responseFormules]
+        responseListAxesEnjeu = supabase.table('Indicateurs').select("axe, enjeu").order("numero",desc= False).execute().data
         dicTemp = responseListEcart[0]
         listEcart = dicTemp['ecarts']
-        # dataTemp = responseDataCible[0]
-        # listCible = dataTemp['cibles']
 
-        indicesListAxes = [16, 46, 206, 221, 280]
-        indicesListEnjeux = [16, 21, 27, 34, 46, 181, 200, 206, 221, 245, 262, 280]
+        # indicesListAxes = [16, 46, 206, 221, 280]
+        # indicesListEnjeux = [16, 21, 27, 34, 46, 181, 200, 206, 221, 245, 262, 280]
         listAxes = []
         listEnjeux = []
-        #print(dataValeurListN2)
 
         for i, (rowN1, rowN2) in enumerate (zip(dataValeurListN1, dataValeurListN2)):
             dataRealiseN1 = rowN1[0]
@@ -137,63 +129,36 @@ class ScriptConsolidation(Resource) :
             if dataRealiseN2 != None and dataRealiseN1 != None:
                 dataEcart = ((dataRealiseN2 - dataRealiseN1) / dataRealiseN2) * 100
                 listEcart[i] = dataEcart
-
-        # for i, type_value in enumerate(listTypes):
-        #     if type_value == 'Primaire':
-        #         formule = listFormules[i]
-        #         dataCible = listCible[i]
-        #         dataRealise = dataValeurListN1[i][0]
-                
-        #         if formule == "Somme":
-        #             if dataCible != None and dataRealise != None:
-        #                 dataEcart = ((dataCible - dataRealise) / dataCible) * 100
-        #                 listEcart[i] = dataEcart
-                
-        #         elif formule == "Dernier mois renseigné":
-        #                 if dataCible != None and dataRealise != None:
-        #                     dataEcart = ((dataCible - dataRealise) / dataCible) * 100
-        #                     listEcart[i] = dataEcart
-                
-        #         elif formule == "Moyenne":
-        #                 if dataCible != None and dataRealise != None:
-        #                     dataEcart = ((dataCible - dataRealise) / dataCible) * 100
-        #                     listEcart[i] = dataEcart
         
         #Calcul de la performance Globale
         globalPerfData = PerformGlobal(listEcart)
-        #print(globalPerfData)
 
-        #decoupage de listEcart pous definir listes des Axes pour performances Axes
-        for i in range(len(indicesListAxes) - 1):
-            axeList = listEcart[indicesListAxes[i]:indicesListAxes[i + 1]]
-            listAxes.append(axeList)
-        for index, item in enumerate(listAxes):
-            l = []
-            count = 0
-            for data in item:
-                if data != None:
-                    l.append(data)
-                    count += 1
-            if l != [] :
-                listAxes[index] = sum(l) / count
-            else:
-                listAxes[index] = None
+        def extract_data(response_list, list_ecart, value):
+            """Extracts data from response_list based on value and calculates average."""
+            result_list = []
+            list_index = indexes_by(response_list, value=value)
+            for index_list in list_index:
+                temp_list = []
+                for index in index_list:
+                    temp_list.append(list_ecart[index])
+                result_list.append(temp_list)
+            for index, item in enumerate(result_list):
+                l = []
+                count = 0
+                for data in item:
+                    if data != None:
+                        l.append(data)
+                        count += 1
+                if l != []:
+                    result_list[index] = sum(l) / count
+                else:
+                    result_list[index] = None
+            return result_list
 
-        #decoupage de listEcart pous definir listes des Enjeux pour performances Enjeux
-        for i in range(len(indicesListEnjeux) - 1):
-            enjeuList = listEcart[indicesListEnjeux[i]:indicesListEnjeux[i + 1]]
-            listEnjeux.append(enjeuList)
-        for index, item in enumerate(listEnjeux):
-            l = []
-            count = 0
-            for data in item:
-                if data != None:
-                    l.append(data)
-                    count += 1
-            if l != [] :
-                listEnjeux[index] = sum(l) / count
-            else:
-                listEnjeux[index] = None
+        resultlistAxes = extract_data(responseListAxesEnjeu, listEcart, "axe")
+        listAxes = resultlistAxes[1:]
+        resultlistEnjeux = extract_data(responseListAxesEnjeu, listEcart, "enjeu")
+        listEnjeux = resultlistEnjeux[1:]
 
         supabase.table('Performance').update({'performs_piliers': listAxes}).eq('id',id).execute()
         supabase.table('Performance').update({'performs_enjeux': listEnjeux}).eq('id',id).execute()

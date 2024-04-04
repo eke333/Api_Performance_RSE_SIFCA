@@ -1,6 +1,6 @@
 from dbkeys import supabase
 from utils_data import readDataJson
-from utils import checkProcessValue
+from utils import checkProcessValue, indexes_by
 from flask_restful import Resource
 from flask import request, make_response
 
@@ -10,11 +10,17 @@ class SuiviDataIndicateur(Resource):
     def updateSuiviIndicateur(self,entiteId, annee, processus, numeroLigne, colonne):
 
         try:
-            suiviMap = {"indicateur_total": 280, "indicateur_valides": 0, "indicateur_collectes": 0,
+            suiviMap = {"indicateur_total": 288, "indicateur_valides": 0, "indicateur_collectes": 0,
                         "suivi_mensuel": {},"suivi_axe": {}, "suivi_processus": {}}
             ########################
             entiteList = supabase.table('Entites').select("nom_entite").eq("id_entite", entiteId).execute().data
             nomEntite = entiteList[0]["nom_entite"]
+
+            responseListAxesEnjeu = supabase.table('Indicateurs').select("axe, enjeu").order("numero",desc= False).execute().data
+            listAxesIndex = indexes_by(responseListAxesEnjeu, value= "axe")
+            totalElementInAxe = []
+            for listIndex in listAxesIndex[1:]:
+                totalElementInAxe.append(len(listIndex))
 
             idSuivi = f"{entiteId}_{annee}"
             isExist = supabase.table('SuiviData').select("*").eq("id_suivi", idSuivi).execute().data
@@ -55,49 +61,49 @@ class SuiviDataIndicateur(Resource):
 
             dataAxe1 = []
             for rowData in dataValeurList:
-                start = 16 -1
-                end = 46
+                # start = 16 -1
+                # end = 46
                 kData = rowData[0]
                 if kData != None:
                     dataAxe1.append(kData)
                 axesMap["axe_1"] = {
-                    "indicateur_total": (end-1)-start,
+                    "indicateur_total": totalElementInAxe[0],
                     "indicateur_collectes": len(dataAxe1)
                 }
 
             dataAxe2 = []
             for rowData in dataValeurList:
-                start = 47 -1
-                end = 206
+                # start = 47 -1
+                # end = 206
                 kData = rowData[0]
                 if kData != None:
                     dataAxe2.append(kData)
                 axesMap["axe_2"] = {
-                    "indicateur_total": end-start,
+                    "indicateur_total": totalElementInAxe[1],
                     "indicateur_collectes": len(dataAxe2)
                 }
 
             dataAxe3 = []
             for rowData in dataValeurList:
-                start = 207 -1
-                end = 221
+                # start = 207 -1
+                # end = 221
                 kData = rowData[0]
                 if kData != None:
                     dataAxe3.append(kData)
                 axesMap["axe_3"] = {
-                    "indicateur_total": end-start,
+                    "indicateur_total": totalElementInAxe[2],
                     "indicateur_collectes": len(dataAxe3)
                 }
 
             dataAxe4 = []
             for rowData in dataValeurList:
-                start = 222 -1
-                end = 280
+                # start = 222 -1
+                # end = 280
                 kData = rowData[0]
                 if kData != None:
                     dataAxe4.append(kData)
                 axesMap["axe_4"] = {
-                    "indicateur_total": end-start,
+                    "indicateur_total": totalElementInAxe[3],
                     "indicateur_collectes": len(dataAxe4)
                 }
 

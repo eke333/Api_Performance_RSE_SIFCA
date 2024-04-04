@@ -3,7 +3,7 @@ from flask import request, make_response
 import copy
 from data import calculated_keys
 from dbkeys import supabase
-from utils import formuleCalcules, formuleSomme, formuleDernierMois, formuleMoyenne, PerformGlobal, extraire_chiffres
+from utils import formuleCalcules, formuleSomme, formuleDernierMois, formuleMoyenne, PerformGlobal, extraire_chiffres, indexes_by
 from utils_data import readDataJson, saveDataInJson
 
 class GetDataEntiteIndicateur(Resource):
@@ -36,16 +36,15 @@ class UpdateDataEntiteIndicateur(Resource):
         id = f"{entite}_{annee}"
 
         responseListEcart = supabase.table('DataIndicateur').select("ecarts").eq("id", id).execute().data
+        responseListAxesEnjeu = supabase.table('Indicateurs').select("axe, enjeu").order("numero",desc= False).execute().data
+
         dicTemp = responseListEcart[0]
         listEcart = dicTemp['ecarts']
-        # L'ecart est determine a partir du realise du mois actuel (cumul jusqu'au mois actuel) et le realise de l'annee derniere
-        # responseDataCible = supabase.table('DataIndicateur').select("cibles").eq("id", id).execute().data
-        # dataTemp = responseDataCible[0]
-        # dataList = dataTemp['cibles']
-        # dataCible = dataList[ligne]
 
-        indicesListAxes = [16, 46, 206, 221, 280]
-        indicesListEnjeux = [16, 21, 27, 34, 46, 181, 200, 206, 221, 245, 262, 280]
+        # L'ecart est determine a partir du realise du mois actuel (cumul jusqu'au mois actuel) et le realise de l'annee derniere
+
+        # indicesListAxes = [16, 46, 206, 221, 280]
+        # indicesListEnjeux = [16, 21, 27, 34, 46, 181, 200, 206, 221, 245, 262, 280]
 
         listAxes = []
         listEnjeux = []
@@ -106,37 +105,72 @@ class UpdateDataEntiteIndicateur(Resource):
         #Calcul de la performance Globale
         globalPerfData = PerformGlobal(listEcart)
 
-        #decoupage de listEcart pous definir listes des Axes pour performances Axes
-        for i in range(len(indicesListAxes) - 1):
-            axeList = listEcart[indicesListAxes[i]:indicesListAxes[i + 1]]
-            listAxes.append(axeList)
-        for index, item in enumerate(listAxes):
-            l = []
-            count = 0
-            for data in item:
-                if data != None:
-                    l.append(data)
-                    count += 1
-            if l != [] :
-                listAxes[index] = sum(l) / count
-            else:
-                listAxes[index] = None
+        def extract_data(response_list, list_ecart, value):
+            """Extracts data from response_list based on value and calculates average."""
+            result_list = []
+            list_index = indexes_by(response_list, value=value)
+            for index_list in list_index:
+                temp_list = []
+                for index in index_list:
+                    temp_list.append(list_ecart[index])
+                result_list.append(temp_list)
+            for index, item in enumerate(result_list):
+                l = []
+                count = 0
+                for data in item:
+                    if data != None:
+                        l.append(data)
+                        count += 1
+                if l != []:
+                    result_list[index] = sum(l) / count
+                else:
+                    result_list[index] = None
+            return result_list
 
-        #decoupage de listEcart pous definir listes des Enjeux pour performances Enjeux
-        for i in range(len(indicesListEnjeux) - 1):
-            enjeuList = listEcart[indicesListEnjeux[i]:indicesListEnjeux[i + 1]]
-            listEnjeux.append(enjeuList)
-        for index, item in enumerate(listEnjeux):
-            l = []
-            count = 0
-            for data in item:
-                if data != None:
-                    l.append(data)
-                    count += 1
-            if l != [] :
-                listEnjeux[index] = sum(l) / count
-            else:
-                listEnjeux[index] = None
+        resultlistAxes = extract_data(responseListAxesEnjeu, listEcart, "axe")
+        listAxes = resultlistAxes[1:]
+        resultlistEnjeux = extract_data(responseListAxesEnjeu, listEcart, "enjeu")
+        listEnjeux = resultlistEnjeux[1:]
+
+
+        # listIndexAxes = indexes_by(responseListAxesEnjeu, value = "axe")
+        # for indexList in listIndexAxes:
+        #     axeList = []
+        #     for index in indexList:
+        #         axeList.append(listEcart[index])
+        #     listAxes.append(axeList)
+        # for index, item in enumerate(listAxes):
+        #     l = []
+        #     count = 0
+        #     for data in item:
+        #         if data != None:
+        #             l.append(data)
+        #             count += 1
+        #     if l != [] :
+        #         listAxes[index] = sum(l) / count
+        #     else:
+        #         listAxes[index] = None
+
+        # listIndexEnjeux = indexes_by(responseListAxesEnjeu, value= "enjeu")
+        # for indexList in listIndexEnjeux:
+        #     enjeuList = []
+        #     for index in indexList:
+        #         enjeuList.append(listEcart[index])
+        #     listEnjeux.append(enjeuList)
+        # # for i in range(len(indicesListEnjeux) - 1):
+        # #     enjeuList = listEcart[indicesListEnjeux[i]:indicesListEnjeux[i + 1]]
+        # #     listEnjeux.append(enjeuList)
+        # for index, item in enumerate(listEnjeux):
+        #     l = []
+        #     count = 0
+        #     for data in item:
+        #         if data != None:
+        #             l.append(data)
+        #             count += 1
+        #     if l != [] :
+        #         listEnjeux[index] = sum(l) / count
+        #     else:
+        #         listEnjeux[index] = None
 
         
         supabase.table('Performance').update({'performs_piliers': listAxes}).eq('id',id).execute()
@@ -366,7 +400,7 @@ class EntiteExportAllData(Resource):
 
             ## Général
 
-            allRows = self.getJson(1,280,dataEntite,dataRealise)
+            allRows = self.getJson(1,288,dataEntite,dataRealise)
 
             return {
                 "entreprise": "Groupe SIFCA",

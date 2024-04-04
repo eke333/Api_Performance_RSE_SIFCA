@@ -36,6 +36,6 @@ ligne = [None,None,None,None,None,None,None,None,None,None,None,None,None]
 
 def dataListGen() :
     list = []
-    for i in range(280):
+    for i in range(288):
         list.append(ligne)
     return list

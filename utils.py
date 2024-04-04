@@ -21,6 +21,16 @@ def extraire_chiffres(chaine):
     chiffres_concatenes = ''.join(chiffres)
     return chiffres_concatenes
 
+def indexes_by(dicts_list, value):
+    indexes_dict = {}
+    for index, d in enumerate(dicts_list):
+        tempVal = d[f'{value}']
+        if tempVal in indexes_dict:
+            indexes_dict[tempVal].append(index)
+        else:
+            indexes_dict[tempVal] = [index]
+    return list(indexes_dict.values())
+
 def checkProcessValue(index, listDic):
     value = listDic[index].get('processus')
     
@@ -126,7 +136,7 @@ def formuleCalcules(index, dataValeurList):
             for i in range(len(A)):
                 valeur = AplusB(A[i], B[i])
                 list.append(valeur)
-            return list
+            return list     
         elif index == 12:
             # L11 / L3
             list = []
@@ -142,6 +152,15 @@ def formuleCalcules(index, dataValeurList):
             A = dataValeurList[17]
             B = dataValeurList[16]
             for i in range(len(A)):
+                valeur = AsurB(A[i], B[i])
+                list.append(valeur)
+            return list
+        elif index == 23:
+            # GOU3-010 = L45 / L3
+            list = []
+            A = dataValeurList[44]
+            B = dataValeurList[2]
+            for i in range (len(A)):
                 valeur = AsurB(A[i], B[i])
                 list.append(valeur)
             return list
@@ -559,6 +578,42 @@ def formuleCalcules(index, dataValeurList):
                 valeur = AplusB(A[i], B[i])
                 list.append(valeur)
             return list
+        elif index == 283:
+            # GOU3-013 = L282 / L46
+            list = []
+            A = dataValeurList[281]
+            B = dataValeurList[45]
+            for i in range(len(A)):
+                valeur = AsurB(A[i], B[i])
+                list.append(valeur)
+            return list
+        elif index == 285:
+            # INC7-013 = L284 / L218
+            list = []
+            A = dataValeurList[283]
+            B = dataValeurList[217]
+            for i in range(len(A)):
+                valeur = AsurB(A[i], B[i])
+                list.append(valeur)
+            return list
+        elif index == 287:
+            # INC7-016 = L219 / L286
+            list = []
+            A = dataValeurList[218]
+            B = dataValeurList[285]
+            for i in range(len(A)):
+                valeur = AsurB(A[i], B[i])
+                list.append(valeur)
+            return list
+        elif index == 216:
+            # INC7-019 = L281 / L288
+            list = []
+            A = dataValeurList[280]
+            B = dataValeurList[287]
+            for i in range(len(A)):
+                valeur = AsurB(A[i], B[i])
+                list.append(valeur)
+            return list
         elif index == 65:
             # L56 - L61
             list = []
@@ -622,6 +677,7 @@ def formuleCalcules(index, dataValeurList):
                 valeur = AmoinsB(A[i], B[i])
                 list.append(valeur)
             return list
+        
         elif index == 91:
             # L82 - L87
             list = []
@@ -773,10 +829,10 @@ def formuleCalcules(index, dataValeurList):
                 list.append(valeur)
             return list
         elif index == 190:
-            # L189 / 24
+            # L189 / 8
             list = []
             A = dataValeurList[188]
-            V = 24
+            V = 8
             for i in range(len(A)):
                 valeur = AsurV(A[i], V)
                 list.append(valeur)
