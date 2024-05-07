@@ -14,7 +14,7 @@ api = Api(app)
 
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://performance-rse-sifca.web.app", "http://localhost:49430", "http://localhost:51938"]
+        "origins": ["https://sifca-performance-rse.web.app/", "http://localhost:49430", "http://localhost:51938"]
     }
 })
 #https://performance-rse-sifca.web.app", "http://localhost:49430
