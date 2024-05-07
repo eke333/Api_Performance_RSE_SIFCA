@@ -16,8 +16,15 @@ class SuiviDataIndicateur(Resource):
             entiteList = supabase.table('Entites').select("nom_entite").eq("id_entite", entiteId).execute().data
             nomEntite = entiteList[0]["nom_entite"]
 
-            responseListAxesEnjeu = supabase.table('Indicateurs').select("axe, enjeu").order("numero",desc= False).execute().data
+            responseListAxesEnjeu = supabase.table('Indicateurs').select("axe, enjeu, processus").order("numero",desc= False).execute().data
             listAxesIndex = indexes_by(responseListAxesEnjeu, value= "axe")
+            # Ordre de procesus : Agricole, Finances, DD, Achats, Juridique, RH , Medecin, Infrastructures, RH / Juridique, GS / Logi, Emissions, Usine
+            #totalElementProcess = []
+            #listProcessIndex = indexes_by(responseListAxesEnjeu, value= 'processus')
+            # for listIndex in listProcessIndex:
+            #     totalElementProcess.append(len(listIndex))
+            # print(totalElementProcess)
+
             totalElementInAxe = []
             for listIndex in listAxesIndex[1:]:
                 totalElementInAxe.append(len(listIndex))
@@ -63,49 +70,53 @@ class SuiviDataIndicateur(Resource):
             for rowData in dataValeurList:
                 # start = 16 -1
                 # end = 46
-                kData = rowData[0]
-                if kData != None:
-                    dataAxe1.append(kData)
-                axesMap["axe_1"] = {
-                    "indicateur_total": totalElementInAxe[0],
-                    "indicateur_collectes": len(dataAxe1)
-                }
+                if dataValeurList.index(rowData) in listAxesIndex[1]:
+                    kData = rowData[0]
+                    if kData != None:
+                        dataAxe1.append(kData)
+                    axesMap["axe_1"] = {
+                        "indicateur_total": totalElementInAxe[0],
+                        "indicateur_collectes": len(dataAxe1)
+                    }
 
             dataAxe2 = []
             for rowData in dataValeurList:
                 # start = 47 -1
                 # end = 206
-                kData = rowData[0]
-                if kData != None:
-                    dataAxe2.append(kData)
-                axesMap["axe_2"] = {
-                    "indicateur_total": totalElementInAxe[1],
-                    "indicateur_collectes": len(dataAxe2)
-                }
+                if dataValeurList.index(rowData) in listAxesIndex[2]:
+                    kData = rowData[0]
+                    if kData != None:
+                        dataAxe2.append(kData)
+                    axesMap["axe_2"] = {
+                        "indicateur_total": totalElementInAxe[1],
+                        "indicateur_collectes": len(dataAxe2)
+                    }
 
             dataAxe3 = []
             for rowData in dataValeurList:
                 # start = 207 -1
                 # end = 221
-                kData = rowData[0]
-                if kData != None:
-                    dataAxe3.append(kData)
-                axesMap["axe_3"] = {
-                    "indicateur_total": totalElementInAxe[2],
-                    "indicateur_collectes": len(dataAxe3)
-                }
+                if dataValeurList.index(rowData) in listAxesIndex[3]:
+                    kData = rowData[0]
+                    if kData != None:
+                        dataAxe3.append(kData)
+                    axesMap["axe_3"] = {
+                        "indicateur_total": totalElementInAxe[2],
+                        "indicateur_collectes": len(dataAxe3)
+                    }
 
             dataAxe4 = []
             for rowData in dataValeurList:
                 # start = 222 -1
                 # end = 280
-                kData = rowData[0]
-                if kData != None:
-                    dataAxe4.append(kData)
-                axesMap["axe_4"] = {
-                    "indicateur_total": totalElementInAxe[3],
-                    "indicateur_collectes": len(dataAxe4)
-                }
+                if dataValeurList.index(rowData) in listAxesIndex[1]:
+                    kData = rowData[0]
+                    if kData != None:
+                        dataAxe4.append(kData)
+                    axesMap["axe_4"] = {
+                        "indicateur_total": totalElementInAxe[3],
+                        "indicateur_collectes": len(dataAxe4)
+                    }
 
             suiviDataRealise = []
 

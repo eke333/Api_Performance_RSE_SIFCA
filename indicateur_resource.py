@@ -53,6 +53,8 @@ class UpdateDataEntiteIndicateur(Resource):
         dataValeurListN2 = readDataJson(entite,f"{entite}_data_{annee - 1}.json")
         dataValidationList = readDataJson(entite, f"{entite}_validation_{annee}.json")
 
+        print(len(dataValeurListN1))
+
         isValide = dataValidationList[ligne][colonne]
         realiseLastYear = dataValeurListN2[ligne][0]
 

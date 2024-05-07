@@ -25,10 +25,11 @@ def indexes_by(dicts_list, value):
     indexes_dict = {}
     for index, d in enumerate(dicts_list):
         tempVal = d[f'{value}']
-        if tempVal in indexes_dict:
-            indexes_dict[tempVal].append(index)
-        else:
-            indexes_dict[tempVal] = [index]
+        if tempVal is not None:
+            if tempVal in indexes_dict:
+                indexes_dict[tempVal].append(index)
+            else:
+                indexes_dict[tempVal] = [index]
     return list(indexes_dict.values())
 
 def checkProcessValue(index, listDic):
