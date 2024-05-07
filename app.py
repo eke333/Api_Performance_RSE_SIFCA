@@ -17,7 +17,6 @@ CORS(app, resources={
         "origins": ["https://sifca-performance-rse.web.app/", "http://localhost:49430", "http://localhost:51938"]
     }
 })
-#https://performance-rse-sifca.web.app", "http://localhost:49430
 
 class HelloWorld(Resource):
     def get(self):
@@ -116,4 +115,4 @@ api.add_resource(ChangeStatusEntityIndic, '/data-entite-indicateur/change-entity
 
 if __name__ == '__main__':
     context = ('ssl/cert.pem', 'ssl/key.pem')
-    app.run() #debug=True,port=4444,host="0.0.0.0"
+    app.run(debug=False, host="https://api-performance-rse-sifca.onrender.com") #debug=True,port=4444,host="0.0.0.0"
