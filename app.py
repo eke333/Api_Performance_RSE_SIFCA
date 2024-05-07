@@ -115,5 +115,5 @@ api.add_resource(SuiviDataIndicateur, '/data-entite-suivi')
 api.add_resource(ChangeStatusEntityIndic, '/data-entite-indicateur/change-entity-indic-status')
 
 if __name__ == '__main__':
-    #context = ('ssl/cert.pem', 'ssl/key.pem')
-    app.run(debug=True,port=4444,host="0.0.0.0")
+    context = ('ssl/cert.pem', 'ssl/key.pem')
+    app.run() #debug=True,port=4444,host="0.0.0.0"
