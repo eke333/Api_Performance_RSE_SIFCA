@@ -12,11 +12,13 @@ app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
 
 api = Api(app)
 
-CORS(app, resources={
-    r"/*": {
-        "origins": ["https://sifca-performance-rse.web.app/", "http://localhost:49430", "http://localhost:51938"]
-    }
-})
+# CORS(app, resources={
+#     r"/*": {
+#         "origins": ["https://sifca-performance-rse.web.app/", "http://localhost:49430", "http://localhost:51938"]
+#     }
+# })
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 
 class HelloWorld(Resource):
     def get(self):
@@ -115,4 +117,4 @@ api.add_resource(ChangeStatusEntityIndic, '/data-entite-indicateur/change-entity
 
 if __name__ == '__main__':
     context = ('ssl/cert.pem', 'ssl/key.pem')
-    app.run(debug=False, host="https://api-performance-rse-sifca.onrender.com") #debug=True,port=4444,host="0.0.0.0"
+    app.run() #debug=True,port=4444,host="0.0.0.0"
