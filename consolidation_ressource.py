@@ -11,11 +11,11 @@ from utils_data import  readDataJson, saveDataInJson, dataListGen
 
 consolidationFiliale = {
     "sucrivoire": ["sucrivoire-siege", "sucrivoire-borotou-koro", "sucrivoire-zuenoula"],
-    #"grel": ["grel-tsibu","grel-apimenim"],
-    #"saph": ["saph-siege","saph-bettie","saph-bongo","saph-loeth","saph-ph-cc",
-    #         "saph-rapides-grah","saph-toupah","saph-yacoli"],
-    #"palmci":["palmci-siege","palmci-blidouba","palmci-boubo","palmci-ehania","palmci-gbapet",
-    #    "palmci-iboke","palmci-irobo","palmci-neka","palmci-toumanguie"],
+    "grel": ["grel-tsibu","grel-apimenim"],
+    "saph": ["saph-siege","saph-bettie","saph-bongo","saph-loeth","saph-ph-cc",
+            "saph-rapides-grah","saph-toupah","saph-yacoli"],
+    "palmci":["palmci-siege","palmci-blidouba","palmci-boubo","palmci-ehania","palmci-gbapet",
+       "palmci-iboke","palmci-irobo","palmci-neka","palmci-toumanguie"],
 }
 consolidationFiliere = {
     "sucre": ["sucrivoire"],
@@ -175,7 +175,7 @@ class ScriptConsolidation(Resource) :
         time.sleep(1)
         self.scriptConsolidation(annee, consolidationFiliere)
         time.sleep(1)
-        #self.scriptConsolidation(annee, consolidationGroupe)
+        self.scriptConsolidation(annee, consolidationGroupe)
         time.sleep(1)
         print(datetime.now())
         return {'status': True}
