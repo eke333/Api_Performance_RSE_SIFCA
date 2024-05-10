@@ -130,9 +130,9 @@ class UpdateDataEntiteIndicateur(Resource):
             return result_list
 
         resultlistAxes = extract_data(responseListAxesEnjeu, listEcart, "axe")
-        listAxes = resultlistAxes[1:]
+        listAxes = [100 if x is None else x for x in resultlistAxes[1:]]
         resultlistEnjeux = extract_data(responseListAxesEnjeu, listEcart, "enjeu")
-        listEnjeux = resultlistEnjeux[1:]
+        listEnjeux = [100 if x is None else x for x in resultlistEnjeux[1:]]
 
 
         # listIndexAxes = indexes_by(responseListAxesEnjeu, value = "axe")

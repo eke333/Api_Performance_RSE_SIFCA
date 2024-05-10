@@ -12,7 +12,7 @@ def AplusB(A, B):
 def PerformGlobal(liste):
     filtreList = [x for x in liste if x is not None ]
     if not filtreList:
-        return None  
+        return 0  
     average = sum(filtreList) / len(filtreList)
     return average
 
