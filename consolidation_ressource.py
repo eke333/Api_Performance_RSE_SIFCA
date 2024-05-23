@@ -19,7 +19,7 @@ consolidationFiliale = {
 }
 consolidationFiliere = {
     "sucre": ["sucrivoire"],
-    "oleagineux": ["palmci", "sania", "mopp"],
+    "oleagineux": ["palmci", "sania", "mopp", "golden-sifca", "thsp"],
     "caoutchouc-naturel": ["siph","crc","renl","saph","grel"],
 
 }

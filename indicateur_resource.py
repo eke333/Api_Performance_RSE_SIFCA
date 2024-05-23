@@ -1,9 +1,9 @@
 from flask_restful import Resource
 from flask import request, make_response
 import copy
-from data import calculated_keys
+from data import calculated_keys, test_indicators_keys
 from dbkeys import supabase
-from utils import formuleCalcules, formuleSomme, formuleDernierMois, formuleMoyenne, PerformGlobal, extraire_chiffres, indexes_by
+from utils import formuleCalcules, formuleSomme, formuleDernierMois, formuleMoyenne, PerformGlobal, extraire_chiffres, indexes_by, testIndicatorsFormulas
 from utils_data import readDataJson, saveDataInJson
 
 class GetDataEntiteIndicateur(Resource):
@@ -53,8 +53,6 @@ class UpdateDataEntiteIndicateur(Resource):
         dataValeurListN2 = readDataJson(entite,f"{entite}_data_{annee - 1}.json")
         dataValidationList = readDataJson(entite, f"{entite}_validation_{annee}.json")
 
-        print(len(dataValeurListN1))
-
         isValide = dataValidationList[ligne][colonne]
         realiseLastYear = dataValeurListN2[ligne][0]
 
@@ -101,6 +99,11 @@ class UpdateDataEntiteIndicateur(Resource):
         for index in calculated_keys :
 
             dataRow = formuleCalcules(index, dataValeurListN1)
+            if dataRow != None:
+                dataValeurListN1[index - 1] = dataRow
+        
+        for index in test_indicators_keys:
+            dataRow = testIndicatorsFormulas(index, dataValeurListN1, dataValeurListN2)
             if dataRow != None:
                 dataValeurListN1[index - 1] = dataRow
 
@@ -398,6 +401,7 @@ class EntiteExportAllData(Resource):
             #################################
 
             kIndicateur = supabase.table("Indicateurs").select("*").execute()
+            kIndicateur = supabase.table("Indicateurs").select("*").order("axe, enjeu, reference", desc=False).execute()
             dataEntite = kIndicateur.data
 
             ## Général

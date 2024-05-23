@@ -8,6 +8,14 @@ def AplusB(A, B):
         return A
     else:
         return None
+
+def CompareAandB(A, B):
+    if A != None and B != None:
+        return A == B
+    elif A == None and B == None:
+        return None
+    else:
+        return False
     
 def PerformGlobal(liste):
     filtreList = [x for x in liste if x is not None ]
@@ -99,6 +107,233 @@ def formuleMoyenne(dataRow) :
         average = total / len(l)
         return average
     return None
+
+def testIndicatorsFormulas(index, dataValeurList, dataValeurListPastYear):
+    try:
+        if index == 55:
+            # if : L54 + L53 = L49
+            computeList = []
+            list = []
+            A = dataValeurList[53]
+            B = dataValeurList[52]
+            C = dataValeurList[48]
+            for i in range(len(A)):
+                valeur = AplusB(A[i], B[i])
+                computeList.append(valeur)
+            for i in range(len(computeList)):
+                valeur = CompareAandB(computeList[i], C[i])
+                if valeur:
+                    list.append(1)
+                elif valeur == False:
+                    list.append(0)
+                else:
+                    list.append(valeur)
+            return list
+        elif index == 60:
+            # if : L56 + L57 + L58 + L59 = L49
+            computeList = []
+            resultlist = []
+            A = dataValeurList[55]
+            B = dataValeurList[56]
+            C = dataValeurList[57]
+            D = dataValeurList[58]
+            E = dataValeurList[48]
+            setList = [C, D]
+            for i in range(len(A)):
+                valeur = AplusB(A[i], B[i])
+                computeList.append(valeur)
+            for list in setList:
+                for i in range(len(computeList)):
+                    valeur = AplusB(computeList[i], list[i])
+                    computeList[i] = valeur
+            #print(len(computeList))
+            for i in range(len(computeList)):
+                valeur = CompareAandB(computeList[i], E[i])
+                if valeur == True:
+                    resultlist.append(1)
+                elif valeur == False:
+                    resultlist.append(0)
+                else:
+                    resultlist.append(valeur)
+            #print(len(resultlist))
+            return resultlist
+        elif index == 69:
+            # if : L65 + L66 + L67 + L68 = L54
+            computeList = []
+            resultList = []
+            A = dataValeurList[64]
+            B = dataValeurList[65]
+            C = dataValeurList[66]
+            D = dataValeurList[67]
+            E = dataValeurList[53]
+            setList = [C, D]
+            for i in range(len(A)):
+                valeur = AplusB(A[i], B[i])
+                computeList.append(valeur)
+            for list in setList:
+                for i in range(len(computeList)):
+                    valeur = AplusB(computeList[i], list[i])
+                    computeList[i] = valeur
+            for i in range(len(computeList)):
+                valeur = CompareAandB(computeList[i], E[i])
+                if valeur:
+                    resultList.append(1)
+                elif valeur == False:
+                    resultList.append(0)
+                else:
+                    resultList.append(valeur)
+            return resultList
+        elif index == 73:
+            # if : L70 + L71 + L72 = L49
+            computeList = []
+            resultList = []
+            A = dataValeurList[69]
+            B = dataValeurList[70]
+            C = dataValeurList[71]
+            D = dataValeurList[48]
+            setList = [C]
+            for i in range(len(A)):
+                valeur = AplusB(A[i], B[i])
+                computeList.append(valeur)
+            for list in setList:
+                for i in range(len(computeList)):
+                    valeur = AplusB(computeList[i], list[i])
+                    computeList[i] = valeur
+            for i in range(len(computeList)):
+                valeur = CompareAandB(computeList[i], D[i])
+                if valeur:
+                    resultList.append(1)
+                elif valeur == False:
+                    resultList.append(0)
+                else:
+                    resultList.append(valeur)
+            return resultList
+        elif index == 77:
+            # if : L74 + L75 + L76 = L53
+            computeList = []
+            resultList = []
+            A = dataValeurList[73]
+            B = dataValeurList[74]
+            C = dataValeurList[75]
+            D = dataValeurList[52]
+            setList = [C]
+            for i in range(len(A)):
+                valeur = AplusB(A[i], B[i])
+                computeList.append(valeur)
+            for list in setList:
+                for i in range(len(computeList)):
+                    valeur = AplusB(computeList[i], list[i])
+                    computeList[i] = valeur
+            for i in range(len(computeList)):
+                valeur = CompareAandB(computeList[i], D[i])
+                if valeur:
+                    resultList.append(1)
+                elif valeur == False:
+                    resultList.append(0)
+                else:
+                    resultList.append(valeur)
+            return resultList
+        elif index == 81:
+            # if : L78 + L79 + L80 = L54
+            computeList = []
+            resultList = []
+            A = dataValeurList[77]
+            B = dataValeurList[78]
+            C = dataValeurList[79]
+            D = dataValeurList[53]
+            setList = [C]
+            for i in range(len(A)):
+                valeur = AplusB(A[i], B[i])
+                computeList.append(valeur)
+            for list in setList:
+                for i in range(len(computeList)):
+                    valeur = AplusB(computeList[i], list[i])
+                    computeList[i] = valeur
+            for i in range(len(computeList)):
+                valeur = CompareAandB(computeList[i], D[i])
+                if valeur:
+                    resultList.append(1)
+                elif valeur == False:
+                    resultList.append(0)
+                else:
+                    resultList.append(valeur)
+            return resultList
+        elif index == 86:
+            # if : L90 + L94 = L95
+            computeList = []
+            resultList = []
+            A = dataValeurList[89]
+            B = dataValeurList[93]
+            C = dataValeurList[94]
+            for i in range(len(A)):
+                valeur = AplusB(A[i], B[i])
+                computeList.append(valeur)
+            for i in range(len(computeList)):
+                valeur = CompareAandB(computeList[i], C[i])
+                if valeur:
+                    resultList.append(1)
+                elif valeur == False:
+                    resultList.append(0)
+                else:
+                    resultList.append(valeur)
+            return resultList
+        elif index == 111:
+            # if : L109 + L110 = L108
+            computeList = []
+            resultList = []
+            A = dataValeurList[108]
+            B = dataValeurList[109]
+            C = dataValeurList[107]
+            for i in range(len(A)):
+                valeur = AplusB(A[i], B[i])
+                computeList.append(valeur)
+            for i in range(len(computeList)):
+                valeur = CompareAandB(computeList[i], C[i])
+                if valeur:
+                    resultList.append(1)
+                elif valeur == False:
+                    resultList.append(0)
+                else:
+                    resultList.append(valeur)
+            return resultList
+        elif index == 114:
+            # if : L49 (mois passe) + L96 - L113 = L49
+            computeList = []
+            resultList = []
+            A = dataValeurList[48]
+            B = dataValeurList[95]
+            C = dataValeurList[112]
+            datasPastYear = dataValeurListPastYear[48]
+            setList = [C]
+
+            for i in range(len(B)):
+                if i == 0:
+                    valeur = AplusB(datasPastYear[i], B[i])
+                    computeList.append(valeur)
+                elif i == 1:
+                    valeur = AplusB(datasPastYear[0], B[i])
+                    computeList.append(valeur)
+                else:
+                    valeur = AplusB(B[i], A[i - 1])
+                    computeList.append(valeur)
+                #print(len(computeList))
+            for list in setList:
+                for i in range(len(computeList)):
+                    valeur = AmoinsB(computeList[i], list[i])
+                    computeList[i] = valeur
+            for i in range(len(computeList)):
+                valeur = CompareAandB(computeList[i], A[i])
+                if valeur:
+                    resultList.append(1)
+                elif valeur == False:
+                    resultList.append(0)
+                else:
+                    resultList.append(valeur)
+            return resultList
+        
+        return None
+    except:
+        return None
 
 def formuleCalcules(index, dataValeurList):
     try:

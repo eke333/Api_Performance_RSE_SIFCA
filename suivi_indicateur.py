@@ -15,6 +15,7 @@ class SuiviDataIndicateur(Resource):
             ########################
             entiteList = supabase.table('Entites').select("nom_entite").eq("id_entite", entiteId).execute().data
             nomEntite = entiteList[0]["nom_entite"]
+            print("suivi de " f"{entiteId}")
 
             responseListAxesEnjeu = supabase.table('Indicateurs').select("axe, enjeu, processus").order("numero",desc= False).execute().data
             listAxesIndex = indexes_by(responseListAxesEnjeu, value= "axe")
@@ -47,6 +48,7 @@ class SuiviDataIndicateur(Resource):
             listProcessus = supabase.table('Indicateurs').select("processus").order('numero', desc=False).execute().data
 
             value = checkProcessValue(numeroLigne, listProcessus)
+            #print(value)
 
             if(value):
                 suiviDicProcessus = isExist[0]['suivi_processus']
@@ -62,6 +64,7 @@ class SuiviDataIndicateur(Resource):
                 if suiviDicProcessus[f'{processus}'][f'{colonne}'] != dataProcessSuivi:
                     suiviDicProcessus[f'{processus}'][f'{colonne}'] = dataProcessSuivi
                 suiviMap["suivi_processus"] = suiviDicProcessus
+                #print(suiviDicProcessus)
             ####################
 
             axesMap = {}
@@ -78,6 +81,11 @@ class SuiviDataIndicateur(Resource):
                         "indicateur_total": totalElementInAxe[0],
                         "indicateur_collectes": len(dataAxe1)
                     }
+            if not dataAxe1:
+                axesMap["axe_1"] = {
+                    "indicateur_total": totalElementInAxe[0],
+                    "indicateur_collectes": 0
+                }
 
             dataAxe2 = []
             for rowData in dataValeurList:
@@ -91,6 +99,11 @@ class SuiviDataIndicateur(Resource):
                         "indicateur_total": totalElementInAxe[1],
                         "indicateur_collectes": len(dataAxe2)
                     }
+            if not dataAxe2:
+                axesMap["axe_2"] = {
+                    "indicateur_total": totalElementInAxe[1],
+                    "indicateur_collectes": 0
+                }
 
             dataAxe3 = []
             for rowData in dataValeurList:
@@ -104,6 +117,11 @@ class SuiviDataIndicateur(Resource):
                         "indicateur_total": totalElementInAxe[2],
                         "indicateur_collectes": len(dataAxe3)
                     }
+            if not dataAxe3:
+                axesMap["axe_3"] = {
+                    "indicateur_total": totalElementInAxe[2],
+                    "indicateur_collectes": 0
+                }
 
             dataAxe4 = []
             for rowData in dataValeurList:
@@ -117,6 +135,11 @@ class SuiviDataIndicateur(Resource):
                         "indicateur_total": totalElementInAxe[3],
                         "indicateur_collectes": len(dataAxe4)
                     }
+            if not dataAxe4:
+                axesMap["axe_4"] = {
+                    "indicateur_total": totalElementInAxe[3],
+                    "indicateur_collectes": 0
+                }
 
             suiviDataRealise = []
 
@@ -156,7 +179,7 @@ class SuiviDataIndicateur(Resource):
                 mapMois["indicateur_valides"] = len(ksuiviValidationRealise)
 
                 suiviMensuel[f"{mois}"] = mapMois
-
+            print(f'{entiteId}: {axesMap}')
             suiviMap["indicateur_total"] = len(dataValeurList)
             suiviMap["indicateur_collectes"] = len(suiviDataRealise)
             suiviMap["indicateur_valides"] = len(suiviValidationRealise)
