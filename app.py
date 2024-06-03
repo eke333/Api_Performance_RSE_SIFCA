@@ -3,7 +3,7 @@ from flask_cors import CORS
 from flask_restful import Api, Resource
 
 from consolidation_ressource import ScriptConsolidation
-from indicateur_resource import ChangeStatusEntityIndic, GetDataEntiteIndicateur, UpdateDataEntiteIndicateur, UpdateAllDataEntiteIndicateur, \
+from indicateur_resource import ChangeStatusEntityIndic, DeleteDataEntiteIndicateur, GetDataEntiteIndicateur, UpdateDataEntiteIndicateur, UpdateAllDataEntiteIndicateur, UpdateDataInApiDB, \
     UpdateValidationEntiteIndicateur, EntiteExportAllData, UpdateDataEntiteIndicateurFromSupabase
 from suivi_indicateur import SuiviDataIndicateur
 
@@ -105,6 +105,7 @@ api.add_resource(HelloWorld, '/')
 
 api.add_resource(GetDataEntiteIndicateur, '/data-entite-indicateur/get')
 api.add_resource(UpdateDataEntiteIndicateur, '/data-entite-indicateur/update-data')
+api.add_resource(DeleteDataEntiteIndicateur, '/data-entite-indicateur/delete-data')
 api.add_resource(UpdateAllDataEntiteIndicateur, '/data-entite-indicateur/update-all-data')
 api.add_resource(UpdateDataEntiteIndicateurFromSupabase, '/data-entite-indicateur/update-data-from-supabase')
 api.add_resource(UpdateValidationEntiteIndicateur, '/data-entite-indicateur/update-validation')
@@ -114,6 +115,7 @@ api.add_resource(ScriptConsolidation, '/data-entite-indicateur/consolidation')
 api.add_resource(SuiviDataIndicateur, '/data-entite-suivi')
 #api.add_resource(ComputePerformsEntite, '/data-entite-indicateur/compute-performs')
 api.add_resource(ChangeStatusEntityIndic, '/data-entite-indicateur/change-entity-indic-status')
+api.add_resource(UpdateDataInApiDB, '/data-entite-indicateur/update-api-bd')
 
 if __name__ == '__main__':
     context = ('ssl/cert.pem', 'ssl/key.pem')
