@@ -413,6 +413,7 @@ class UpdateDataInApiDB(Resource):
             print(entity)
             dataValeuListApi = dataListFromSupabase[0]["valeurs"]
             saveDataInJson(dataValeuListApi, entity, f"{entity}_data_2024.json")
+        
 
         return {"status": True}
 

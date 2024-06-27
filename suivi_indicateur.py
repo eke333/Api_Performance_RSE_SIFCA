@@ -10,6 +10,33 @@ class SuiviDataIndicateur(Resource):
     def updateSuiviIndicateur(self,entiteId, annee, processus, numeroLigne, colonne):
 
         try:
+            processDic = {
+                "Agricole": "Agricole",
+                "Finances": "Finances",
+                "Juridique": "Juridique",
+                "Achats": "Achats",
+                "Emissions": "Emissions",
+                "Usine": "Usine",
+                "Infrastructures": "Infrastructures",
+                "Médecin": "Médecin",
+                "Ressources Humaines": "Ressources Humaines",
+                "Ressources Humaines / Juridique": "Ressources Humaines / Juridique",
+                "Développement Durable": "Développement Durable",
+                "Gestion des Stocks / Logistique": "Gestion des Stocks / Logistique",
+                "Agricultural": "Agricole",
+                "Sustainable development": "Développement Durable",
+                "Finance": "Finances",
+                "Purchases": "Achats",
+                "Legal": "Juridique",
+                "Human ressources": "Ressources Humaines",
+                "Doctor": "Médecin",
+                "Infrastructure": "Infrastructures",
+                "Human ressources / Legal": "Ressources Humaines / Juridique",
+                "Stock Management / Logistics": "Gestion des Stocks / Logistique",
+                "Emissions": "Emissions",
+                "Factory": "Usine"
+                }
+            processus = processDic[processus]
             suiviMap = {"indicateur_total": 288, "indicateur_valides": 0, "indicateur_collectes": 0,
                         "suivi_mensuel": {},"suivi_axe": {}, "suivi_processus": {}}
             ########################
@@ -19,12 +46,6 @@ class SuiviDataIndicateur(Resource):
 
             responseListAxesEnjeu = supabase.table('Indicateurs').select("axe, enjeu, processus").order("numero",desc= False).execute().data
             listAxesIndex = indexes_by(responseListAxesEnjeu, value= "axe")
-            # Ordre de procesus : Agricole, Finances, DD, Achats, Juridique, RH , Medecin, Infrastructures, RH / Juridique, GS / Logi, Emissions, Usine
-            #totalElementProcess = []
-            #listProcessIndex = indexes_by(responseListAxesEnjeu, value= 'processus')
-            # for listIndex in listProcessIndex:
-            #     totalElementProcess.append(len(listIndex))
-            # print(totalElementProcess)
 
             totalElementInAxe = []
             for listIndex in listAxesIndex[1:]:
