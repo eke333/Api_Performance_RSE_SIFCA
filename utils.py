@@ -862,7 +862,7 @@ def formuleCalcules(index, dataValeurList):
         elif index == 66:
             # L57 - L62
             list = []
-            A = dataValeurList[54]
+            A = dataValeurList[56]
             B = dataValeurList[61]
             for i in range(len(A)):
                 valeur = AmoinsB(A[i], B[i])
@@ -969,75 +969,125 @@ def formuleCalcules(index, dataValeurList):
                 list.append(valeur)
             return list
         elif index == 90:
-            # SUM(87,88,89)
+            # L87 + L88 + L89
             list = []
-            A = dataValeurList[86, 87, 88]
+            A = dataValeurList[86]
+            B = dataValeurList[87]
+            C = dataValeurList[88]
             for i in range(len(A)):
-                valeur = sommeList(A[i])
+                valeurTemp = AplusB(A[i], B[i])
+                valeur = AplusB(valeurTemp, C[i])
                 list.append(valeur)
             return list
         elif index == 94:
-            # SUM(91,92,93)
+            # L91 + L92 + L93
             list = []
-            A = dataValeurList[90, 91, 92]
+            A = dataValeurList[90]
+            B = dataValeurList[91]
+            C = dataValeurList[92]
             for i in range(len(A)):
-                valeur = sommeList(A[i])
+                valeurTemp = AplusB(A[i], B[i])
+                valeur = AplusB(valeurTemp, C[i])
                 list.append(valeur)
             return list
         elif index == 101:
-            # SUM(97,98,99,100)
+            # L97 + L98 + L99 + L100
             list = []
-            A = dataValeurList[96, 97, 98, 99]
+            A = dataValeurList[96]
+            B = dataValeurList[97]
+            C = dataValeurList[98]
+            D = dataValeurList[99]
             for i in range(len(A)):
-                valeur = sommeList(A[i])
+                valeurTemp = AplusB(A[i], B[i])
+                valeurTemp = AplusB(valeurTemp, C[i])
+                valeur = AplusB(valeurTemp, D[i])
                 list.append(valeur)
             return list
         elif index == 108:
-            # SUM(101,102,103,104,105,106,107)
+            # L101 + L102 + L103 + L104 + L105 + L106 + L107
             list = []
-            A = dataValeurList[100, 101, 103, 104, 105, 106]
+            A = dataValeurList[100]
+            B = dataValeurList[101]
+            C = dataValeurList[102]
+            D = dataValeurList[103]
+            E = dataValeurList[104]
+            F = dataValeurList[105]
+            G = dataValeurList[106]
+            setList = [A, B, C, D, E, F, G]
+            valeur = None           
             for i in range(len(A)):
-                valeur = sommeList(A[i])
+                for sousList in setList:
+                    valeur = AplusB(valeur, sousList[i])
                 list.append(valeur)
             return list
         elif index == 121:
-            # SUM(117,118,119,120)
+            # L117 + L118 + L119 + L120
             list = []
-            A = dataValeurList[116, 117, 118, 119]
+            A = dataValeurList[116]
+            B = dataValeurList[117]
+            C = dataValeurList[118]
+            D = dataValeurList[119]
+            setList = [A, B, C, D]
+            valeur = None           
             for i in range(len(A)):
-                valeur = sommeList(A[i])
+                for sousList in setList:
+                    valeur = AplusB(valeur, sousList[i])
                 list.append(valeur)
             return list
         elif index == 227:
-            # SUM(222,223,224,225,226)
+            # (L222 * 3.44 + L223 * 2.6 + L224 * 3 + L225 * 2.96 + L226 * 3.64 ) / 1000; voir cas realise
             list = []
-            A = dataValeurList[221, 222, 223, 224, 225]
+            A = dataValeurList[221]
+            B = dataValeurList[222]
+            C = dataValeurList[223]
+            D = dataValeurList[224]
+            E = dataValeurList[225]
+            coefList = [3.44, 2.6, 3, 2.96, 3.64]
+            setList = [A, B, C, D, E]
+
             for i in range(len(A)):
-                valeur = sommeList(A[i])
-                list.append(valeur)
-            return list
+                if i == 0:
+                    continue
+                else:
+                    total = None
+                    for j in range(len(setList)):
+                        product = AfoisB(setList[j][i], coefList[j])
+                        total = AplusB(total, product)
+                    valeur = total / 1000
+                    list.append(valeur)
+                             
+                return list
         elif index == 249:
-            # SUM(246,247,248)
+            # L246 + L247 + L248
             list = []
-            A = dataValeurList[245, 246, 247]
+            A = dataValeurList[245]
+            B = dataValeurList[246]
+            C = dataValeurList[247]
             for i in range(len(A)):
-                valeur = sommeList(A[i])
+                valeurTemp = AplusB(A[i], B[i])
+                valeur = AplusB(valeurTemp, C[i])
                 list.append(valeur)
             return list
         elif index == 253:
-            # SUM(250,251,252)
+            # L250 + L251 + L252
             list = []
-            A = dataValeurList[249, 250, 251]
+            A = dataValeurList[249]
+            B = dataValeurList[250]
+            C = dataValeurList[251]
             for i in range(len(A)):
-                valeur = sommeList(A[i])
+                valeurTemp = AplusB(A[i], B[i])
+                valeur = AplusB(valeurTemp, C[i])
                 list.append(valeur)
             return list
         elif index == 269:
-            # SUM(265,266,267)
+            # L265 + L266 + L267
             list = []
-            A = dataValeurList[264, 265, 266]
+            A = dataValeurList[264]
+            B = dataValeurList[265]
+            C = dataValeurList[266]
             for i in range(len(A)):
-                valeur = sommeList(A[i])
+                valeurTemp = AplusB(A[i], B[i])
+                valeur = AplusB(valeurTemp, C[i])
                 list.append(valeur)
             return list
         elif index == 138:
