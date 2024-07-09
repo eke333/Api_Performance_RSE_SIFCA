@@ -1014,8 +1014,9 @@ def formuleCalcules(index, dataValeurList):
             F = dataValeurList[105]
             G = dataValeurList[106]
             setList = [A, B, C, D, E, F, G]
-            valeur = None           
+
             for i in range(len(A)):
+                valeur = None
                 for sousList in setList:
                     valeur = AplusB(valeur, sousList[i])
                 list.append(valeur)
@@ -1028,8 +1029,9 @@ def formuleCalcules(index, dataValeurList):
             C = dataValeurList[118]
             D = dataValeurList[119]
             setList = [A, B, C, D]
-            valeur = None           
+
             for i in range(len(A)):
+                valeur = None
                 for sousList in setList:
                     valeur = AplusB(valeur, sousList[i])
                 list.append(valeur)
