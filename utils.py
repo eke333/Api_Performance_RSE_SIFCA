@@ -1038,7 +1038,7 @@ def formuleCalcules(index, dataValeurList):
             return list
         elif index == 227:
             # (L222 * 3.44 + L223 * 2.6 + L224 * 3 + L225 * 2.96 + L226 * 3.64 ) / 1000; voir cas realise
-            list = []
+            list = [None, None, None, None, None, None, None, None, None, None, None, None, None]
             A = dataValeurList[221]
             B = dataValeurList[222]
             C = dataValeurList[223]
@@ -1047,18 +1047,17 @@ def formuleCalcules(index, dataValeurList):
             coefList = [3.44, 2.6, 3, 2.96, 3.64]
             setList = [A, B, C, D, E]
 
-            for i in range(len(A)):
-                if i == 0:
-                    continue
-                else:
-                    total = None
-                    for j in range(len(setList)):
-                        product = AfoisB(setList[j][i], coefList[j])
-                        total = AplusB(total, product)
-                    valeur = total / 1000
-                    list.append(valeur)
-                             
-                return list
+            for i in range(1, len(A)):
+                total = None
+                for j in range(len(setList)):
+                    product = AfoisB(setList[j][i], coefList[j])
+                    total = AplusB(total, product)
+                valeur = AsurB(total, 1000)
+                list[i] = valeur
+
+            list[0] = sommeList(list)
+
+            return list
         elif index == 249:
             # L246 + L247 + L248
             list = []
