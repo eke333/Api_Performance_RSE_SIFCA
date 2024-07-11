@@ -297,7 +297,8 @@ def testIndicatorsFormulas(index, dataValeurList, dataValeurListPastYear):
                     resultList.append(valeur)
             return resultList
         elif index == 114:
-            # if : L49 (mois passe) + L96 - L113 = L49
+            # Test de coherence, si : L49 (mois passe) + L96 - L113 = L49 alors vrai sinon faux
+            # l'indexe 0 correspond au realisé
             computeList = []
             resultList = []
             A = dataValeurList[48]
@@ -316,7 +317,6 @@ def testIndicatorsFormulas(index, dataValeurList, dataValeurListPastYear):
                 else:
                     valeur = AplusB(B[i], A[i - 1])
                     computeList.append(valeur)
-                #print(len(computeList))
             for list in setList:
                 for i in range(len(computeList)):
                     valeur = AmoinsB(computeList[i], list[i])
