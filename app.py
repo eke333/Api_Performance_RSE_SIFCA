@@ -1,122 +1,35 @@
-from flask import Flask, request, make_response
+from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api, Resource
-
-from consolidation_ressource import ScriptConsolidation
-from indicateur_resource import ChangeStatusEntityIndic, DeleteDataEntiteIndicateur, GetDataEntiteIndicateur, UpdateDataEntiteIndicateur, UpdateAllDataEntiteIndicateur, UpdateDataInApiDB, \
-    UpdateValidationEntiteIndicateur, EntiteExportAllData, UpdateDataEntiteIndicateurFromSupabase
-from suivi_indicateur import SuiviDataIndicateur
+from recuperations import *
+from ajouts import *
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 15 * 1024 * 1024  # Limiter la taille des fichiers téléchargés
 
 api = Api(app)
 
-# CORS(app, resources={
-#     r"/*": {
-#         "origins": ["https://sifca-performance-rse.web.app/", "http://localhost:49430", "http://localhost:51938"]
-#     }
-# })
+# Configurer CORS pour autoriser toutes les origines.
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+@app.route('/ajouter_urgence', methods=['POST', 'GET'])
+def add_urgence_route():
+    return add_urgence()  # Appelle de la fonction importée depuis ajouts.py
+
+@app.route('/urgences', methods=['POST', 'GET'])
+def get_urgences_route():
+    return get_urgences()
 
 class HelloWorld(Resource):
     def get(self):
-        return {'version': '1.2.0'}
-
-class EntiteAccueil(Resource):
-    def post(self):
         return {
-            "entite":"sucrivoire",
-            "entiteName":"SUCRIVOIRE",
-            "annee":2023,
-            "suivi":[
-                {
-                    "axe":"Axe 1",
-                    "nombre":200,
-                    "collecte":100,
-                    "ordre":1
-                },
-                {
-                    "axe": "Axe 2",
-                    "nombre": 200,
-                    "collecte": 50,
-                    "ordre": 2
-                },
-                {
-                    "axe": "Axe 3",
-                    "nombre": 200,
-                    "collecte": 10,
-                    "ordre": 3
-                },
-                {
-                    "axe": "Axe 1",
-                    "nombre": 200,
-                    "collecte": 150,
-                    "ordre": 4
-                },
-
-            ],
-            "contriuteurs":[
-                {
-                    "nom":"Fabrice HOUESSOU",
-                    "email":"fabricehouessou@gmail.com",
-                    "entité":"Sucrivore-Siège",
-                    "filiale":"SUCRIVOIRE"
-                }
-            ],
-            "comparaison":[
-                {
-                    "entite":"Entite 1",
-                    "progres1":55,
-                    "progres2":60
-                },
-                {
-                    "entite": "Entite 1",
-                    "progres1": 55,
-                    "progres2": 60
-                },
-                {
-                    "entite": "Entite 1",
-                    "progres1": 55,
-                    "progres2": 60
-                },
-                {
-                    "entite": "Entite 1",
-                    "progres1": 55,
-                    "progres2": 60
-                }
-            ],
+            'version': '1.2.0',
+            'infoApi': "Je suis l'API principale pour le projet performance QSE",
         }
 
-class EntiteSuivi(Resource):
-    def get(self):
-        return {'version': '1.2.0'}
-
-class EntitePerformance(Resource):
-    def get(self):
-        return {'version': '1.2.0'}
-
-class EntiteHistorique(Resource):
-    def get(self):
-        return {'version': '1.2.0'}
-
+# Ajouter HelloWorld au routeur API
 api.add_resource(HelloWorld, '/')
 
-api.add_resource(GetDataEntiteIndicateur, '/data-entite-indicateur/get')
-api.add_resource(UpdateDataEntiteIndicateur, '/data-entite-indicateur/update-data')
-api.add_resource(DeleteDataEntiteIndicateur, '/data-entite-indicateur/delete-data')
-api.add_resource(UpdateAllDataEntiteIndicateur, '/data-entite-indicateur/update-all-data')
-api.add_resource(UpdateDataEntiteIndicateurFromSupabase, '/data-entite-indicateur/update-data-from-supabase')
-api.add_resource(UpdateValidationEntiteIndicateur, '/data-entite-indicateur/update-validation')
-api.add_resource(EntiteExportAllData, '/data-entite-indicateur/export-all-data')
-
-api.add_resource(ScriptConsolidation, '/data-entite-indicateur/consolidation')
-api.add_resource(SuiviDataIndicateur, '/data-entite-suivi')
-#api.add_resource(ComputePerformsEntite, '/data-entite-indicateur/compute-performs')
-api.add_resource(ChangeStatusEntityIndic, '/data-entite-indicateur/change-entity-indic-status')
-api.add_resource(UpdateDataInApiDB, '/data-entite-indicateur/update-api-bd')
-
 if __name__ == '__main__':
-    context = ('ssl/cert.pem', 'ssl/key.pem')
-    app.run() #debug=True,port=4444,host="0.0.0.0"
+    # Pour un serveur local non sécurisé (HTTP)
+    app.run(debug=True, port=5000, host="0.0.0.0")
