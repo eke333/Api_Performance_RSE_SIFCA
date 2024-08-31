@@ -23,3 +23,27 @@ def add_urgence():
             return jsonify({'message': 'Erreur lors de l\'ajout de l\'urgence', 'details': response}), 400
     except Exception as e:
         return jsonify({'message': f'Erreur serveur : {str(e)}'}), 500
+
+
+def add_enjeu():
+    data = request.json
+    libelle = data.get('libelle')
+    id_axe = data.get('id_axe')
+    type_enjeu = data.get('type_enjeu', '')  # Ajouter un type_enjeu si nécessaire
+
+    if not libelle or not id_axe:
+        return jsonify({"error": "libelle and id_axe are required"}), 400
+
+    try:
+        response = supabase.from_("EnjeuTable").insert({
+            "libelle": libelle,
+            "id_axe": id_axe,
+            "type_enjeu": type_enjeu
+        }).execute()
+
+        if response.status_code == 201:
+            return jsonify({"message": "Enjeu added successfully"}), 201
+        else:
+            return jsonify({"error": "Failed to add enjeu"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
