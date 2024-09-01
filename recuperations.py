@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from dbkeys import supabase
 
 def get_text():
@@ -45,8 +45,19 @@ def get_opportunites():
 
 def get_axes():
     try:
-        response = supabase.from_("AxeTable").select("id_axe, libelle").order("libelle", desc=False).execute()
-        return jsonify(response.data), 200
+        response = supabase.table('AxeTable').select('id_axe, libelle').execute()
+        return jsonify(response.data)
+    except Exception as e:
+        return jsonify({"Erreur de récupération de axes": str(e)}), 500
+
+
+def check_id_enjeu_exists():
+    try:
+        id_enjeu = request.args.get('id_enjeu')
+        response = supabase.table('EnjeuTable').select('id_enjeu').eq('id_enjeu', id_enjeu).execute()
+        exists = len(response.data) > 0
+        return jsonify({'exists': exists})
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

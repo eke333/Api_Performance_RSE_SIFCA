@@ -27,21 +27,24 @@ def add_urgence():
 
 def add_enjeu():
     data = request.json
+    id_enjeu = data.get('id_enjeu')
     libelle = data.get('libelle')
     id_axe = data.get('id_axe')
-    type_enjeu = data.get('type_enjeu', '')  # Ajouter un type_enjeu si nécessaire
+    type_enjeu = data.get('type_enjeu')
 
-    if not libelle or not id_axe:
-        return jsonify({"error": "libelle and id_axe are required"}), 400
+    if not id_enjeu or not libelle or not id_axe:
+        return jsonify({"error": "id_enjeu, libelle, and id_axe are required"}), 400
 
     try:
         response = supabase.from_("EnjeuTable").insert({
+            "id_enjeu": id_enjeu,  # Ajout de id_enjeu
             "libelle": libelle,
             "id_axe": id_axe,
             "type_enjeu": type_enjeu
         }).execute()
 
-        if response.status_code == 201:
+        if response.data:  # Si des données sont retournées, l'insertion a réussi
+            print("insertion réussie")
             return jsonify({"message": "Enjeu added successfully"}), 201
         else:
             return jsonify({"error": "Failed to add enjeu"}), 500

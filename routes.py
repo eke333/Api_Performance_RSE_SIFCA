@@ -1,5 +1,5 @@
 from flask import Blueprint
-from ajouts import add_urgence
+from ajouts import *
 from recuperations import *
 from modifications import update_text
 
@@ -34,6 +34,11 @@ def get_axes_route():
     return get_axes()
 
 
+@main_routes.route('/check_id_enjeu_exists', methods=['GET', 'POST'])
+def check_id_enjeu_exists_route():
+    return check_id_enjeu_exists()
+
+
 """----------------------------------------------Ajouts(add)--------------------------------------------------------"""
 
 
@@ -44,7 +49,7 @@ def add_urgence_route():
 
 @main_routes.route('/add_enjeu', methods=['POST', 'GET'])
 def add_enjeu_route():
-    return add_enjeu_route()
+    return add_enjeu()
 
 
 """----------------------------------------------Suppressions(delete)-----------------------------------------------"""
