@@ -35,6 +35,11 @@ def get_axes_route():
     return get_axes()
 
 
+@main_routes.route('/get_dangers', methods=['GET', 'POST'])
+def get_dangers_route():
+    return get_dangers()
+
+
 @main_routes.route('/check_id_enjeu_exists', methods=['GET', 'POST'])
 def check_id_enjeu_exists_route():
     return check_id_enjeu_exists()
@@ -75,6 +80,11 @@ def delete_risque_route(id_opportunite):
     return delete_opportunite(id_opportunite)
 
 
+@main_routes.route('/delete_danger/<int:id>', methods=['DELETE'])
+def delete_danger_route(id):
+    return delete_danger(id)
+
+
 """----------------------------------------------Modifications(update)----------------------------------------------"""
 
 
@@ -91,6 +101,11 @@ def update_opportunite_route(id_risque):
 @main_routes.route('/update_risque/<int:id_risque>', methods=['PUT'])
 def update_risque_route(id_risque):
     return update_risque(id_risque)
+
+
+@main_routes.route('/update_danger/<int:id>', methods=['PUT'])
+def update_danger_route(id):
+    return update_danger(id)
 
 
 """-----------------------------------------------------------------------------------------------------------------"""

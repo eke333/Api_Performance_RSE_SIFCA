@@ -51,6 +51,11 @@ def get_axes():
         return jsonify({"Erreur de récupération de axes": str(e)}), 500
 
 
+def get_dangers():
+    response = supabase.table('Aleas').select('*').gt('poids_incident_danger', 5).order('poids_incident_danger', desc=True).order('libelle', desc=False).execute()
+    return jsonify(response.data)
+
+
 def check_id_enjeu_exists():
     try:
         id_enjeu = request.args.get('id_enjeu')

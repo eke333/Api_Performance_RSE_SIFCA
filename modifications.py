@@ -3,6 +3,7 @@ from dbkeys import supabase
 
 TABLE_NAME = 'Urgences'
 
+
 def update_text():
     data = request.json
     id = data.get('id')
@@ -53,7 +54,7 @@ def update_risque(id_risque):
 
         # Mise à jour dans Supabase
         response = supabase.table('Risques').update({'libelle': nouveau_libelle}).eq('id_risque',
-                                                                                          id_risque).execute()
+                                                                                     id_risque).execute()
         print("Opportunité mise à jour avec succès", f"{id_risque}")
         return jsonify({"message": "Opportunité mise à jour avec succès", "id_risque": id_risque}), 200
 
@@ -61,3 +62,12 @@ def update_risque(id_risque):
         # Gestion des exceptions
         print(f"Exception lors de la mise à jour: {e}")
         return jsonify({"error": "Une erreur est survenue lors de la mise à jour"}), 500
+
+
+def update_danger(id):
+    try:
+        data = request.json
+        response = supabase.table('Aleas').update({'libelle': data['libelle']}).eq('id_alea', id).execute()
+        return jsonify(response.data), 200
+    except Exception as e:
+        return jsonify({"error": "Failed to update danger"}), 500
