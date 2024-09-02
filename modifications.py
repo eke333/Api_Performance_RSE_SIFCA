@@ -71,3 +71,12 @@ def update_danger(id):
         return jsonify(response.data), 200
     except Exception as e:
         return jsonify({"error": "Failed to update danger"}), 500
+
+
+def update_incident(id):
+    try:
+        data = request.json
+        response = supabase.table('Aleas').update({'libelle': data['libelle']}).eq('id_alea', id).execute()
+        return jsonify(response.data), 200
+    except Exception as e:
+        return jsonify({"error": "Failed to update danger"}), 500

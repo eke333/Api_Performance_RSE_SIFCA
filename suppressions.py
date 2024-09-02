@@ -33,3 +33,11 @@ def delete_danger(id):
     except Exception as e:
         return {"error": "Failed to delete danger", "details": str(e)}, 500
 
+
+def delete_incident(id):
+    try:
+        response = supabase.table('Aleas').delete().eq('id_alea', id).execute()
+        return jsonify(response.data), 200
+    except Exception as e:
+        return {"error": "Failed to delete incident", "details": str(e)}, 500
+

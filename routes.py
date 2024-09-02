@@ -40,6 +40,11 @@ def get_dangers_route():
     return get_dangers()
 
 
+@main_routes.route('/get_incidents', methods=['GET', 'POST'])
+def get_incidents_route():
+    return get_incidents()
+
+
 @main_routes.route('/check_id_enjeu_exists', methods=['GET', 'POST'])
 def check_id_enjeu_exists_route():
     return check_id_enjeu_exists()
@@ -85,6 +90,11 @@ def delete_danger_route(id):
     return delete_danger(id)
 
 
+@main_routes.route('/delete_incident/<int:id>', methods=['DELETE'])
+def delete_incident_route(id):
+    return delete_incident(id)
+
+
 """----------------------------------------------Modifications(update)----------------------------------------------"""
 
 
@@ -106,6 +116,11 @@ def update_risque_route(id_risque):
 @main_routes.route('/update_danger/<int:id>', methods=['PUT'])
 def update_danger_route(id):
     return update_danger(id)
+
+
+@main_routes.route('/update_incident/<int:id>', methods=['PUT'])
+def update_incident_route(id):
+    return update_incident(id)
 
 
 """-----------------------------------------------------------------------------------------------------------------"""

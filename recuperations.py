@@ -56,6 +56,11 @@ def get_dangers():
     return jsonify(response.data)
 
 
+def get_incidents():
+    response = supabase.table('Aleas').select('*').lte('poids_incident_danger', 5).order('poids_incident_danger', desc=True).order('libelle', desc=False).execute()
+    return jsonify(response.data)
+
+
 def check_id_enjeu_exists():
     try:
         id_enjeu = request.args.get('id_enjeu')
