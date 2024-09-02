@@ -1,4 +1,6 @@
 from flask import request, jsonify
+from supabase._async.client import SupabaseException
+
 from dbkeys import supabase
 
 def add_urgence():
@@ -48,5 +50,36 @@ def add_enjeu():
             return jsonify({"message": "Enjeu added successfully"}), 201
         else:
             return jsonify({"error": "Failed to add enjeu"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+def add_risque():
+    data = request.json
+    try:
+        new_risque = {
+            "gravite": int(data['gravite']),
+            "libelle": data['libelle'],
+            "id_enjeu": data['id_enjeu'],
+            "frequence": float(data['frequence'])
+        }
+        response = supabase.table('Risques').insert(new_risque).execute()
+        return jsonify({"message": "Risque ajouté avec succès", "data": response.data}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+def add_opportunite():
+    data = request.json
+    try:
+        new_risque = {
+            "libelle": data['libelle'],
+            "id_enjeu": data['id_enjeu'],
+            "gravite": int(data['gravite']),
+            "frequence": float(data['frequence'])
+        }
+        response = supabase.table('Opportunites').insert(new_risque).execute()
+        return jsonify({"message": "Risque ajouté avec succès", "data": response.data}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500

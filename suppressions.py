@@ -1,12 +1,26 @@
 from flask import jsonify
 from dbkeys import supabase
 
-# TABLE_NAME = 'Urgences'
-#
-# def delete_urgence(id):
-#     response = supabase.table(TABLE_NAME).delete().eq('id', id).execute()
-#
-#     if response.status_code == 200:
-#         return jsonify({'message': 'Urgence supprimée avec succès'})
-#     else:
-#         return jsonify({'error': 'Erreur lors de la suppression de l\'urgence'}), response.status_code
+
+def delete_opportunite(id_opportunite):
+    response = supabase.table('Opportunites').delete().eq('id_opportunite', id_opportunite).execute()
+
+    if response.data is None:
+        print("Erreur lors de la suppression")
+        return jsonify({"error": "Erreur lors de la suppression"}), 400
+
+    print("Opportunité supprimée avec succès", "id_opportunite")
+
+    return jsonify({"message": "Opportunité supprimée avec succès", "id_opportunite": id_opportunite}), 200
+
+
+def delete_risque(id_risque):
+    response = supabase.table('Risques').delete().eq('id_risque', id_risque).execute()
+
+    if response.data is None:
+        print("Erreur lors de la suppression")
+        return jsonify({"error": "Erreur lors de la suppression"}), 400
+
+    print("Opportunité supprimée avec succès", "id_opportunite")
+
+    return jsonify({"message": "Opportunité supprimée avec succès", "id_opportunite": id_risque}), 200

@@ -17,3 +17,47 @@ def update_text():
     except Exception as e:
         # Retourne une erreur générique en cas d'exception
         return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
+
+def update_opportunite(id_opportunite):
+    try:
+        # Récupération des données JSON de la requête
+        data = request.json
+        if not data or 'libelle' not in data:
+            print("Données JSON manquantes ou clé 'libelle' absente")
+            return jsonify({"error": "Données JSON manquantes ou clé 'libelle' absente"}), 400
+
+        nouveau_libelle = data['libelle']
+
+        # Mise à jour dans Supabase
+        response = supabase.table('Opportunites').update({'libelle': nouveau_libelle}).eq('id_opportunite',
+                                                                                          id_opportunite).execute()
+        print("Opportunité mise à jour avec succès", f"{id_opportunite}")
+        return jsonify({"message": "Opportunité mise à jour avec succès", "id_opportunite": id_opportunite}), 200
+
+    except Exception as e:
+        # Gestion des exceptions
+        print(f"Exception lors de la mise à jour: {e}")
+        return jsonify({"error": "Une erreur est survenue lors de la mise à jour"}), 500
+
+
+def update_risque(id_risque):
+    try:
+        # Récupération des données JSON de la requête
+        data = request.json
+        if not data or 'libelle' not in data:
+            print("Données JSON manquantes ou clé 'libelle' absente")
+            return jsonify({"error": "Données JSON manquantes ou clé 'libelle' absente"}), 400
+
+        nouveau_libelle = data['libelle']
+
+        # Mise à jour dans Supabase
+        response = supabase.table('Risques').update({'libelle': nouveau_libelle}).eq('id_risque',
+                                                                                          id_risque).execute()
+        print("Opportunité mise à jour avec succès", f"{id_risque}")
+        return jsonify({"message": "Opportunité mise à jour avec succès", "id_risque": id_risque}), 200
+
+    except Exception as e:
+        # Gestion des exceptions
+        print(f"Exception lors de la mise à jour: {e}")
+        return jsonify({"error": "Une erreur est survenue lors de la mise à jour"}), 500
