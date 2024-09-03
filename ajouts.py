@@ -39,7 +39,7 @@ def add_enjeu():
 
     try:
         response = supabase.from_("EnjeuTable").insert({
-            "id_enjeu": id_enjeu,  # Ajout de id_enjeu
+            "id_enjeu": id_enjeu,
             "libelle": libelle,
             "id_axe": id_axe,
             "type_enjeu": type_enjeu
@@ -83,3 +83,29 @@ def add_opportunite():
         return jsonify({"message": "Risque ajouté avec succès", "data": response.data}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+def ajouter_incident_ou_enjeu():
+    try:
+        data = request.json
+        if not data:
+            raise ValueError('No JSON data provided.')
+
+        nom = data.get('libelle')
+        poids = data.get('poids_incident_danger')
+
+        if nom is None or poids is None:
+            raise ValueError('Missing required fields: libelle or poids_incident_danger.')
+
+        # Insérer les données dans la table Aleas
+        response = supabase.table('Aleas').insert({
+            'libelle': nom,
+            'poids_incident_danger': poids
+        }).execute()
+
+        return jsonify({'message': 'Urgence ajoutée avec succès!'}), 200
+
+    except ValueError as ve:
+        return jsonify({'error': str(ve)}), 400
+    except Exception as e:
+        return jsonify({'error': 'Une erreur est survenue : ' + str(e)}), 500

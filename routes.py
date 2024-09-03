@@ -73,6 +73,11 @@ def add_opportunite_route():
     return add_opportunite()
 
 
+@main_routes.route('/ajouter_incident_ou_danger', methods=['POST'])
+def ajouter_incident_ou_enjeu_route():
+    return ajouter_incident_ou_enjeu()
+
+
 """----------------------------------------------Suppressions(delete)-----------------------------------------------"""
 
 @main_routes.route('/delete_opportunite/<int:id_opportunite>', methods=['DELETE'])
