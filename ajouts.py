@@ -123,10 +123,34 @@ def add_impact_environnemental_ou_societal():
         if nom is None or degre_impact is None:
             raise ValueError('Missing required fields: libelle or poids_incident_danger.')
 
-        # Insérer les données dans la table Aleas
         response = supabase.table('Impacts').insert({
             'libelle': nom,
             'degre_impact': degre_impact
+        }).execute()
+
+        return jsonify({'message': 'Urgence ajoutée avec succès!'}), 200
+
+    except ValueError as ve:
+        return jsonify({'error': str(ve)}), 400
+    except Exception as e:
+        return jsonify({'error': 'Une erreur est survenue : ' + str(e)}), 500
+
+
+def add_aspect_environnemental():
+    try:
+        data = request.json
+        if not data:
+            raise ValueError('No JSON data provided.')
+
+        nom = data.get('libelle')
+        gravite_impact = data.get('gravite_impact')
+
+        if nom is None or gravite_impact is None:
+            raise ValueError('Missing required fields: libelle or poids_incident_danger.')
+
+        response = supabase.table('AspectsEnv').insert({
+            'libelle': nom,
+            'gravite_impact': gravite_impact
         }).execute()
 
         return jsonify({'message': 'Urgence ajoutée avec succès!'}), 200

@@ -54,6 +54,11 @@ def get_impacts_societaux_route():
     return get_impacts_societaux()
 
 
+@main_routes.route('/get_aspects_environnementaux', methods=['GET', 'POST'])
+def get_aspects_environnementaux_route():
+    return get_aspects_environnementaux()
+
+
 @main_routes.route('/check_id_enjeu_exists', methods=['GET', 'POST'])
 def check_id_enjeu_exists_route():
     return check_id_enjeu_exists()
@@ -92,6 +97,11 @@ def add_impact_environnemental_ou_societal_route():
     return add_impact_environnemental_ou_societal()
 
 
+@main_routes.route('/ajouter_aspect_environnemental', methods=['POST'])
+def add_aspect_environnemental_route():
+    return add_aspect_environnemental()
+
+
 """----------------------------------------------Suppressions(delete)-----------------------------------------------"""
 
 
@@ -100,9 +110,9 @@ def delete_opportunite_route(id_opportunite):
     return delete_opportunite(id_opportunite)
 
 
-@main_routes.route('/delete_risque/<int:id_opportunite>', methods=['DELETE'])
-def delete_risque_route(id_opportunite):
-    return delete_opportunite(id_opportunite)
+@main_routes.route('/delete_risque/<int:id_risque>', methods=['DELETE'])
+def delete_risque_route(id_risque):
+    return delete_risque(id_risque)
 
 
 @main_routes.route('/delete_alea/<int:id>', methods=['DELETE'])
@@ -113,6 +123,11 @@ def delete_alea_route(id):
 @main_routes.route('/delete_impact/<int:id>', methods=['DELETE'])
 def delete_impact_route(id):
     return delete_impact(id)
+
+
+@main_routes.route('/delete_aspect_environnemental/<int:id>', methods=['DELETE'])
+def delete_aspect_environnemental_route(id):
+    return delete_aspect_environnemental(id)
 
 
 """----------------------------------------------Modifications(update)----------------------------------------------"""
@@ -141,6 +156,11 @@ def update_alea_route(id):
 @main_routes.route('/update_impact/<int:id>', methods=['PUT'])
 def update_impact_route(id):
     return update_impact(id)
+
+
+@main_routes.route('/update_aspect_environnemental/<int:id>', methods=['PUT'])
+def update_aspect_environnemental_route(id):
+    return update_aspect_environnemental(id)
 
 
 """-----------------------------------------------------------------------------------------------------------------"""

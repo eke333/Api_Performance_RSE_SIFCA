@@ -80,3 +80,12 @@ def update_impact(id):
         return jsonify(response.data), 200
     except Exception as e:
         return jsonify({"error": "Failed to update danger"}), 500
+
+
+def update_aspect_environnemental(id):
+    try:
+        data = request.json
+        response = supabase.table('AspectsEnv').update({'libelle': data['libelle']}).eq('id_aspect_env', id).execute()
+        return jsonify(response.data), 200
+    except Exception as e:
+        return jsonify({"error": "Failed to update danger"}), 500
