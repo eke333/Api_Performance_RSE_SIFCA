@@ -61,6 +61,15 @@ def get_incidents():
     return jsonify(response.data)
 
 
+def get_impacts_environnementaux():
+    response = supabase.table('Impacts').select('*').gt('degre_impact', 5).order('degre_impact', desc=True).order('libelle', desc=False).execute()
+    return jsonify(response.data)
+
+def get_impacts_societaux():
+    response = supabase.table('Impacts').select('*').lte('degre_impact', 5).order('degre_impact', desc=True).order('libelle', desc=False).execute()
+    return jsonify(response.data)
+
+
 def check_id_enjeu_exists():
     try:
         id_enjeu = request.args.get('id_enjeu')

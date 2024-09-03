@@ -64,7 +64,7 @@ def update_risque(id_risque):
         return jsonify({"error": "Une erreur est survenue lors de la mise à jour"}), 500
 
 
-def update_danger(id):
+def update_alea(id):
     try:
         data = request.json
         response = supabase.table('Aleas').update({'libelle': data['libelle']}).eq('id_alea', id).execute()
@@ -73,10 +73,10 @@ def update_danger(id):
         return jsonify({"error": "Failed to update danger"}), 500
 
 
-def update_incident(id):
+def update_impact(id):
     try:
         data = request.json
-        response = supabase.table('Aleas').update({'libelle': data['libelle']}).eq('id_alea', id).execute()
+        response = supabase.table('Impacts').update({'libelle': data['libelle']}).eq('id_impact', id).execute()
         return jsonify(response.data), 200
     except Exception as e:
         return jsonify({"error": "Failed to update danger"}), 500

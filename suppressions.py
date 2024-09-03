@@ -26,7 +26,7 @@ def delete_risque(id_risque):
     return jsonify({"message": "Opportunité supprimée avec succès", "id_opportunite": id_risque}), 200
 
 
-def delete_danger(id):
+def delete_alea(id):
     try:
         response = supabase.table('Aleas').delete().eq('id_alea', id).execute()
         return jsonify(response.data), 200
@@ -34,10 +34,9 @@ def delete_danger(id):
         return {"error": "Failed to delete danger", "details": str(e)}, 500
 
 
-def delete_incident(id):
+def delete_impact(id):
     try:
-        response = supabase.table('Aleas').delete().eq('id_alea', id).execute()
+        response = supabase.table('Impacts').delete().eq('id_impact', id).execute()
         return jsonify(response.data), 200
     except Exception as e:
         return {"error": "Failed to delete incident", "details": str(e)}, 500
-

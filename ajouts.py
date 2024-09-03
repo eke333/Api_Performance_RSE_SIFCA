@@ -3,6 +3,7 @@ from supabase._async.client import SupabaseException
 
 from dbkeys import supabase
 
+
 def add_urgence():
     data = request.json
     nom_urgence = data.get('nom_urgence')
@@ -69,7 +70,6 @@ def add_risque():
         return jsonify({"error": str(e)}), 500
 
 
-
 def add_opportunite():
     data = request.json
     try:
@@ -85,7 +85,7 @@ def add_opportunite():
         return jsonify({"error": str(e)}), 500
 
 
-def ajouter_incident_ou_enjeu():
+def add_incident_ou_danger():
     try:
         data = request.json
         if not data:
@@ -101,6 +101,32 @@ def ajouter_incident_ou_enjeu():
         response = supabase.table('Aleas').insert({
             'libelle': nom,
             'poids_incident_danger': poids
+        }).execute()
+
+        return jsonify({'message': 'Urgence ajoutée avec succès!'}), 200
+
+    except ValueError as ve:
+        return jsonify({'error': str(ve)}), 400
+    except Exception as e:
+        return jsonify({'error': 'Une erreur est survenue : ' + str(e)}), 500
+
+
+def add_impact_environnemental_ou_societal():
+    try:
+        data = request.json
+        if not data:
+            raise ValueError('No JSON data provided.')
+
+        nom = data.get('libelle')
+        degre_impact = data.get('degre_impact')
+
+        if nom is None or degre_impact is None:
+            raise ValueError('Missing required fields: libelle or poids_incident_danger.')
+
+        # Insérer les données dans la table Aleas
+        response = supabase.table('Impacts').insert({
+            'libelle': nom,
+            'degre_impact': degre_impact
         }).execute()
 
         return jsonify({'message': 'Urgence ajoutée avec succès!'}), 200
