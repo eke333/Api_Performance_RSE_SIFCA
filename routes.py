@@ -49,6 +49,7 @@ def get_incidents_route():
 def get_impacts_environnementaux_route():
     return get_impacts_environnementaux()
 
+
 @main_routes.route('/get_impacts_societaux', methods=['GET', 'POST'])
 def get_impacts_societaux_route():
     return get_impacts_societaux()
@@ -57,6 +58,12 @@ def get_impacts_societaux_route():
 @main_routes.route('/get_aspects_environnementaux', methods=['GET', 'POST'])
 def get_aspects_environnementaux_route():
     return get_aspects_environnementaux()
+
+
+# Route pour obtenir toutes les modifications de la matrice RACI
+@main_routes.route('/modifications_matrice_RACI', methods=['GET'])
+def get_modifications_matrice_RACI_route():
+    return get_modifications_matrice_RACI()
 
 
 @main_routes.route('/check_id_enjeu_exists', methods=['GET', 'POST'])
@@ -102,6 +109,16 @@ def add_aspect_environnemental_route():
     return add_aspect_environnemental()
 
 
+@main_routes.route('/modifications_matrice_RACI', methods=['POST'])
+def add_modification_matrice_RACI_route():
+    return add_modification_matrice_RACI()
+
+
+@main_routes.route('/ajout_ligne_matrice_RACI', methods=['POST'])
+def add_row_route():
+    return add_row()
+
+
 """----------------------------------------------Suppressions(delete)-----------------------------------------------"""
 
 
@@ -128,6 +145,12 @@ def delete_impact_route(id):
 @main_routes.route('/delete_aspect_environnemental/<int:id>', methods=['DELETE'])
 def delete_aspect_environnemental_route(id):
     return delete_aspect_environnemental(id)
+
+
+# Route pour supprimer une modification
+@main_routes.route('/modifications_matrice_RACI/<string:id>', methods=['DELETE'])
+def delete_modification_matrice_RACI_route(id):
+    return delete_modification_matrice_RACI(id)
 
 
 """----------------------------------------------Modifications(update)----------------------------------------------"""

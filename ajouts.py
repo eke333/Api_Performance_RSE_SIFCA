@@ -1,3 +1,7 @@
+import time
+import uuid
+from datetime import datetime
+
 from flask import request, jsonify
 from supabase._async.client import SupabaseException
 
@@ -159,3 +163,83 @@ def add_aspect_environnemental():
         return jsonify({'error': str(ve)}), 400
     except Exception as e:
         return jsonify({'error': 'Une erreur est survenue : ' + str(e)}), 500
+
+
+# Modification de la de la matrice RACI
+def add_modification_matrice_RACI():
+    data = request.get_json()
+
+    row_index = data.get('row_index')
+    column_index = data.get('column_index')
+    cell_value = data.get('cell_value')
+
+    if row_index is None or column_index is None or cell_value is None:
+        return jsonify({"error": "Données manquantes"}), 400
+
+    try:
+        # Vérifiez si une modification existe déjà pour cette cellule
+        existing_modification = supabase.table('TableModifications') \
+            .select('id') \
+            .eq('row_index', row_index) \
+            .eq('column_index', column_index) \
+            .execute()
+
+        if existing_modification.data:
+            # Mise à jour de la modification existante
+            supabase.table('TableModifications') \
+                .update({"cell_value": cell_value, "timestamp": "now()"}) \
+                .eq('id', existing_modification.data[0]['id']) \
+                .execute()
+        else:
+            # Ajout d'une nouvelle modification
+            new_modification = {
+                "row_index": row_index,
+                "column_index": column_index,
+                "cell_value": cell_value
+            }
+            supabase.table('TableModifications').insert(new_modification).execute()
+
+        return jsonify({"message": "Modification enregistrée avec succès"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+def add_row():
+    data = request.json
+    row_number = data['row_number']  # Numéro de la ligne
+    row_data = data['row_data']      # Liste des données de la ligne
+    default_cell_value = "Vide"
+
+    try:
+        # Pour chaque cellule de la ligne, insérer une entrée dans la table des modifications
+        for column_index, cell_value in enumerate(row_data):
+            if cell_value != None and cell_value != "":  # Vérifier si la cellule contient une valeur
+                new_modification = {
+                    "id": str(uuid.uuid4()),
+                    "row_index": row_number,
+                    "column_index": column_index,
+                    "cell_value": cell_value,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+                response = supabase.table("TableModifications").insert(new_modification).execute()
+                print("Insersion de ligne réussie")
+                return jsonify({'success': False, 'error': response.json()}), 201
+            else:
+                cell_value = default_cell_value
+                new_modification = {
+                    "id": str(uuid.uuid4()),
+                    "row_index": row_number,
+                    "column_index": column_index,
+                    "cell_value": cell_value,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+                time.sleep(2)
+                response = supabase.table("TableModifications").insert(new_modification).execute()
+                print("Insertion d'une ligne contenant la chaîne: 'Vide'")
+                return jsonify({'success': False, 'error': response.json()}), 201
+
+        print("Toutes les lignes sont insérées")
+        return jsonify({'success': True}), 201
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500

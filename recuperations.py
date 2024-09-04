@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from dbkeys import supabase
 
+
 def get_text():
     response = supabase.table('FonctionGenerale').select('id, libelle').execute()
     data = response.data
@@ -20,6 +21,7 @@ def get_enjeux():
     except Exception as e:
         return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
 
+
 def get_risques():
     try:
         response = supabase.table('Risques').select('*').execute()
@@ -30,6 +32,7 @@ def get_risques():
     except Exception as e:
         # Retourne une erreur générique en cas d'exception
         return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
 
 def get_opportunites():
     try:
@@ -52,26 +55,44 @@ def get_axes():
 
 
 def get_dangers():
-    response = supabase.table('Aleas').select('*').gt('poids_incident_danger', 5).order('poids_incident_danger', desc=True).order('libelle', desc=False).execute()
+    response = supabase.table('Aleas').select('*').gt('poids_incident_danger', 5).order('poids_incident_danger',
+                                                                                        desc=True).order('libelle',
+                                                                                                         desc=False).execute()
     return jsonify(response.data)
 
 
 def get_incidents():
-    response = supabase.table('Aleas').select('*').lte('poids_incident_danger', 5).order('poids_incident_danger', desc=True).order('libelle', desc=False).execute()
+    response = supabase.table('Aleas').select('*').lte('poids_incident_danger', 5).order('poids_incident_danger',
+                                                                                         desc=True).order('libelle',
+                                                                                                          desc=False).execute()
     return jsonify(response.data)
 
 
 def get_impacts_environnementaux():
-    response = supabase.table('Impacts').select('*').gt('degre_impact', 5).order('degre_impact', desc=True).order('libelle', desc=False).execute()
+    response = supabase.table('Impacts').select('*').gt('degre_impact', 5).order('degre_impact', desc=True).order(
+        'libelle', desc=False).execute()
     return jsonify(response.data)
+
 
 def get_impacts_societaux():
-    response = supabase.table('Impacts').select('*').lte('degre_impact', 5).order('degre_impact', desc=True).order('libelle', desc=False).execute()
+    response = supabase.table('Impacts').select('*').lte('degre_impact', 5).order('degre_impact', desc=True).order(
+        'libelle', desc=False).execute()
     return jsonify(response.data)
 
+
 def get_aspects_environnementaux():
-    response = supabase.table('AspectsEnv').select('*').order('gravite_impact', desc=True).order('libelle', desc=False).execute()
+    response = supabase.table('AspectsEnv').select('*').order('gravite_impact', desc=True).order('libelle',
+                                                                                                 desc=False).execute()
     return jsonify(response.data)
+
+
+# Obtenir toutes les modifications de la matrice RACI
+def get_modifications_matrice_RACI():
+    try:
+        response = supabase.table('TableModifications').select('*').execute()
+        return jsonify(response.data), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 def check_id_enjeu_exists():
@@ -83,4 +104,3 @@ def check_id_enjeu_exists():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-

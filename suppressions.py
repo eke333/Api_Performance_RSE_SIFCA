@@ -1,3 +1,5 @@
+import uuid
+
 from flask import jsonify
 from dbkeys import supabase
 
@@ -48,3 +50,20 @@ def delete_aspect_environnemental(id):
         return jsonify(response.data), 200
     except Exception as e:
         return {"error": "Failed to delete incident", "details": str(e)}, 500
+
+
+# Route pour supprimer une modification
+def delete_modification_matrice_RACI(id):
+    try:
+        # Vérifier si l'identifiant est un UUID valide
+        uuid.UUID(id)
+    except ValueError:
+        return jsonify({"error": "Identifiant UUID invalide"}), 400
+
+    try:
+        response = supabase.table('TableModifications').delete().eq('id', id).execute()
+        if response.count == 0:
+            return jsonify({"error": "Modification non trouvée"}), 404
+        return jsonify({"message": "Modification supprimée avec succès"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
