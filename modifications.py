@@ -20,6 +20,70 @@ def update_text():
         return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
 
 
+def update_text_budgets():
+    data = request.json
+    id = data.get('id')
+    new_text = data.get('libelle')
+
+    try:
+        if not id or not new_text:
+            return jsonify({'error': 'Invalid data'}), 400
+
+        response = supabase.table('Budgets').update({'libelle': new_text}).eq('id', id).execute()
+        return jsonify({'message': 'Text updated successfully'})
+    except Exception as e:
+        # Retourne une erreur générique en cas d'exception
+        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
+
+def update_text_domaines():
+    data = request.json
+    id = data.get('id')
+    new_text = data.get('libelle')
+
+    try:
+        if not id or not new_text:
+            return jsonify({'error': 'Invalid data'}), 400
+
+        response = supabase.table('DomainesDapplication').update({'libelle': new_text}).eq('id', id).execute()
+        return jsonify({'message': 'Text updated successfully'})
+    except Exception as e:
+        # Retourne une erreur générique en cas d'exception
+        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
+
+def update_text_perimetres():
+    data = request.json
+    id = data.get('id')
+    new_text = data.get('libelle')
+
+    try:
+        if not id or not new_text:
+            return jsonify({'error': 'Invalid data'}), 400
+
+        response = supabase.table('PerimetresDapplication').update({'libelle': new_text}).eq('id', id).execute()
+        return jsonify({'message': 'Text updated successfully'})
+    except Exception as e:
+        # Retourne une erreur générique en cas d'exception
+        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
+
+def update_text_exclusions():
+    data = request.json
+    id = data.get('id')
+    new_text = data.get('libelle')
+
+    try:
+        if not id or not new_text:
+            return jsonify({'error': 'Invalid data'}), 400
+
+        response = supabase.table('Exclusions').update({'libelle': new_text}).eq('id', id).execute()
+        return jsonify({'message': 'Text updated successfully'})
+    except Exception as e:
+        # Retourne une erreur générique en cas d'exception
+        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
+
 def update_opportunite(id_opportunite):
     try:
         # Récupération des données JSON de la requête

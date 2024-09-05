@@ -11,6 +11,51 @@ def get_text():
         return jsonify({'error': 'No data found'}), 404
 
 
+def get_text_budgets():
+    response = supabase.table('Budgets').select('id, libelle').execute()
+    data = response.data
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({'error': 'No data found'}), 404
+
+
+def get_text_domaines():
+    response = supabase.table('DomainesDapplication').select('id, libelle').execute()
+    data = response.data
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({'error': 'No data found'}), 404
+
+
+def get_text_perimetres():
+    response = supabase.table('PerimetresDapplication').select('id, libelle').execute()
+    data = response.data
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({'error': 'No data found'}), 404
+
+
+def get_text_exclusions_perimetres():
+    response = supabase.table('Exclusions').select('id, libelle').eq('type', 'perimetre').execute()
+    data = response.data
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({'error': 'No data found'}), 404
+
+
+def get_text_exclusions_domaines():
+    response = supabase.table('Exclusions').select('id, libelle').eq('type', 'domaine').execute()
+    data = response.data
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({'error': 'No data found'}), 404
+
+
 def get_enjeux():
     try:
         response = supabase.table('EnjeuTable').select('*').execute()

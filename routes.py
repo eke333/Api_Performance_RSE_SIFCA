@@ -15,6 +15,31 @@ def get_text_route():
     return get_text()
 
 
+@main_routes.route('/get-text-budgets', methods=['GET', 'POST'])
+def get_text_budgets_route():
+    return get_text_budgets()
+
+
+@main_routes.route('/get-text-domaines', methods=['GET', 'POST'])
+def get_text_domaines_route():
+    return get_text_domaines()
+
+
+@main_routes.route('/get-text-perimetres', methods=['GET', 'POST'])
+def get_text_perimetres_route():
+    return get_text_perimetres()
+
+
+@main_routes.route('/get-text-exclusions-domaines', methods=['GET', 'POST'])
+def get_text_exclusions_domaines_route():
+    return get_text_exclusions_domaines()
+
+
+@main_routes.route('/get-text-exclusions-perimetres', methods=['GET', 'POST'])
+def get_text_exclusions_perimetres_route():
+    return get_text_exclusions_perimetres()
+
+
 @main_routes.route('/enjeux', methods=['GET', 'POST'])
 def get_enjeux_route():
     return get_enjeux()
@@ -159,6 +184,31 @@ def delete_modification_matrice_RACI_route(id):
 @main_routes.route('/update-text', methods=['POST', 'GET'])
 def update_text_route():
     return update_text()
+
+
+@main_routes.route('/update-text-budgets', methods=['POST', 'GET'])
+def update_text_budgets_route():
+    return update_text_budgets()
+
+
+@main_routes.route('/update-text-domaines', methods=['POST', 'GET'])
+def update_text_domaines_route():
+    return update_text_domaines()
+
+
+@main_routes.route('/update-text-perimetres', methods=['POST', 'GET'])
+def update_text_perimetres_route():
+    return update_text_perimetres()
+
+
+@main_routes.route('/update-text-exclusions-domaines', methods=['POST', 'GET'])
+def update_text_exclusions_domaines_route():
+    return update_text_exclusions()
+
+
+@main_routes.route('/update-text-exclusions-perimetres', methods=['POST', 'GET'])
+def update_text_exclusions_perimetres_route():
+    return update_text_exclusions()
 
 
 @main_routes.route('/update_opportunite/<int:id_opportunite>', methods=['PUT'])
