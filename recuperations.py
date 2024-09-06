@@ -58,7 +58,7 @@ def get_text_exclusions_domaines():
 
 def get_enjeux():
     try:
-        response = supabase.table('EnjeuTable').select('*').execute()
+        response = supabase.table('EnjeuTable').select('*').order('libelle', desc=False).execute()
         if response.data:
             return jsonify(response.data)
         else:
@@ -69,7 +69,7 @@ def get_enjeux():
 
 def get_risques():
     try:
-        response = supabase.table('Risques').select('*').execute()
+        response = supabase.table('Risques').select('*').order('libelle', desc=False).execute()
         if response.data:
             return jsonify(response.data)
         else:
@@ -81,7 +81,7 @@ def get_risques():
 
 def get_opportunites():
     try:
-        response = supabase.table('Opportunites').select('*').execute()
+        response = supabase.table('Opportunites').select('*').order('libelle', desc=False).execute()
         if response.data:
             return jsonify(response.data)
         else:
@@ -93,7 +93,7 @@ def get_opportunites():
 
 def get_axes():
     try:
-        response = supabase.table('AxeTable').select('id_axe, libelle').execute()
+        response = supabase.table('AxeTable').select('id_axe, libelle').order('libelle', desc=False).execute()
         return jsonify(response.data)
     except Exception as e:
         return jsonify({"Erreur de récupération de axes": str(e)}), 500
@@ -138,6 +138,23 @@ def get_modifications_matrice_RACI():
         return jsonify(response.data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+def get_parties_interessees():
+    try:
+        # Requête à Supabase
+        response = supabase.table('PartiesInteressees').select('*').order('libelle', desc=False).execute()
+
+        if response.data is not None:
+            # Convertir les données en liste de dictionnaires
+            parties_list = [dict(partie) for partie in response.data]
+
+            # Retourner les données au format JSON
+            return jsonify(parties_list)
+        else:
+            return jsonify({'error': 'Erreur lors de la récupération des données'}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 def check_id_enjeu_exists():

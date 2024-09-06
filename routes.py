@@ -91,6 +91,10 @@ def get_modifications_matrice_RACI_route():
     return get_modifications_matrice_RACI()
 
 
+@main_routes.route('/parties_interessees', methods=['GET'])
+def get_parties_interessees_route():
+    return get_parties_interessees()
+
 @main_routes.route('/check_id_enjeu_exists', methods=['GET', 'POST'])
 def check_id_enjeu_exists_route():
     return check_id_enjeu_exists()
@@ -212,8 +216,8 @@ def update_text_exclusions_perimetres_route():
 
 
 @main_routes.route('/update_opportunite/<int:id_opportunite>', methods=['PUT'])
-def update_opportunite_route(id_risque):
-    return update_risque(id_risque)
+def update_opportunite_route(id_opportunite):
+    return update_opportunite(id_opportunite)
 
 
 @main_routes.route('/update_risque/<int:id_risque>', methods=['PUT'])
