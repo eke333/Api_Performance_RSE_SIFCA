@@ -100,6 +100,11 @@ def check_id_enjeu_exists_route():
     return check_id_enjeu_exists()
 
 
+@main_routes.route('/processus', methods=['GET'])
+def get_processus_route():
+    return get_processus()
+
+
 """----------------------------------------------Ajouts(add)--------------------------------------------------------"""
 
 

@@ -33,7 +33,7 @@ def update_text_budgets():
         return jsonify({'message': 'Text updated successfully'})
     except Exception as e:
         # Retourne une erreur générique en cas d'exception
-        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+        return jsonify({'error': 'An unexpected error  occurred', 'message': str(e)}), 500
 
 
 def update_text_domaines():

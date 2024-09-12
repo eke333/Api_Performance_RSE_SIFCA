@@ -157,10 +157,23 @@ def get_parties_interessees():
         return jsonify({'error': str(e)}), 500
 
 
+def get_processus():
+    try:
+        response = supabase.from_('Processus').select('*').execute()
+        data = response.data
+        if data:
+            return jsonify({'processus': data}), 200
+        else:
+            return jsonify({'message': 'Aucun processus trouvé'}), 404
+    except Exception as e:
+        return jsonify({'message': 'Erreur lors de la récupération des processus', 'error': str(e)}), 500
+
+
+
 def check_id_enjeu_exists():
     try:
         id_enjeu = request.args.get('id_enjeu')
-        response = supabase.table('EnjeuTable').select('id_enjeu').eq('id_enjeu', id_enjeu).execute()
+        response = supabase.table('EnjeuTable').select('id_enjeu').eq('id_enjeu', id_enjeu).order('libelle_processus', desc=False).execute()
         exists = len(response.data) > 0
         return jsonify({'exists': exists})
 
