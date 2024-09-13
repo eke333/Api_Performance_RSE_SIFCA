@@ -3,7 +3,6 @@ import uuid
 from datetime import datetime
 
 from flask import request, jsonify
-from supabase._async.client import SupabaseException
 
 from dbkeys import supabase
 
@@ -243,3 +242,29 @@ def add_row():
 
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+
+
+def add_processus():
+    data = request.get_json()
+
+    # Vérifiez si les données requises sont présentes
+    type_processus = data.get('type_processus')
+    libelle_processus = data.get('libelle_processus')
+    pilote = data.get('pilote')
+
+    if not type_processus or not libelle_processus or not pilote:
+        return jsonify({"error": "Données manquantes"}), 400
+
+    # Insérer les données dans Supabase
+    try:
+        supabase.table('Processus').insert({
+            'type_processus': type_processus,
+            'libelle_processus': libelle_processus,
+            'pilote': pilote,
+        }).execute()
+
+        return jsonify({"message": "Processus ajouté avec succès"}), 201
+
+    except Exception as e:
+        print("Erreur lors de l'insertion")
+        return jsonify({"error": str(e)}), 500

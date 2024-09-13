@@ -153,6 +153,11 @@ def add_row_route():
     return add_row()
 
 
+@main_routes.route('/ajouter_processus', methods=['POST'])
+def add_processus_route():
+    return add_processus()
+
+
 """----------------------------------------------Suppressions(delete)-----------------------------------------------"""
 
 
