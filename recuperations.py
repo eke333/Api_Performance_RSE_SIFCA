@@ -173,9 +173,14 @@ def get_processus():
 def check_id_enjeu_exists():
     try:
         id_enjeu = request.args.get('id_enjeu')
-        response = supabase.table('EnjeuTable').select('id_enjeu').eq('id_enjeu', id_enjeu).order('libelle_processus', desc=False).execute()
+        print(f"id_enjeu = {id_enjeu}", "\n")
+        response = supabase.table('EnjeuTable').select('id_enjeu').eq('id_enjeu', id_enjeu).execute()
+        print(f"response = {response.data}", "\n")
         exists = len(response.data) > 0
+        print(f"existe = {exists}")
+        print(len(response.data))
         return jsonify({'exists': exists})
 
     except Exception as e:
+        print("Je rentre dans l'exception ")
         return jsonify({"error": str(e)}), 500
