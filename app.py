@@ -22,13 +22,10 @@ if os.getenv('FLASK_ENV') == 'production':
 app.register_blueprint(main_routes)
 
 
-class HelloWorld(Resource):
-    def get(self):
-        return render_template('index.html')
+@app.route('/')
+def welcome():
+    return render_template('index.html')
 
-
-# Ajouter HelloWorld au routeur API
-api.add_resource(HelloWorld, '/')
 
 # Détection de l'environnement (en Production ou en Développement
 
