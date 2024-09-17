@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api, Resource
+from flask_talisman import Talisman
+
 from routes import main_routes  # Importer le Blueprint
 import os
 
@@ -11,6 +13,10 @@ api = Api(app)
 
 # Configurer CORS pour autoriser toutes les origines.
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+# Assurer la sécurité HTTPS en production
+if os.getenv('FLASK_ENV') == 'production':
+    Talisman(app)
 
 # Enregistrer le Blueprint avec l'application
 app.register_blueprint(main_routes)
