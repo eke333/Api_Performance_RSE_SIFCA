@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from flask_restful import Api, Resource
 from flask_talisman import Talisman
@@ -24,10 +24,7 @@ app.register_blueprint(main_routes)
 
 class HelloWorld(Resource):
     def get(self):
-        return {
-            'version': '1.2.0',
-            'infoApi': "Je suis l'API principale pour le projet performance QSE",
-        }
+        return render_template('index.html')
 
 
 # Ajouter HelloWorld au routeur API
@@ -44,4 +41,4 @@ else:
 
 if __name__ == '__main__':
     # Pour un serveur local non sécurisé (HTTP)
-    app.run()
+    app.run()  # Par défaut le port en production sur render est 10000, et en local c'est 5000.
