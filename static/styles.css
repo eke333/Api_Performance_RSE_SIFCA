@@ -1,6 +1,5 @@
 body {
     font-family: Arial, sans-serif;
-    /*background-color: white;*/
     color: #333;
     text-align: center;
     margin: 0;
@@ -17,5 +16,26 @@ body {
 }
 
 h1 {
+    color: green;
+}
+
+h2 {
     color: #007bff;
+}
+
+/* Animation de texte défilant */
+.scroll-text {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: scroll 13s linear infinite;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(-200%);
+    }
+    100% {
+        transform: translateX(200%);
+    }
 }
