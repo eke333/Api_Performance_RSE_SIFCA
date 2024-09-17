@@ -38,4 +38,4 @@ else:
 
 if __name__ == '__main__':
     # Pour un serveur local non sécurisé (HTTP)
-    app.run(port=5000, host="0.0.0.0")
+    app.run()
