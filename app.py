@@ -14,9 +14,9 @@ api = Api(app)
 # Configurer CORS pour autoriser toutes les origines.
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# # Assurer la sécurité HTTPS en production avec Talisman
-# if os.getenv('FLASK_ENV') == 'production':
-#     Talisman(app)
+# Assurer la sécurité HTTPS en production avec Talisman
+if os.getenv('FLASK_ENV') == 'production':
+    Talisman(app)
 
 # Enregistrer le Blueprint avec l'application
 app.register_blueprint(main_routes)
