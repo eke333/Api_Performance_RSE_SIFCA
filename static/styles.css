@@ -19,16 +19,12 @@ h1 {
     color: green;
 }
 
-h2 {
-    color: #007bff;
-}
-
 /* Animation de texte défilant */
 .scroll-text {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
-    animation: scroll 13s linear infinite;
+    animation: scroll 15s linear infinite;
 }
 
 @keyframes scroll {
