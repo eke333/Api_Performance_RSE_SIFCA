@@ -40,6 +40,16 @@ def get_text_exclusions_perimetres_route():
     return get_text_exclusions_perimetres()
 
 
+@main_routes.route('/get-text-plan_d_action', methods=['GET', 'POST'])
+def get_text_plan_d_action_route():
+    return get_text_plan_d_action()
+
+
+@main_routes.route('/get-text-non_conformites_et_actions_de_maitrise', methods=['GET', 'POST'])
+def get_text_non_conformites_et_actions_de_maitrise_route():
+    return get_text_non_conformites_et_actions_de_maitrise()
+
+
 @main_routes.route('/enjeux', methods=['GET', 'POST'])
 def get_enjeux_route():
     return get_enjeux()
@@ -94,6 +104,7 @@ def get_modifications_matrice_RACI_route():
 @main_routes.route('/parties_interessees', methods=['GET'])
 def get_parties_interessees_route():
     return get_parties_interessees()
+
 
 @main_routes.route('/check_id_enjeu_exists', methods=['GET', 'POST'])
 def check_id_enjeu_exists_route():
@@ -223,6 +234,16 @@ def update_text_exclusions_domaines_route():
 @main_routes.route('/update-text-exclusions-perimetres', methods=['POST', 'GET'])
 def update_text_exclusions_perimetres_route():
     return update_text_exclusions()
+
+
+@main_routes.route('/update-text-plan_d_action', methods=['POST', 'GET'])
+def update_text_plan_d_action_route():
+    return update_text_plan_d_action()
+
+
+@main_routes.route('/update-text-non_conformites_et_actions_de_maitrise', methods=['POST', 'GET'])
+def update_text_non_conformites_et_actions_de_maitrise_route():
+    return update_text_non_conformites_et_actions_de_maitrise()
 
 
 @main_routes.route('/update_opportunite/<int:id_opportunite>', methods=['PUT'])

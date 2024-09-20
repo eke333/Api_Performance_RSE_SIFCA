@@ -84,6 +84,38 @@ def update_text_exclusions():
         return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
 
 
+def update_text_plan_d_action():
+    data = request.json
+    id = data.get('id')
+    new_text = data.get('libelle')
+
+    try:
+        if not id or not new_text:
+            return jsonify({'error': 'Invalid data'}), 400
+
+        response = supabase.table('PlanDaction').update({'libelle': new_text}).eq('id', id).execute()
+        return jsonify({'message': 'Text updated successfully'})
+    except Exception as e:
+        # Retourne une erreur générique en cas d'exception
+        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
+
+def update_text_non_conformites_et_actions_de_maitrise():
+    data = request.json
+    id = data.get('id')
+    new_text = data.get('libelle')
+
+    try:
+        if not id or not new_text:
+            return jsonify({'error': 'Invalid data'}), 400
+
+        response = supabase.table('NonConformitesEtActionsCorrectives').update({'libelle': new_text}).eq('id', id).execute()
+        return jsonify({'message': 'Text updated successfully'})
+    except Exception as e:
+        # Retourne une erreur générique en cas d'exception
+        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
+
 def update_opportunite(id_opportunite):
     try:
         # Récupération des données JSON de la requête

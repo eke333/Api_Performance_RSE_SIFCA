@@ -56,6 +56,25 @@ def get_text_exclusions_domaines():
         return jsonify({'error': 'No data found'}), 404
 
 
+def get_text_plan_d_action():
+    response = supabase.table('PlanDaction').select('id, libelle').execute()
+    print(response)
+    data = response.data
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({'error': 'No data found'}), 404
+
+
+def get_text_non_conformites_et_actions_de_maitrise():
+    response = supabase.table('NonConformitesEtActionsCorrectives').select('id, libelle').execute()
+    data = response.data
+    if data:
+        return jsonify(data[0])
+    else:
+        return jsonify({'error': 'No data found'}), 404
+
+
 def get_enjeux():
     try:
         response = supabase.table('EnjeuTable').select('*').order('libelle', desc=False).execute()
@@ -167,7 +186,6 @@ def get_processus():
             return jsonify({'message': 'Aucun processus trouvé'}), 404
     except Exception as e:
         return jsonify({'message': 'Erreur lors de la récupération des processus', 'error': str(e)}), 500
-
 
 
 def check_id_enjeu_exists():
