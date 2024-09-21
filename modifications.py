@@ -1,4 +1,6 @@
 from flask import request, jsonify
+from supabase._async.client import SupabaseException
+
 from dbkeys import supabase
 
 TABLE_NAME = 'Urgences'
