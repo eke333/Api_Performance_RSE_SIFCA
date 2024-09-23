@@ -169,6 +169,16 @@ def add_processus_route():
     return add_processus()
 
 
+@main_routes.route('/add_partie_interessee', methods=['POST'])
+def add_partie_interessee_route():
+    return add_partie_interessee()
+
+
+@main_routes.route('/add_attente', methods=['POST'])
+def add_attente_route():
+    return add_attente()
+
+
 """----------------------------------------------Suppressions(delete)-----------------------------------------------"""
 
 

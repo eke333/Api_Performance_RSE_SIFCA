@@ -268,3 +268,44 @@ def add_processus():
     except Exception as e:
         print("Erreur lors de l'insertion")
         return jsonify({"error": str(e)}), 500
+
+
+def add_partie_interessee():
+    try:
+        data = request.json
+
+        # Insert Partie Interessee
+        partie_interessee = {
+            'categorie': data['categorie'],
+            'libelle': data['libelle'],
+            'poids_pi': data['poids_pi'],
+            'type_pi': data['type_pi'],
+        }
+        response = supabase.table('PartiesInteressees').insert(partie_interessee).execute()
+
+        id_pi = response.data[0]['id_pi']  # Retrieve the inserted ID
+        return jsonify({'id_pi': id_pi}), 201
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+def add_attente():
+    try:
+        data = request.json
+
+        # Insert Attente
+        attente_data = {
+            'id_pi': data['id_pi'],  # Foreign key to Partie Interessee
+            'libelle': data['libelle'],
+            'type_attente': data['type_attente'],
+            'mode_reponse': data['mode_reponse'],
+        }
+        response = supabase.table('Attentes').insert(attente_data).execute()
+
+        return jsonify({'message': 'Attente added successfully'}), 201
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
