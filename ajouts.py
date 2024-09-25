@@ -31,22 +31,18 @@ def add_urgence():
         return jsonify({'message': f'Erreur serveur : {str(e)}'}), 500
 
 
-def add_enjeu():
+def add_enjeu_context():
     data = request.json
-    id_enjeu = data.get('id_enjeu')
     libelle = data.get('libelle')
-    id_axe = data.get('id_axe')
-    type_enjeu = data.get('type_enjeu')
+    type_enjeu = data.get('type')
 
-    if not id_enjeu or not libelle or not id_axe:
-        return jsonify({"error": "id_enjeu, libelle, and id_axe are required"}), 400
+    if not type_enjeu or not libelle:
+        return jsonify({"error": "type, and libelle are required"}), 400
 
     try:
-        response = supabase.from_("EnjeuTable").insert({
-            "id_enjeu": id_enjeu,
+        response = supabase.table("EnjeuContexte").insert({
             "libelle": libelle,
-            "id_axe": id_axe,
-            "type_enjeu": type_enjeu
+            "type": type_enjeu
         }).execute()
 
         if response.data:  # Si des données sont retournées, l'insertion a réussi
@@ -64,7 +60,7 @@ def add_risque():
         new_risque = {
             "gravite": int(data['gravite']),
             "libelle": data['libelle'],
-            "id_enjeu": data['id_enjeu'],
+            "id": data['id'],
             "frequence": float(data['frequence'])
         }
         response = supabase.table('Risques').insert(new_risque).execute()
@@ -78,7 +74,7 @@ def add_opportunite():
     try:
         new_risque = {
             "libelle": data['libelle'],
-            "id_enjeu": data['id_enjeu'],
+            "id": data['id'],
             "gravite": int(data['gravite']),
             "frequence": float(data['frequence'])
         }

@@ -126,7 +126,7 @@ def add_urgence_route():
 
 @main_routes.route('/add_enjeu', methods=['POST', 'GET'])
 def add_enjeu_route():
-    return add_enjeu()
+    return add_enjeu_context()
 
 
 @main_routes.route('/add_risque', methods=['POST', 'POST'])

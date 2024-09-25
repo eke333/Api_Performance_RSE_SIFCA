@@ -77,7 +77,7 @@ def get_text_non_conformites_et_actions_de_maitrise():
 
 def get_enjeux():
     try:
-        response = supabase.table('EnjeuTable').select('*').order('libelle', desc=False).execute()
+        response = supabase.table('EnjeuContexte').select('*').order('libelle', desc=False).execute()
         if response.data:
             return jsonify(response.data)
         else:
