@@ -75,9 +75,20 @@ def get_text_non_conformites_et_actions_de_maitrise():
         return jsonify({'error': 'No data found'}), 404
 
 
-def get_enjeux():
+def get_enjeux_contexte():
     try:
         response = supabase.table('EnjeuContexte').select('*').order('libelle', desc=False).execute()
+        if response.data:
+            return jsonify(response.data)
+        else:
+            return jsonify({'error': 'No data found'}), 404
+    except Exception as e:
+        return jsonify({'error': 'An unexpected error occurred', 'message': str(e)}), 500
+
+
+def get_enjeux_pilotage():
+    try:
+        response = supabase.table('EnjeuTable').select('*').order('libelle', desc=False).execute()
         if response.data:
             return jsonify(response.data)
         else:
@@ -112,7 +123,7 @@ def get_opportunites():
 
 def get_axes():
     try:
-        response = supabase.table('AxeTable').select('id_axe, libelle').order('libelle', desc=False).execute()
+        response = supabase.table('AxeTable').select('*').order('libelle', desc=False).execute()
         return jsonify(response.data)
     except Exception as e:
         return jsonify({"Erreur de récupération de axes": str(e)}), 500

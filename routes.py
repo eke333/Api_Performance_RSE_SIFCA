@@ -52,7 +52,12 @@ def get_text_non_conformites_et_actions_de_maitrise_route():
 
 @main_routes.route('/enjeux', methods=['GET', 'POST'])
 def get_enjeux_route():
-    return get_enjeux()
+    return get_enjeux_contexte()
+
+
+@main_routes.route('/enjeux-pilotage', methods=['GET', 'POST'])
+def get_enjeux_pilotage_route():
+    return get_enjeux_pilotage()
 
 
 @main_routes.route('/opportunites', methods=['POST', 'GET'])
@@ -106,9 +111,9 @@ def get_parties_interessees_route():
     return get_parties_interessees()
 
 
-@main_routes.route('/check_id_enjeu_exists', methods=['GET', 'POST'])
-def check_id_enjeu_exists_route():
-    return check_id_enjeu_exists()
+# @main_routes.route('/check_id_enjeu_exists', methods=['GET', 'POST'])
+# def check_id_enjeu_exists_route():
+#     return check_id_enjeu_exists()
 
 
 @main_routes.route('/processus', methods=['GET'])
